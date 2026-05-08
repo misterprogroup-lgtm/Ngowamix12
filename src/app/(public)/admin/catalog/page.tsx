@@ -20,6 +20,7 @@ export default function AdminCatalogPage() {
   const [albums, setAlbums] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('ALL');
+  
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({ pages: 1, total: 0 });
 
