@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --surface: 0 0% 96%;
+    --surface-hover: 0 0% 92%;
+    --border: 0 0% 85%;
+    --text-primary: 0 0% 10%;
+    --text-secondary: 0 0% 40%;
+    --text-muted: 0 0% 55%;
+    --primary: 28 100% 50%;
+    --primary-hover: 28 100% 45%;
+    --primary-glow: rgba(255, 140, 0, 0.3);
+    --accent: 45 100% 50%;
+    --accent-hover: 45 100% 45%;
+    --success: 152 65% 41%;
+    --warning: 28 100% 50%;
+    --error: 0 72% 56%;
+  }
+
+  .dark {
+    --background: 240 10% 4%;
+    --surface: 240 8% 9%;
+    --surface-hover: 240 8% 14%;
+    --border: 240 6% 20%;
+    --text-primary: 0 0% 100%;
+    --text-secondary: 240 4% 68%;
+    --text-muted: 240 4% 40%;
+    --primary: 28 100% 50%;
+    --primary-hover: 28 100% 45%;
+    --primary-glow: rgba(255, 140, 0, 0.3);
+    --accent: 45 100% 50%;
+    --accent-hover: 45 100% 45%;
+    --success: 152 65% 41%;
+    --warning: 28 100% 50%;
+    --error: 0 72% 56%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-text-primary antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-hover rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-border;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: #2a2a3a;
+    border-radius: 2px;
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #FF8C00;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #FF8C00;
+    cursor: pointer;
+    border: none;
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  .glow {
+    box-shadow: 0 0 40px rgba(255, 140, 0, 0.3);
+  }
+}
