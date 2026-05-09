@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Play, Pause, Music, Heart } from 'lucide-react';
 import { usePlayerStore } from '@/store/player-store';
-import { formatDuration, cn } from '@/lib/utils';
+import { formatDuration } from '@/lib/utils';
 import type { Track } from '@/types';
 
 export function FavoritesPlaylist() {
