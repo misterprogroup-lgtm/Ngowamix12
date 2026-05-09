@@ -73,6 +73,11 @@ model User {
   lastName              String?
   displayName           String?
   avatar                String?
+  phone                 String?
+  phoneVerified         Boolean       @default(false)
+  phoneVerificationCode String?
+  phoneVerificationExpiresAt DateTime?
+  labelName             String?
   role                  UserRole      @default(LISTENER)
   isPremium             Boolean       @default(false)
   premiumExpiresAt      DateTime?
@@ -90,10 +95,27 @@ model User {
   downloads             Download[]
   favorites             Favorite[]
   artist                Artist?
+  label                 Label?
   reviews               Review[]
+  listenHistory         ListenHistory[]
+  notifications         Notification[]
 
   @@index([email])
   @@index([role])
+}
+
+model Label {
+  id                    String        @id @default(uuid())
+  name                  String
+  slug                  String        @unique
+  userId                String        @unique
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artists               Artist[]
+
+  @@index([slug])
 }
 
 model Artist {
@@ -115,6 +137,8 @@ model Artist {
   updatedAt             DateTime      @updatedAt
 
   user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  labelId               String?
+  label                 Label?        @relation(fields: [labelId], references: [id])
   albums                Album[]
   concerts              Concert[]
 
@@ -172,6 +196,7 @@ model Track {
 
   album                 Album         @relation(fields: [albumId], references: [id], onDelete: Cascade)
   favorites             Favorite[]
+  listenHistory         ListenHistory[]
 
   @@unique([albumId, slug])
   @@index([albumId])
@@ -346,6 +371,7 @@ enum NotificationStatus {
 
 model Notification {
   id                    String           @id @default(uuid())
+  userId                String?
   type                  NotificationType @default(ALBUM_SUBMISSION)
   title                 String
   message               String
@@ -354,6 +380,9 @@ model Notification {
   referenceType         String?
   createdAt             DateTime         @default(now())
 
+  user                  User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
   @@index([status])
   @@index([createdAt])
 }
@@ -373,6 +402,20 @@ model Review {
   @@unique([userId, albumId])
   @@index([albumId])
   @@index([createdAt])
+}
+
+model ListenHistory {
+  id        String   @id @default(uuid())
+  userId    String
+  trackId   String
+  playedAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([playedAt])
+  @@index([userId, playedAt])
 }
 
 model SiteConfig {

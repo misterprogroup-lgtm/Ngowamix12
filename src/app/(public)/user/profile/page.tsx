@@ -1,17 +1,31 @@
 'use client';
 
-import { useState } from 'react';
-import { User, Save } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { User, Save, Phone } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/store/auth-store';
 
 export default function ProfilePage() {
-  const [displayName, setDisplayName] = useState('');
-  const [email, setEmail] = useState('');
+  const { user } = useAuthStore();
+  const [displayName, setDisplayName] = useState(user?.displayName || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [email, setEmail] = useState(user?.email || '');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetch('/api/user/status')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.user) {
+          setPhone(data.user.phone || '');
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +55,6 @@ export default function ProfilePage() {
       )}
 
       <div className="space-y-8">
-        {/* Profile info */}
         <div className="rounded-xl border border-border p-6">
           <h2 className="text-lg font-semibold mb-4">Informations du profil</h2>
           <form onSubmit={handleSaveProfile} className="space-y-4">
@@ -50,6 +63,13 @@ export default function ProfilePage() {
               placeholder="Votre nom"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
+            />
+            <Input
+              label="Téléphone"
+              placeholder="+225 01 02 03 04 05"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              autoComplete="tel"
             />
             <Input
               type="email"
@@ -65,7 +85,6 @@ export default function ProfilePage() {
           </form>
         </div>
 
-        {/* Change password */}
         <div className="rounded-xl border border-border p-6">
           <h2 className="text-lg font-semibold mb-4">Changer le mot de passe</h2>
           <form onSubmit={handleChangePassword} className="space-y-4">

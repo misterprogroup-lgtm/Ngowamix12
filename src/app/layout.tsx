@@ -9,6 +9,8 @@ import { InstallPrompt } from '@/components/pwa/install-prompt';
 import { ToastProvider } from '@/components/feedback/toast';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { TermsAcceptanceModal } from '@/components/layout/terms-modal';
+import { AuthProvider } from '@/components/auth/auth-provider';
+import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav';
 import { db } from '@/lib/db';
 
 const inter = Inter({
@@ -91,14 +93,17 @@ export default function RootLayout({
         />
           <ThemeProvider>
             <ToastProvider>
+              <AuthProvider>
               <Header />
-              <main className="flex-1">
+              <main className="flex-1 pb-32 md:pb-0">
                 {children}
               </main>
               <Footer />
+              <MobileBottomNav />
               <AudioPlayer />
               <InstallPrompt />
               <TermsAcceptanceModal />
+              </AuthProvider>
               <Script id="register-sw" strategy="afterInteractive">
             {`
               if ('serviceWorker' in navigator) {

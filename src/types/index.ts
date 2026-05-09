@@ -8,6 +8,7 @@ export interface Track {
   isExplicit: boolean;
   isPremiumOnly: boolean;
   playCount: number;
+  createdAt?: string;
   album: {
     id: string;
     title: string;
@@ -63,6 +64,9 @@ export interface User {
   email: string;
   displayName: string | null;
   avatar: string | null;
+  phone: string | null;
+  phoneVerified: boolean;
+  labelName: string | null;
   role: 'LISTENER' | 'ARTIST' | 'LABEL' | 'ADMIN';
   isPremium: boolean;
   premiumExpiresAt: Date | null;

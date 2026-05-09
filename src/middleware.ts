@@ -8,6 +8,7 @@ const JWT_SECRET = new TextEncoder().encode(
 
 const protectedRoutes = ['/user', '/admin'];
 const artistProtectedRoutes = ['/artist/dashboard', '/artist/catalog', '/artist/profile'];
+const labelProtectedRoutes = ['/label'];
 const authRoutes = ['/login', '/register'];
 
 export async function middleware(request: NextRequest) {
@@ -26,7 +27,11 @@ export async function middleware(request: NextRequest) {
   }
 
   if (authRoutes.includes(pathname) && userRole) {
-    return NextResponse.redirect(new URL('/user/dashboard', request.url));
+    const target = userRole === 'LABEL' ? '/label/dashboard'
+      : userRole === 'ARTIST' ? '/artist/dashboard'
+      : userRole === 'ADMIN' ? '/admin/dashboard'
+      : '/user/dashboard';
+    return NextResponse.redirect(new URL(target, request.url));
   }
 
   const isArtistProtected = artistProtectedRoutes.some((route) => pathname.startsWith(route));
@@ -38,7 +43,25 @@ export async function middleware(request: NextRequest) {
       );
     }
 
-    if (!['ARTIST', 'LABEL', 'ADMIN'].includes(userRole)) {
+    if (userRole === 'LABEL') {
+      return NextResponse.redirect(new URL('/label/dashboard', request.url));
+    }
+
+    if (!['ARTIST', 'ADMIN'].includes(userRole)) {
+      return NextResponse.redirect(new URL('/user/dashboard', request.url));
+    }
+  }
+
+  const isLabelProtected = labelProtectedRoutes.some((route) => pathname.startsWith(route));
+
+  if (isLabelProtected) {
+    if (!userRole) {
+      return NextResponse.redirect(
+        new URL(`/login?redirect=${encodeURIComponent(pathname)}`, request.url)
+      );
+    }
+
+    if (userRole !== 'LABEL') {
       return NextResponse.redirect(new URL('/user/dashboard', request.url));
     }
   }
@@ -59,5 +82,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/user/:path*', '/artist/:path*', '/admin/:path*', '/login', '/register'],
+  matcher: ['/user/:path*', '/artist/:path*', '/admin/:path*', '/label/:path*', '/login', '/register'],
 };

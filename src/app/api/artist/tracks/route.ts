@@ -2,12 +2,35 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireRole } from '@/lib/auth';
 import { slugify } from '@/lib/utils';
+import { applyVoiceTag, getTempAudioPath, getFinalAudioPath } from '@/lib/audio-processor';
+import fs from 'fs';
+import path from 'path';
+import { execFile } from 'child_process';
+import ffprobe from 'ffprobe-static';
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+function getAudioDuration(filePath: string): Promise<number> {
+  return new Promise((resolve) => {
+    execFile(ffprobe.path, [
+      '-v', 'error',
+      '-show_entries', 'format=duration',
+      '-of', 'default=noprint_wrappers=1:nokey=1',
+      filePath,
+    ], (err, stdout) => {
+      if (err) {
+        resolve(0);
+        return;
+      }
+      const duration = parseFloat(stdout.trim());
+      resolve(isNaN(duration) ? 0 : Math.round(duration));
+    });
+  });
+}
 
 export async function POST(request: Request) {
   try {
@@ -20,6 +43,13 @@ export async function POST(request: Request) {
     if (!artist) {
       return NextResponse.json(
         { error: 'Profil artiste non trouvé' },
+        { status: 403 }
+      );
+    }
+
+    if (!artist.isVerified && user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Votre compte artiste doit être vérifié avant de pouvoir publier. Contactez l\'administration.' },
         { status: 403 }
       );
     }
@@ -53,15 +83,22 @@ export async function POST(request: Request) {
 
     const buffer = Buffer.from(await audioFile.arrayBuffer());
     const filename = `${Date.now()}-${audioFile.name}`;
-    const fs = await import('fs');
-    const path = await import('path');
-    const fullDir = path.join(process.cwd(), 'public', 'uploads', 'audio');
-    if (!fs.existsSync(fullDir)) {
-      fs.mkdirSync(fullDir, { recursive: true });
+    const audioDir = path.join(process.cwd(), 'public', 'uploads', 'audio');
+    if (!fs.existsSync(audioDir)) {
+      fs.mkdirSync(audioDir, { recursive: true });
     }
-    fs.writeFileSync(path.join(fullDir, filename), buffer);
 
+    const tempPath = getTempAudioPath(filename);
+    fs.writeFileSync(tempPath, buffer);
+
+    const finalPath = getFinalAudioPath(filename);
+    await applyVoiceTag(tempPath, finalPath);
+
+    fs.unlinkSync(tempPath);
+
+    const finalStats = fs.statSync(finalPath);
     const audioPath = `/uploads/audio/${filename}`;
+    const duration = await getAudioDuration(finalPath);
 
     const track = await db.track.create({
       data: {
@@ -69,11 +106,11 @@ export async function POST(request: Request) {
         title,
         slug: slugify(title) + '-' + Date.now().toString(36),
         trackNumber,
-        duration: 0,
+        duration,
         audioFile: audioPath,
         isExplicit,
         isPremiumOnly,
-        fileSize: buffer.length,
+        fileSize: finalStats.size,
       },
     });
 

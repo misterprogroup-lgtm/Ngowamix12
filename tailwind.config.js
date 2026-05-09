@@ -40,10 +40,15 @@ module.exports = {
           '0%': { transform: 'translateY(100%)' },
           '100%': { transform: 'translateY(0)' },
         },
+        slideRight: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
       },
       animation: {
         pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         slideUp: 'slideUp 0.3s ease-out',
+        slideRight: 'slideRight 0.3s ease-out',
       },
     },
   },

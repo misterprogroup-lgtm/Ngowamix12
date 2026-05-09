@@ -9,6 +9,7 @@ interface AuthState {
   setUser: (user: User | null, token?: string | null) => void;
   setLoading: (loading: boolean) => void;
   logout: () => Promise<void>;
+  checkSession: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -19,6 +20,19 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       setUser: (user, token) => set({ user, token: token ?? null }),
       setLoading: (isLoading) => set({ isLoading }),
+      checkSession: async () => {
+        try {
+          const res = await fetch('/api/user/status');
+          if (res.ok) {
+            const data = await res.json();
+            if (data.user) {
+              set({ user: data.user, isLoading: false });
+            }
+          }
+        } catch {
+          // No session
+        }
+      },
       logout: async () => {
         try {
           const res = await fetch('/api/auth/logout', { method: 'POST' });

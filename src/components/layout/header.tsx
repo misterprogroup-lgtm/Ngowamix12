@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, User, Shield, LayoutDashboard, Crown, LogOut, Settings, ChevronDown, Ticket } from 'lucide-react';
+import { Search, User, Shield, LayoutDashboard, Crown, LogOut, Settings, ChevronDown, Ticket, Menu, X, Home, Compass, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/store/auth-store';
 import { ROUTES, APP_NAME } from '@/lib/constants';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { NotificationBell } from '@/components/layout/notification-bell';
 import { cn } from '@/lib/utils';
 import { useState, useRef, useEffect } from 'react';
 
@@ -18,6 +19,7 @@ export function Header() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -63,6 +65,7 @@ export function Header() {
   ];
 
   return (
+    <>
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center gap-4">
@@ -123,7 +126,7 @@ export function Header() {
             )}
           </nav>
 
-          <form onSubmit={handleSearch} className="flex-1 max-w-md mx-auto">
+          <form onSubmit={handleSearch} className="hidden md:block flex-1 max-w-md mx-auto">
             <Input
               type="search"
               placeholder="Rechercher artistes, albums, titres..."
@@ -134,7 +137,8 @@ export function Header() {
             />
           </form>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="hidden md:flex items-center gap-2 shrink-0">
+            {user && <NotificationBell />}
             <ThemeToggle />
             {user ? (
               <div className="relative" ref={dropdownRef}>
@@ -228,5 +232,181 @@ export function Header() {
         </div>
       </div>
     </header>
+      {/* Fixed hamburger top-left on mobile */}
+      <button
+        onClick={() => setShowMobileMenu(true)}
+        className="md:hidden fixed top-3 right-3 z-[55] p-2.5 text-text-secondary hover:text-text-primary transition-colors"
+        aria-label="Menu"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+
+      {/* Mobile menu overlay */}
+      {showMobileMenu && (
+        <div className="md:hidden fixed inset-0 z-[60]">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setShowMobileMenu(false)} />
+          <div className="absolute right-0 top-0 bottom-0 w-72 bg-background border-l border-border shadow-xl flex flex-col animate-slideRight">
+            <div className="flex items-center justify-between px-4 h-16 border-b border-border">
+              <span className="font-bold text-text-primary">Menu</span>
+              <button
+                onClick={() => setShowMobileMenu(false)}
+                className="p-2 text-text-secondary hover:text-text-primary transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-2">
+              {/* Theme toggle */}
+              <div className="px-3 mb-2">
+                {user && <NotificationBell />}
+                <ThemeToggle />
+              </div>
+
+              {/* Main links */}
+              <div className="px-3 space-y-0.5">
+                <Link
+                  href={ROUTES.HOME}
+                  onClick={() => setShowMobileMenu(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    pathname === '/' ? 'text-primary bg-primary/5' : 'text-text-secondary hover:text-text-primary hover:bg-surface'
+                  )}
+                >
+                  <Home className="h-4 w-4" />
+                  Accueil
+                </Link>
+                <Link
+                  href={ROUTES.EXPLORE}
+                  onClick={() => setShowMobileMenu(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    pathname.startsWith('/explore') ? 'text-primary bg-primary/5' : 'text-text-secondary hover:text-text-primary hover:bg-surface'
+                  )}
+                >
+                  <Compass className="h-4 w-4" />
+                  Explorer
+                </Link>
+                <Link
+                  href={ROUTES.MY_PLAYLIST}
+                  onClick={() => setShowMobileMenu(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface transition-colors"
+                >
+                  <Headphones className="h-4 w-4" />
+                  Ma playlist
+                </Link>
+                <Link
+                  href={ROUTES.TICKETS}
+                  onClick={() => setShowMobileMenu(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    pathname.startsWith('/tickets') ? 'text-primary bg-primary/5' : 'text-text-secondary hover:text-text-primary hover:bg-surface'
+                  )}
+                >
+                  <Ticket className="h-4 w-4" />
+                  Tickets
+                </Link>
+                <Link
+                  href={ROUTES.PREMIUM}
+                  onClick={() => setShowMobileMenu(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    pathname.startsWith('/premium') ? 'text-primary bg-primary/5' : 'text-text-secondary hover:text-text-primary hover:bg-surface'
+                  )}
+                >
+                  <Crown className="h-4 w-4" />
+                  Premium
+                </Link>
+              </div>
+
+              {/* User section */}
+              <div className="border-t border-border my-3 mx-3" />
+
+              {user ? (
+                <div className="px-3 space-y-0.5">
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-medium text-text-primary truncate">{user.displayName || user.email}</p>
+                    <p className="text-xs text-text-muted truncate">{user.email}</p>
+                  </div>
+
+                  <Link
+                    href={ROUTES.USER_PROFILE}
+                    onClick={() => setShowMobileMenu(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface transition-colors"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Mon profil
+                  </Link>
+
+                  {user.role === 'ADMIN' && (
+                    <Link
+                      href={ROUTES.ADMIN_DASHBOARD}
+                      onClick={() => setShowMobileMenu(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface transition-colors"
+                    >
+                      <Shield className="h-4 w-4" />
+                      Administration
+                    </Link>
+                  )}
+
+                  {(user.role === 'ARTIST' || user.role === 'LABEL') && (
+                    <Link
+                      href={ROUTES.ARTIST_DASHBOARD}
+                      onClick={() => setShowMobileMenu(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface transition-colors"
+                    >
+                      <LayoutDashboard className="h-4 w-4" />
+                      Dashboard artiste
+                    </Link>
+                  )}
+
+                  {user.role === 'LISTENER' && (
+                    <Link
+                      href={ROUTES.USER_DASHBOARD}
+                      onClick={() => setShowMobileMenu(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface transition-colors"
+                    >
+                      <LayoutDashboard className="h-4 w-4" />
+                      Mon tableau de bord
+                    </Link>
+                  )}
+
+                  <div className="border-t border-border my-2" />
+
+                  <button
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      handleLogout();
+                    }}
+                    className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-surface transition-colors"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Se déconnecter
+                  </button>
+                </div>
+              ) : (
+                <div className="px-3 space-y-2">
+                  <Link
+                    href={ROUTES.LOGIN}
+                    onClick={() => setShowMobileMenu(false)}
+                    className="flex items-center justify-center w-full px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors"
+                  >
+                    Connexion
+                  </Link>
+                  <Link
+                    href={ROUTES.REGISTER}
+                    onClick={() => setShowMobileMenu(false)}
+                    className="flex items-center justify-center w-full px-4 py-2.5 rounded-lg border border-border text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface transition-colors"
+                  >
+                    S&apos;inscrire
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+    </>
   );
 }

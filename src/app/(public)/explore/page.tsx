@@ -6,6 +6,7 @@ import { AlbumCard } from '@/components/catalog/album-card';
 import { ArtistCard } from '@/components/catalog/artist-card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ListenHistoryPlaylist } from '@/components/catalog/listen-history-playlist';
 import { GENRES, COUNTRIES } from '@/lib/constants';
 
 export default function ExplorePage() {
@@ -65,6 +66,9 @@ export default function ExplorePage() {
       <h1 className="text-3xl font-bold mb-8">
         Explorer le catalogue
       </h1>
+
+      {/* Ma playlist */}
+      <ListenHistoryPlaylist />
 
       {/* Type selector */}
       <div className="flex gap-2 mb-6">

@@ -32,6 +32,14 @@ const initialState: PlayerState = {
   shuffle: false,
 };
 
+function recordListen(trackId: string) {
+  fetch('/api/user/listen', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ trackId }),
+  }).catch(() => {});
+}
+
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
   ...initialState,
   audioElement: null,
@@ -51,6 +59,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       queue: queue || get().queue,
       queueIndex: index ?? 0,
     });
+    recordListen(track.id);
   },
 
   togglePlay: () => {
@@ -62,6 +71,12 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   },
 
   play: (track, queue, index) => {
+    const { audioElement } = get();
+    if (audioElement) {
+      audioElement.src = track.audioFile;
+      audioElement.load();
+      audioElement.play().catch(() => {});
+    }
     set({
       currentTrack: track,
       isPlaying: true,
@@ -69,6 +84,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       queue: queue || get().queue,
       queueIndex: index ?? 0,
     });
+    recordListen(track.id);
   },
 
   pause: () => {

@@ -6,6 +6,7 @@ import { ArtistCard } from '@/components/catalog/artist-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { HeroSlider } from '@/components/ui/hero-slider';
+import { RecentlyPlayed } from '@/components/catalog/recently-played';
 import { ROUTES, PREMIUM_PRICE, PREMIUM_CURRENCY, APP_NAME } from '@/lib/constants';
 
 export const metadata: Metadata = {
@@ -103,6 +104,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Recently Played */}
+      <RecentlyPlayed />
 
       {/* Featured Artists */}
       {featuredArtists.length > 0 && (

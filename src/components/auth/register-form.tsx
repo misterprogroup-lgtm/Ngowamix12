@@ -15,11 +15,13 @@ export function RegisterForm() {
   const { setUser, setLoading } = useAuthStore();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [accountType, setAccountType] = useState('LISTENER');
   const [artistName, setArtistName] = useState('');
+  const [labelName, setLabelName] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +45,11 @@ export function RegisterForm() {
       return;
     }
 
+    if (accountType === 'LABEL' && !labelName.trim()) {
+      setError('Le nom du label est requis');
+      return;
+    }
+
     if (!acceptTerms) {
       setError('Vous devez accepter les conditions d\'utilisation');
       return;
@@ -58,10 +65,12 @@ export function RegisterForm() {
         body: JSON.stringify({
           firstName,
           lastName,
+          phone: phone || undefined,
           email,
           password,
           role: accountType,
           artistName: accountType === 'ARTIST' ? artistName : undefined,
+          labelName: accountType === 'LABEL' ? labelName : undefined,
           acceptTerms: true,
         }),
       });
@@ -73,10 +82,12 @@ export function RegisterForm() {
       }
 
       setUser(data.user as User, data.token);
-      if (accountType === 'ARTIST') {
+      if (phone) {
+        router.push('/verify-phone');
+      } else if (accountType === 'ARTIST') {
         router.push('/artist/dashboard');
       } else if (accountType === 'LABEL') {
-        router.push('/artist/dashboard');
+        router.push('/label/dashboard');
       } else {
         router.push(ROUTES.USER_DASHBOARD);
       }
@@ -125,12 +136,30 @@ export function RegisterForm() {
         />
       </div>
 
+      <Input
+        type="tel"
+        label="Téléphone"
+        placeholder="+225 01 02 03 04 05"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        autoComplete="tel"
+      />
+
       {accountType === 'ARTIST' && (
         <Input
           label="Nom d'artiste"
           placeholder="Votre nom de scène"
           value={artistName}
           onChange={(e) => setArtistName(e.target.value)}
+        />
+      )}
+
+      {accountType === 'LABEL' && (
+        <Input
+          label="Nom du label"
+          placeholder="Nom de votre label"
+          value={labelName}
+          onChange={(e) => setLabelName(e.target.value)}
         />
       )}
 

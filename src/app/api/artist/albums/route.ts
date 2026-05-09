@@ -25,6 +25,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!artist.isVerified && user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Votre compte artiste doit être vérifié avant de pouvoir publier. Contactez l\'administration.' },
+        { status: 403 }
+      );
+    }
+
     const formData = await request.formData();
     const title = formData.get('title') as string;
     const type = formData.get('type') as string || 'ALBUM';
@@ -86,6 +93,21 @@ export async function POST(request: Request) {
           referenceId: album.id,
           referenceType: 'ALBUM',
         },
+      });
+    } else {
+      const listeners = await db.user.findMany({
+        where: { role: 'LISTENER' },
+        select: { id: true },
+      });
+      await db.notification.createMany({
+        data: listeners.map((listener) => ({
+          userId: listener.id,
+          type: 'SYSTEM',
+          title: `Nouveau Single : ${title}`,
+          message: `"${title}" de ${artist.name} est maintenant disponible.`,
+          referenceId: album.id,
+          referenceType: 'ALBUM',
+        })),
       });
     }
 

@@ -109,6 +109,18 @@ export default function ArtistDashboard() {
         </Link>
       </div>
 
+      {!data.artist.isVerified && (
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 mb-6 flex items-center justify-between">
+          <div>
+            <p className="font-medium text-amber-600 dark:text-amber-400">Compte non vérifié</p>
+            <p className="text-sm text-text-secondary">Vous devez faire vérifier votre compte avant de pouvoir publier des musiques ou des concerts.</p>
+          </div>
+          <Link href={ROUTES.ARTIST_PROFILE}>
+            <Button variant="outline" size="sm">Demander la vérification</Button>
+          </Link>
+        </div>
+      )}
+
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
         <StatsCard icon={Music} label="Albums" value={data.stats.albums} />

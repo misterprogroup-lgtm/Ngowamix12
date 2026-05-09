@@ -18,7 +18,11 @@ export function LoginForm() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const redirect = searchParams.get('redirect') || ROUTES.USER_DASHBOARD;
+  const getDefaultRedirect = (_role?: string) => {
+    return ROUTES.HOME;
+  };
+
+  const redirect = searchParams.get('redirect');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +44,7 @@ export function LoginForm() {
       }
 
       setUser(data.user as User, data.token);
-      router.push(redirect);
+      router.push(redirect || getDefaultRedirect(data.user?.role));
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue');

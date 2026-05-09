@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Play, Music, Star, BadgeCheck } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn, formatPrice } from '@/lib/utils';
+import { ShareButton } from '@/components/catalog/share-button';
 
 interface AlbumCardProps {
   id: string;
@@ -59,6 +60,9 @@ export function AlbumCard({
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg">
               <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
+            </div>
+            <div className="absolute top-2 right-2">
+              <ShareButton url={`/album/${id}`} title={title} />
             </div>
           </div>
           <div className="absolute top-2 left-2 flex gap-1.5">

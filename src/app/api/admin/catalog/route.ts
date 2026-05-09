@@ -85,6 +85,24 @@ export async function PUT(request: Request) {
       include: { artist: { select: { name: true } } },
     });
 
+    if (status === 'PUBLISHED') {
+      const listeners = await db.user.findMany({
+        where: { role: 'LISTENER' },
+        select: { id: true },
+      });
+      const label = album.type === 'SINGLE' ? 'Single' : album.type === 'EP' ? 'EP' : 'Album';
+      await db.notification.createMany({
+        data: listeners.map((listener) => ({
+          userId: listener.id,
+          type: 'SYSTEM',
+          title: `Nouveau ${label} : ${album.title}`,
+          message: `"${album.title}" de ${album.artist.name} est maintenant disponible.`,
+          referenceId: albumId,
+          referenceType: 'ALBUM',
+        })),
+      });
+    }
+
     return NextResponse.json({ album });
   } catch (error) {
     console.error('Admin catalog action error:', error);

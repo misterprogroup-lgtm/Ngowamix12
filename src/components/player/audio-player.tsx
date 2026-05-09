@@ -134,7 +134,8 @@ export function AudioPlayer() {
       <audio ref={audioRef} preload="metadata" />
       {!currentTrack ? null : (
     <div className={cn(
-      'fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-surface/95 backdrop-blur transition-all duration-300',
+      'fixed left-0 right-0 z-40 border-t border-border bg-surface/95 backdrop-blur transition-all duration-300',
+      'bottom-16 md:bottom-0',
       isExpanded ? 'h-64 md:h-72' : 'h-16 md:h-20',
       error && 'border-error/30'
     )}>

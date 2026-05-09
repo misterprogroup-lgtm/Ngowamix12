@@ -1,12 +1,14 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, Clock, ShoppingBag, Music, Crown, Heart, Download, BadgeCheck } from 'lucide-react';
+import { Play, Clock, ShoppingBag, Music, Crown, Heart, Download, BadgeCheck, Headphones } from 'lucide-react';
 import { TrackRow } from '@/components/catalog/track-row';
+import { TrackList } from '@/components/catalog/track-list';
 import { AlbumActions } from '@/components/catalog/album-actions';
 import { ReviewsSection } from '@/components/catalog/reviews-section';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ShareButtons } from '@/components/catalog/share-buttons';
 import { formatDuration, formatPrice } from '@/lib/utils';
 import { getCurrentUser } from '@/lib/auth';
 import { PREMIUM_PRICE } from '@/lib/constants';
@@ -133,6 +135,12 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
               {formatDuration(totalDuration)}
             </span>
             <span>{album.totalTracks} titre{album.totalTracks !== 1 ? 's' : ''}</span>
+            {album.playCount > 0 && (
+              <span className="flex items-center gap-1">
+                <Headphones className="h-4 w-4" />
+                {album.playCount.toLocaleString('fr-FR')} écoutes
+              </span>
+            )}
             {album.releaseDate && (
               <span>
                 {new Date(album.releaseDate).toLocaleDateString('fr-FR', {
@@ -158,6 +166,14 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
             isPurchased={isPurchased}
           />
 
+          <div className="mt-4">
+            <ShareButtons
+              url={`/album/${album.id}`}
+              title={album.title}
+              description={`${album.artist.name} — ${album.type === 'SINGLE' ? 'Single' : album.type === 'EP' ? 'EP' : 'Album'}`}
+            />
+          </div>
+
           {album.description && (
             <p className="text-text-secondary mt-6 max-w-2xl">
               {album.description}
@@ -172,14 +188,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
             Liste des titres
           </h2>
           <div className="space-y-1">
-            {tracks.map((track: any, index: number) => (
-              <TrackRow
-                key={track.id}
-                track={track}
-                index={index}
-                isPlaying={false}
-              />
-            ))}
+            <TrackList tracks={tracks} />
           </div>
         </section>
       ) : (

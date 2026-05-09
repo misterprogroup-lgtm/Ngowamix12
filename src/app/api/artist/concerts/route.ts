@@ -24,6 +24,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!artist.isVerified && user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Votre compte artiste doit être vérifié avant de pouvoir publier. Contactez l\'administration.' },
+        { status: 403 }
+      );
+    }
+
     const formData = await request.formData();
     const title = formData.get('title') as string;
     const venue = formData.get('venue') as string;

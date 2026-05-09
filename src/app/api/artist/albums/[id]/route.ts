@@ -66,6 +66,13 @@ export async function PUT(
       );
     }
 
+    if (!artist.isVerified && user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Votre compte artiste doit être vérifié avant de pouvoir modifier des albums.' },
+        { status: 403 }
+      );
+    }
+
     const album = await db.album.findUnique({
       where: { id },
       select: { artistId: true },
@@ -120,6 +127,13 @@ export async function DELETE(
     if (!artist) {
       return NextResponse.json(
         { error: 'Profil artiste non trouvé' },
+        { status: 403 }
+      );
+    }
+
+    if (!artist.isVerified && user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Votre compte artiste doit être vérifié avant de pouvoir supprimer des albums.' },
         { status: 403 }
       );
     }

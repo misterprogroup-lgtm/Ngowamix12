@@ -9,8 +9,10 @@ const registerSchema = z.object({
   lastName: z.string().min(1, 'Le nom est requis'),
   email: z.string().email('Email invalide'),
   password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
+  phone: z.string().optional(),
   role: z.enum(['LISTENER', 'ARTIST', 'LABEL']).optional(),
   artistName: z.string().optional(),
+  labelName: z.string().optional(),
   acceptTerms: z.literal(true, {
     errorMap: () => ({ message: 'Vous devez accepter les conditions d\'utilisation' }),
   }),
@@ -28,7 +30,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { firstName, lastName, email, password, role = 'LISTENER', artistName } = result.data;
+    const { firstName, lastName, email, password, phone, role = 'LISTENER', artistName, labelName } = result.data;
 
     const existingUser = await db.user.findUnique({
       where: { email },
@@ -49,8 +51,10 @@ export async function POST(request: Request) {
         firstName,
         lastName,
         email,
+        phone: phone || null,
         password: hashedPassword,
         displayName,
+        labelName: labelName || null,
         role: role as never,
         termsAccepted: true,
         termsAcceptedAt: new Date(),
@@ -63,6 +67,14 @@ export async function POST(request: Request) {
             },
           },
         }),
+        ...(role === 'LABEL' && labelName && {
+          label: {
+            create: {
+              name: labelName,
+              slug: slugify(labelName),
+            },
+          },
+        }),
       },
       select: {
         id: true,
@@ -70,6 +82,9 @@ export async function POST(request: Request) {
         firstName: true,
         lastName: true,
         displayName: true,
+        phone: true,
+        phoneVerified: true,
+        labelName: true,
         avatar: true,
         role: true,
         isPremium: true,

@@ -66,6 +66,7 @@ interface Concert {
 
 export default function ArtistCatalog() {
   const [activeTab, setActiveTab] = useState<'albums' | 'concerts'>('albums');
+  const [isVerified, setIsVerified] = useState(true);
   const [releases, setReleases] = useState<Release[]>([]);
   const [concerts, setConcerts] = useState<Concert[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,9 +100,18 @@ export default function ArtistCatalog() {
   const [posterFile, setPosterFile] = useState<File | null>(null);
 
   useEffect(() => {
+    fetchArtist();
     if (activeTab === 'albums') fetchReleases();
     else fetchConcerts();
   }, [activeTab]);
+
+  const fetchArtist = async () => {
+    try {
+      const res = await fetch('/api/artist/dashboard');
+      const data = await res.json();
+      if (data.artist) setIsVerified(data.artist.isVerified);
+    } catch {}
+  };
 
   const fetchReleases = async () => {
     try {
@@ -266,6 +276,18 @@ export default function ArtistCatalog() {
           )}
         </div>
       </div>
+
+      {!isVerified && (
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 mb-6 flex items-center justify-between">
+          <div>
+            <p className="font-medium text-amber-600 dark:text-amber-400">Compte non vérifié</p>
+            <p className="text-sm text-text-secondary">Vous devez faire vérifier votre compte avant de pouvoir publier des musiques ou des concerts.</p>
+          </div>
+          <Link href="/artist/profile">
+            <Button variant="outline" size="sm">Demander la vérification</Button>
+          </Link>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-2 mb-6">
