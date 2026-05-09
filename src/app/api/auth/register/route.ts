@@ -110,9 +110,13 @@ export async function POST(request: Request) {
     );
   } catch (error: any) {
     console.error('Register error:', error);
-    const message = error?.message?.includes('connect to the database')
-      ? 'Erreur de connexion à la base de données. Vérifiez la configuration.'
-      : 'Erreur lors de l\'inscription';
+    let message = 'Erreur lors de l\'inscription';
+    if (error?.message?.includes('connect to the database') || error?.message?.includes('does not exist')) {
+      message = 'Erreur de connexion à la base de données. Vérifiez que DATABASE_URL est configurée sur Vercel.';
+    }
+    if (error?.code === 'P2021') {
+      message = 'La base de données est vide. Exécutez npx prisma db push pour créer les tables.';
+    }
     return NextResponse.json(
       { error: message },
       { status: 500 }
