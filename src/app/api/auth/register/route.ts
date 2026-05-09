@@ -108,10 +108,13 @@ export async function POST(request: Request) {
       { user, token, message: 'Inscription réussie' },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error('Register error:', error);
+    const message = error?.message?.includes('connect to the database')
+      ? 'Erreur de connexion à la base de données. Vérifiez la configuration.'
+      : 'Erreur lors de l\'inscription';
     return NextResponse.json(
-      { error: 'Erreur lors de l\'inscription' },
+      { error: message },
       { status: 500 }
     );
   }
