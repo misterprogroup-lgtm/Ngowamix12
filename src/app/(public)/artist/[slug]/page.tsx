@@ -1,12 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Music, Play, Users, Instagram, Twitter, Facebook, Youtube, CheckCircle2 } from 'lucide-react';
+import { Music, Headphones, Instagram, Twitter, Facebook, Youtube, CheckCircle2 } from 'lucide-react';
 import { AlbumCard } from '@/components/catalog/album-card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { formatNumber, formatPrice } from '@/lib/utils';
+import { formatNumber } from '@/lib/utils';
 import { APP_NAME } from '@/lib/constants';
 import { db } from '@/lib/db';
 
@@ -74,6 +72,19 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
     }),
   );
 
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthlyListens = await db.listenHistory.count({
+    where: {
+      track: {
+        album: {
+          artistId: artist.id,
+        },
+      },
+      playedAt: { gte: startOfMonth },
+    },
+  });
+
   const socialLinks = artist.socialLinks ? JSON.parse(artist.socialLinks) as Record<string, string> : null;
 
   return (
@@ -107,8 +118,12 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
               </h1>
               <div className="flex items-center gap-4 text-sm text-text-secondary">
                 <span className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
-                  {albums.length} album{albums.length !== 1 ? 's' : ''}
+                  <Headphones className="h-4 w-4" />
+                  {formatNumber(monthlyListens)} écoute{monthlyListens !== 1 ? 's' : ''} ce mois-ci
+                </span>
+                <span className="flex items-center gap-1">
+                  <Music className="h-4 w-4" />
+                  {albums.length} titre{albums.length !== 1 ? 's' : ''}
                 </span>
               </div>
             </div>
