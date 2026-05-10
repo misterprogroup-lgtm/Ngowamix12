@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   const envStatus = {
-    UPLOADTHING_SECRET: !!process.env.UPLOADTHING_SECRET,
+    UPLOADTHING_TOKEN: !!process.env.UPLOADTHING_TOKEN,
     UPLOADTHING_APP_ID: !!process.env.UPLOADTHING_APP_ID,
     VERCEL: !!process.env.VERCEL,
   };
 
   let uploadTest = null;
-  if (process.env.UPLOADTHING_SECRET) {
+  if (process.env.UPLOADTHING_TOKEN) {
     try {
       const { UTApi } = await import('uploadthing/server');
       const utapi = new UTApi();

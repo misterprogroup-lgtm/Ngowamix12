@@ -12,7 +12,7 @@ export async function uploadFile(
   filename: string,
   _folder: 'covers' | 'avatars' | 'audio'
 ): Promise<UploadResult> {
-  if (process.env.UPLOADTHING_SECRET) {
+  if (process.env.UPLOADTHING_TOKEN) {
     try {
       const file = new File([new Uint8Array(buffer)], filename);
       const { data, error } = await utapi.uploadFiles(file);
