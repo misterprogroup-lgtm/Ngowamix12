@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireRole } from '@/lib/auth';
-import { coverUpload } from '@/lib/upload';
+import { uploadFile } from '@/lib/upload';
 import { slugify } from '@/lib/utils';
 
 export const config = {
@@ -56,15 +56,8 @@ export async function POST(request: Request) {
     if (coverFile && coverFile.size > 0) {
       const buffer = Buffer.from(await coverFile.arrayBuffer());
       const filename = `${Date.now()}-${coverFile.name}`;
-      const filePath = `public/uploads/covers/${filename}`;
-      const fs = await import('fs');
-      const path = await import('path');
-      const fullDir = path.join(process.cwd(), 'public', 'uploads', 'covers');
-      if (!fs.existsSync(fullDir)) {
-        fs.mkdirSync(fullDir, { recursive: true });
-      }
-      fs.writeFileSync(path.join(fullDir, filename), buffer);
-      coverPath = `/uploads/covers/${filename}`;
+      const result = await uploadFile(buffer, filename, 'covers');
+      coverPath = result.url;
     }
 
     const album = await db.album.create({

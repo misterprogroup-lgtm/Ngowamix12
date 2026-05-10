@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { requireRole } from '@/lib/auth';
 import { slugify } from '@/lib/utils';
 import { applyVoiceTag, getTempAudioPath, getFinalAudioPath } from '@/lib/audio-processor';
+import { uploadFile } from '@/lib/upload';
 import fs from 'fs';
 import path from 'path';
 import { execFile } from 'child_process';
@@ -97,8 +98,16 @@ export async function POST(request: Request) {
     fs.unlinkSync(tempPath);
 
     const finalStats = fs.statSync(finalPath);
-    const audioPath = `/uploads/audio/${filename}`;
     const duration = await getAudioDuration(finalPath);
+
+    const uploadResult = await uploadFile(
+      fs.readFileSync(finalPath),
+      filename,
+      'audio'
+    );
+    fs.unlinkSync(finalPath);
+
+    const audioPath = uploadResult.url;
 
     const track = await db.track.create({
       data: {

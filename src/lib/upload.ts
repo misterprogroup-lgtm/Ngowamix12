@@ -1,64 +1,39 @@
-import multer from 'multer';
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
+import path from 'path';
 
-const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads');
-const AUDIO_DIR = path.join(UPLOADS_DIR, 'audio');
-const COVERS_DIR = path.join(UPLOADS_DIR, 'covers');
+interface UploadResult {
+  url: string;
+  pathname: string;
+}
 
-[UPLOADS_DIR, AUDIO_DIR, COVERS_DIR].forEach((dir) => {
+export async function uploadFile(
+  buffer: Buffer,
+  filename: string,
+  folder: 'covers' | 'avatars' | 'audio'
+): Promise<UploadResult> {
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const { put } = await import('@vercel/blob');
+    const blob = await put(`uploads/${folder}/${filename}`, buffer, {
+      access: 'public',
+    });
+    return { url: blob.url, pathname: blob.pathname };
+  }
+
+  const dir = path.join(process.cwd(), 'public', 'uploads', folder);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
-});
+  const filePath = path.join(dir, filename);
+  fs.writeFileSync(filePath, buffer);
 
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, AUDIO_DIR);
-  },
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `${uuidv4()}${ext}`);
-  },
-});
+  return {
+    url: `/uploads/${folder}/${filename}`,
+    pathname: `/uploads/${folder}/${filename}`,
+  };
+}
 
-const coverStorage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, COVERS_DIR);
-  },
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `${uuidv4()}${ext}`);
-  },
-});
+export const coverUpload = uploadFile;
 
-export const audioUpload = multer({
-  storage,
-  limits: { fileSize: 20 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    const allowedTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/m4a', 'audio/aac', 'audio/ogg'];
-    if (allowedTypes.includes(file.mimetype) || file.originalname.match(/\.(mp3|wav|m4a|aac|ogg)$/i)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Format audio non supporté. Utilisez MP3, WAV, M4A, AAC ou OGG'));
-    }
-  },
-});
-
-export const coverUpload = multer({
-  storage: coverStorage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Format d\'image non supporté. Utilisez JPEG, PNG, WebP ou GIF'));
-    }
-  },
-});
-
-export function getFilePath(filename: string, type: 'audio' | 'cover'): string {
-  return `/uploads/${type === 'audio' ? 'audio' : 'covers'}/${filename}`;
+export function getLocalUploadPath(folder: 'covers' | 'avatars' | 'audio'): string {
+  return path.join(process.cwd(), 'public', 'uploads', folder);
 }

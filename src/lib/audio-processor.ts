@@ -32,6 +32,25 @@ export async function applyVoiceTag(
   inputPath: string,
   outputPath: string
 ): Promise<void> {
+  let ffmpegAvailable = false;
+  try {
+    await execFileAsync(ffmpegPath, ['-version']);
+    ffmpegAvailable = true;
+  } catch {
+    ffmpegAvailable = false;
+  }
+
+  if (!ffmpegAvailable) {
+    fs.copyFileSync(inputPath, outputPath);
+    return;
+  }
+
+  const VOICE_TAG_EXISTS = await fs.promises.stat(VOICE_TAG_PATH).then(() => true).catch(() => false);
+  if (!VOICE_TAG_EXISTS) {
+    fs.copyFileSync(inputPath, outputPath);
+    return;
+  }
+
   const tempOutput = outputPath + '.tmp.' + path.extname(outputPath);
 
   const args = [
@@ -47,9 +66,12 @@ export async function applyVoiceTag(
     tempOutput,
   ];
 
-  await execFileAsync(ffmpegPath, args);
-
-  fs.renameSync(tempOutput, outputPath);
+  try {
+    await execFileAsync(ffmpegPath, args);
+    fs.renameSync(tempOutput, outputPath);
+  } catch {
+    fs.copyFileSync(inputPath, outputPath);
+  }
 }
 
 export function getTempAudioPath(filename: string): string {

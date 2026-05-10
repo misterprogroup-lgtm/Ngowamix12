@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireRole } from '@/lib/auth';
 import { slugify } from '@/lib/utils';
+import { uploadFile } from '@/lib/upload';
 
 export const config = {
   api: {
@@ -47,14 +48,8 @@ export async function PUT(request: Request) {
       if (avatarFile && avatarFile.size > 0) {
         const buffer = Buffer.from(await avatarFile.arrayBuffer());
         const filename = `${Date.now()}-${avatarFile.name.replace(/\s/g, '-')}`;
-        const fs = await import('fs');
-        const path = await import('path');
-        const fullDir = path.join(process.cwd(), 'public', 'uploads', 'avatars');
-        if (!fs.existsSync(fullDir)) {
-          fs.mkdirSync(fullDir, { recursive: true });
-        }
-        fs.writeFileSync(path.join(fullDir, filename), buffer);
-        avatarPath = `/uploads/avatars/${filename}`;
+        const result = await uploadFile(buffer, filename, 'avatars');
+        avatarPath = result.url;
       } else {
         avatarPath = formData.get('avatar') as string | null || undefined;
       }
