@@ -117,27 +117,31 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
                 {artist.isVerified && <CheckCircle2 className="h-6 w-6 text-primary hidden md:block" />}
               </h1>
               <div className="flex items-center gap-4 md:gap-6 text-sm text-text-secondary">
-                <div className="flex flex-col md:flex-row items-center gap-1">
-                  <div className="flex items-center justify-center h-10 w-10 md:h-auto md:w-auto rounded-full bg-surface md:bg-transparent">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center h-10 w-10 md:h-auto md:w-auto rounded-full bg-surface md:bg-transparent shrink-0">
                     <Headphones className="h-4 w-4" />
                   </div>
-                  <span className="text-xs md:text-sm font-semibold md:font-normal text-text-primary md:text-text-secondary">
-                    {formatNumber(monthlyListens)}
-                  </span>
-                  <span className="hidden md:inline ml-1">
-                    écoute{monthlyListens !== 1 ? 's' : ''} ce mois-ci
-                  </span>
+                  <div className="flex flex-col md:flex-row md:items-center leading-tight">
+                    <span className="text-xs md:text-sm font-semibold md:font-normal text-text-primary md:text-text-secondary">
+                      {formatNumber(monthlyListens)}
+                    </span>
+                    <span className="hidden md:inline md:ml-1">
+                      écoute{monthlyListens !== 1 ? 's' : ''} ce mois-ci
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col md:flex-row items-center gap-1">
-                  <div className="flex items-center justify-center h-10 w-10 md:h-auto md:w-auto rounded-full bg-surface md:bg-transparent">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center h-10 w-10 md:h-auto md:w-auto rounded-full bg-surface md:bg-transparent shrink-0">
                     <Music className="h-4 w-4" />
                   </div>
-                  <span className="text-xs md:text-sm font-semibold md:font-normal text-text-primary md:text-text-secondary">
-                    {albums.length}
-                  </span>
-                  <span className="hidden md:inline ml-1">
-                    titre{albums.length !== 1 ? 's' : ''}
-                  </span>
+                  <div className="flex flex-col md:flex-row md:items-center leading-tight">
+                    <span className="text-xs md:text-sm font-semibold md:font-normal text-text-primary md:text-text-secondary">
+                      {albums.length}
+                    </span>
+                    <span className="hidden md:inline md:ml-1">
+                      titre{albums.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
