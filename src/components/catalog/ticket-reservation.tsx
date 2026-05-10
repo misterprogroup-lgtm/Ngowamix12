@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Ticket, Loader2, Minus, Plus } from 'lucide-react';
+import { Ticket, Loader2, Minus, Plus, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth-store';
 import { ROUTES } from '@/lib/constants';
@@ -25,6 +25,7 @@ export function TicketReservation({ concert }: TicketReservationProps) {
   const router = useRouter();
   const [ticketType, setTicketType] = useState<TicketType>('STANDARD');
   const [quantity, setQuantity] = useState(1);
+  const [email, setEmail] = useState(user?.email || '');
   const [buying, setBuying] = useState(false);
 
   const maxQty = ticketType === 'VIP'
@@ -36,6 +37,11 @@ export function TicketReservation({ concert }: TicketReservationProps) {
   const handleReserve = async () => {
     if (!user) {
       router.push(`${ROUTES.LOGIN}?redirect=/tickets/${concert.id}`);
+      return;
+    }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('Veuillez entrer un email valide pour recevoir vos billets.');
       return;
     }
 
@@ -52,6 +58,7 @@ export function TicketReservation({ concert }: TicketReservationProps) {
           type: 'TICKET_PURCHASE',
           productId,
           paymentMethod: 'MOBILE_MONEY',
+          recipientEmail: email,
         }),
       });
 
@@ -123,28 +130,44 @@ export function TicketReservation({ concert }: TicketReservationProps) {
       </div>
 
       {!soldOut && (
-        <div className="flex items-center justify-between rounded-lg border border-border p-3">
-          <span className="text-sm font-medium text-text-primary">Quantité</span>
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              disabled={quantity <= 1}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-text-muted hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            >
-              <Minus className="h-4 w-4" />
-            </button>
-            <span className="w-6 text-center font-semibold text-text-primary">{quantity}</span>
-            <button
-              type="button"
-              onClick={() => setQuantity(Math.min(maxQty, quantity + 1))}
-              disabled={quantity >= maxQty}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-text-muted hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-            </button>
+        <>
+          <div className="flex items-center justify-between rounded-lg border border-border p-3">
+            <span className="text-sm font-medium text-text-primary">Quantité</span>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                disabled={quantity <= 1}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-text-muted hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <Minus className="h-4 w-4" />
+              </button>
+              <span className="w-6 text-center font-semibold text-text-primary">{quantity}</span>
+              <button
+                type="button"
+                onClick={() => setQuantity(Math.min(maxQty, quantity + 1))}
+                disabled={quantity >= maxQty}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-text-muted hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
           </div>
-        </div>
+
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-text-primary flex items-center gap-1.5">
+              <Mail className="h-4 w-4 text-text-muted" />
+              Recevoir les billets par email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="votre@email.com"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+        </>
       )}
 
       <div className="flex items-center justify-between px-1">

@@ -101,6 +101,12 @@ export async function POST(request: Request) {
           const concertId = parts[0];
           const ticketType = parts[1] as 'STANDARD' | 'VIP';
           const quantity = parseInt(parts[2] || '1', 10);
+          let recipientEmail: string | null = null;
+          try {
+            const meta = transaction.metadata ? JSON.parse(transaction.metadata) : null;
+            recipientEmail = meta?.recipientEmail || null;
+          } catch {}
+          const userEmail = transaction.user?.email || null;
 
           for (let i = 0; i < quantity; i++) {
             const qrCode = crypto.randomUUID();
@@ -112,6 +118,7 @@ export async function POST(request: Request) {
                 price: Math.floor(transaction.amount / quantity),
                 qrCode,
                 status: 'PURCHASED',
+                recipientEmail: recipientEmail || userEmail,
               },
             });
           }

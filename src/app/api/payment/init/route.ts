@@ -10,6 +10,7 @@ const paymentSchema = z.object({
   type: z.enum(['SUBSCRIPTION', 'ALBUM_PURCHASE', 'TICKET_PURCHASE']),
   productId: z.string(),
   paymentMethod: z.enum(['MOBILE_MONEY', 'CARD', 'STRIPE']).default('MOBILE_MONEY'),
+  recipientEmail: z.string().email().optional(),
 });
 
 export async function POST(request: Request) {
@@ -32,7 +33,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { amount, description, type, productId, paymentMethod } = result.data;
+    const { amount, description, type, productId, paymentMethod, recipientEmail } = result.data;
 
     if (paymentMethod === 'STRIPE') {
       return NextResponse.json(
@@ -101,6 +102,10 @@ export async function POST(request: Request) {
 
     const transactionId = generateTransactionId();
 
+    const metadata = type === 'TICKET_PURCHASE' && recipientEmail
+      ? JSON.stringify({ recipientEmail })
+      : null;
+
     const transaction = await db.transaction.create({
       data: {
         userId: user.sub,
@@ -112,6 +117,7 @@ export async function POST(request: Request) {
         paymentProvider: 'CINETPAY',
         providerTransactionId: transactionId,
         productId,
+        metadata,
       },
     });
 

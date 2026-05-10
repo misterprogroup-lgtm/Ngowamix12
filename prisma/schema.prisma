@@ -331,6 +331,7 @@ model Ticket {
   price                 Int
   qrCode                String        @unique
   status                TicketStatus  @default(AVAILABLE)
+  recipientEmail        String?
   purchasedAt           DateTime      @default(now())
 
   concert               Concert       @relation(fields: [concertId], references: [id], onDelete: Cascade)
