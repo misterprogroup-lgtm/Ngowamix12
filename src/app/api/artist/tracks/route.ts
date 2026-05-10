@@ -84,10 +84,6 @@ export async function POST(request: Request) {
 
     const buffer = Buffer.from(await audioFile.arrayBuffer());
     const filename = `${Date.now()}-${audioFile.name}`;
-    const audioDir = path.join(process.cwd(), 'public', 'uploads', 'audio');
-    if (!fs.existsSync(audioDir)) {
-      fs.mkdirSync(audioDir, { recursive: true });
-    }
 
     const tempPath = getTempAudioPath(filename);
     fs.writeFileSync(tempPath, buffer);

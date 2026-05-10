@@ -74,8 +74,12 @@ export async function applyVoiceTag(
   }
 }
 
+const UPLOAD_DIR = process.env.VERCEL
+  ? '/tmp/uploads/audio'
+  : path.join(process.cwd(), 'public', 'uploads', 'audio');
+
 export function getTempAudioPath(filename: string): string {
-  const dir = path.join(process.cwd(), 'public', 'uploads', 'audio', '.temp');
+  const dir = path.join(UPLOAD_DIR, '.temp');
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -83,5 +87,9 @@ export function getTempAudioPath(filename: string): string {
 }
 
 export function getFinalAudioPath(filename: string): string {
-  return path.join(process.cwd(), 'public', 'uploads', 'audio', filename);
+  const dir = UPLOAD_DIR;
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  return path.join(dir, filename);
 }
