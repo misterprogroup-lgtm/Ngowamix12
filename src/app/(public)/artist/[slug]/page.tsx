@@ -116,15 +116,29 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
                 {artist.name}
                 {artist.isVerified && <CheckCircle2 className="h-6 w-6 text-primary hidden md:block" />}
               </h1>
-              <div className="flex items-center gap-4 text-sm text-text-secondary">
-                <span className="flex items-center gap-1">
-                  <Headphones className="h-4 w-4" />
-                  {formatNumber(monthlyListens)} écoute{monthlyListens !== 1 ? 's' : ''} ce mois-ci
-                </span>
-                <span className="flex items-center gap-1">
-                  <Music className="h-4 w-4" />
-                  {albums.length} titre{albums.length !== 1 ? 's' : ''}
-                </span>
+              <div className="flex items-center gap-4 md:gap-6 text-sm text-text-secondary">
+                <div className="flex flex-col md:flex-row items-center gap-1">
+                  <div className="flex items-center justify-center h-10 w-10 md:h-auto md:w-auto rounded-full bg-surface md:bg-transparent">
+                    <Headphones className="h-4 w-4" />
+                  </div>
+                  <span className="text-xs md:text-sm font-semibold md:font-normal text-text-primary md:text-text-secondary">
+                    {formatNumber(monthlyListens)}
+                  </span>
+                  <span className="hidden md:inline ml-1">
+                    écoute{monthlyListens !== 1 ? 's' : ''} ce mois-ci
+                  </span>
+                </div>
+                <div className="flex flex-col md:flex-row items-center gap-1">
+                  <div className="flex items-center justify-center h-10 w-10 md:h-auto md:w-auto rounded-full bg-surface md:bg-transparent">
+                    <Music className="h-4 w-4" />
+                  </div>
+                  <span className="text-xs md:text-sm font-semibold md:font-normal text-text-primary md:text-text-secondary">
+                    {albums.length}
+                  </span>
+                  <span className="hidden md:inline ml-1">
+                    titre{albums.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
