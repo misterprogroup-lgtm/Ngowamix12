@@ -99,6 +99,7 @@ model User {
   reviews               Review[]
   listenHistory         ListenHistory[]
   notifications         Notification[]
+  pushSubscriptions     PushSubscription[]
 
   @@index([email])
   @@index([role])
@@ -416,6 +417,20 @@ model ListenHistory {
   @@index([userId])
   @@index([playedAt])
   @@index([userId, playedAt])
+}
+
+model PushSubscription {
+  id            String   @id @default(uuid())
+  userId        String
+  endpoint      String   @unique
+  p256dh        String
+  auth          String
+  userAgent     String?
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model SiteConfig {

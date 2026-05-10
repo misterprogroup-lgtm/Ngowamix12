@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { AudioPlayer } from '@/components/player/audio-player';
 import { InstallPrompt } from '@/components/pwa/install-prompt';
+import { PushNotificationManager } from '@/components/pwa/push-manager';
 import { ToastProvider } from '@/components/feedback/toast';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { TermsAcceptanceModal } from '@/components/layout/terms-modal';
@@ -101,6 +102,7 @@ export default function RootLayout({
               <MobileBottomNav />
               <AudioPlayer />
               <InstallPrompt />
+              <PushNotificationManager />
               <TermsAcceptanceModal />
               </AuthProvider>
               <Script id="register-sw" strategy="afterInteractive">

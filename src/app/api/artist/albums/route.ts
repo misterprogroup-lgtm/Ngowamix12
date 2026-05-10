@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { requireRole } from '@/lib/auth';
 import { uploadFile } from '@/lib/upload';
 import { slugify } from '@/lib/utils';
+import { sendPushToAllListeners } from '@/lib/push';
 
 export const config = {
   api: {
@@ -104,6 +105,11 @@ export async function POST(request: Request) {
           referenceId: album.id,
           referenceType: 'ALBUM',
         })),
+      });
+      await sendPushToAllListeners({
+        title: `Nouveau Single : ${title}`,
+        body: `"${title}" de ${artist.name} est maintenant disponible.`,
+        url: `/album/${album.slug}`,
       });
     }
 

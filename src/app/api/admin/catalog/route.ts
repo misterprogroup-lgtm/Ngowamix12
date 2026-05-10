@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireRole } from '@/lib/auth';
+import { sendPushToAllListeners } from '@/lib/push';
 
 export async function GET(request: Request) {
   try {
@@ -100,6 +101,15 @@ export async function PUT(request: Request) {
           referenceId: albumId,
           referenceType: 'ALBUM',
         })),
+      });
+      const fullAlbum = await db.album.findUnique({
+        where: { id: albumId },
+        select: { slug: true },
+      });
+      await sendPushToAllListeners({
+        title: `Nouveau ${label} : ${album.title}`,
+        body: `"${album.title}" de ${album.artist.name} est maintenant disponible.`,
+        url: fullAlbum?.slug ? `/album/${fullAlbum.slug}` : '/',
       });
     }
 

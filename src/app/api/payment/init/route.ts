@@ -60,6 +60,45 @@ export async function POST(request: Request) {
       }
     }
 
+    if (type === 'TICKET_PURCHASE') {
+      const parts = productId.split(':');
+      if (parts.length !== 3) {
+        return NextResponse.json(
+          { error: 'Format de produit invalide' },
+          { status: 400 }
+        );
+      }
+      const [concertId, ticketType, qtyStr] = parts;
+      const qty = parseInt(qtyStr, 10);
+      if (!qty || qty < 1 || qty > 20) {
+        return NextResponse.json(
+          { error: 'Quantité invalide' },
+          { status: 400 }
+        );
+      }
+      const concert = await db.concert.findUnique({ where: { id: concertId } });
+      if (!concert) {
+        return NextResponse.json(
+          { error: 'Concert introuvable' },
+          { status: 404 }
+        );
+      }
+      const available = ticketType === 'VIP' ? concert.vipAvailableTickets : concert.availableTickets;
+      if (qty > available) {
+        return NextResponse.json(
+          { error: `Seulement ${available} place(s) disponible(s)` },
+          { status: 400 }
+        );
+      }
+      const unitPrice = ticketType === 'VIP' ? (concert.vipPrice ?? concert.price) : concert.price;
+      if (amount !== unitPrice * qty) {
+        return NextResponse.json(
+          { error: 'Montant invalide' },
+          { status: 400 }
+        );
+      }
+    }
+
     const transactionId = generateTransactionId();
 
     const transaction = await db.transaction.create({

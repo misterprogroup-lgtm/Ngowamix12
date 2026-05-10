@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Ticket, Loader2 } from 'lucide-react';
+import { Ticket, Loader2, Minus, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useAuthStore } from '@/store/auth-store';
 import { ROUTES } from '@/lib/constants';
 
@@ -25,10 +24,14 @@ export function TicketReservation({ concert }: TicketReservationProps) {
   const { user } = useAuthStore();
   const router = useRouter();
   const [ticketType, setTicketType] = useState<TicketType>('STANDARD');
+  const [quantity, setQuantity] = useState(1);
   const [buying, setBuying] = useState(false);
 
-  const soldOut = concert.availableTickets === 0;
-  const vipSoldOut = !concert.vipPrice || concert.vipAvailableTickets === 0;
+  const maxQty = ticketType === 'VIP'
+    ? (concert.vipAvailableTickets || 0)
+    : concert.availableTickets;
+  const soldOut = maxQty === 0;
+  const unitPrice = ticketType === 'VIP' ? (concert.vipPrice ?? concert.price) : concert.price;
 
   const handleReserve = async () => {
     if (!user) {
@@ -38,15 +41,14 @@ export function TicketReservation({ concert }: TicketReservationProps) {
 
     setBuying(true);
     try {
-      const price = ticketType === 'VIP' ? (concert.vipPrice ?? concert.price) : concert.price;
-      const productId = `${concert.id}:${ticketType}`;
+      const productId = `${concert.id}:${ticketType}:${quantity}`;
 
       const res = await fetch('/api/payment/init', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: price,
-          description: `Billet ${ticketType === 'VIP' ? 'VIP' : 'Standard'} - ${concert.title}`,
+          amount: unitPrice * quantity,
+          description: `${quantity > 1 ? `${quantity}x ` : ''}Billet ${ticketType === 'VIP' ? 'VIP' : 'Standard'} - ${concert.title}`,
           type: 'TICKET_PURCHASE',
           productId,
           paymentMethod: 'MOBILE_MONEY',
@@ -74,17 +76,18 @@ export function TicketReservation({ concert }: TicketReservationProps) {
       <div className="space-y-3">
         <button
           type="button"
-          onClick={() => !soldOut && setTicketType('STANDARD')}
+          onClick={() => { setTicketType('STANDARD'); setQuantity(1); }}
+          disabled={concert.availableTickets === 0}
           className={`w-full flex justify-between items-center p-3 rounded-lg border text-left transition-colors ${
-            ticketType === 'STANDARD' && !soldOut
+            ticketType === 'STANDARD'
               ? 'border-primary bg-primary/5'
-              : 'border-border'
-          } ${soldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-text-muted'}`}
+              : 'border-border hover:border-text-muted'
+          } ${concert.availableTickets === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         >
           <div>
             <p className="font-medium text-text-primary">Standard</p>
             <p className="text-sm text-text-muted">
-              {soldOut ? 'Complet' : `${concert.availableTickets} places`}
+              {concert.availableTickets === 0 ? 'Complet' : `${concert.availableTickets} places`}
             </p>
           </div>
           <p className="text-lg font-bold text-text-primary">
@@ -95,12 +98,13 @@ export function TicketReservation({ concert }: TicketReservationProps) {
         {concert.vipPrice && (
           <button
             type="button"
-            onClick={() => !vipSoldOut && setTicketType('VIP')}
+            onClick={() => { setTicketType('VIP'); setQuantity(1); }}
+            disabled={concert.vipAvailableTickets === 0}
             className={`w-full flex justify-between items-center p-3 rounded-lg border text-left transition-colors ${
-              ticketType === 'VIP' && !vipSoldOut
+              ticketType === 'VIP'
                 ? 'border-primary bg-primary/5'
-                : 'border-border'
-            } ${vipSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-text-muted'}`}
+                : 'border-border hover:border-text-muted'
+            } ${concert.vipAvailableTickets === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
           >
             <div>
               <p className="font-medium text-text-primary flex items-center gap-1">
@@ -108,7 +112,7 @@ export function TicketReservation({ concert }: TicketReservationProps) {
                 VIP
               </p>
               <p className="text-sm text-text-muted">
-                {vipSoldOut ? 'Complet' : `${concert.vipAvailableTickets} places`}
+                {concert.vipAvailableTickets === 0 ? 'Complet' : `${concert.vipAvailableTickets} places`}
               </p>
             </div>
             <p className="text-lg font-bold text-primary">
@@ -118,11 +122,43 @@ export function TicketReservation({ concert }: TicketReservationProps) {
         )}
       </div>
 
+      {!soldOut && (
+        <div className="flex items-center justify-between rounded-lg border border-border p-3">
+          <span className="text-sm font-medium text-text-primary">Quantité</span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              disabled={quantity <= 1}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-text-muted hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <Minus className="h-4 w-4" />
+            </button>
+            <span className="w-6 text-center font-semibold text-text-primary">{quantity}</span>
+            <button
+              type="button"
+              onClick={() => setQuantity(Math.min(maxQty, quantity + 1))}
+              disabled={quantity >= maxQty}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-text-muted hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="flex items-center justify-between px-1">
+        <span className="text-sm text-text-muted">Total</span>
+        <span className="text-xl font-bold text-text-primary">
+          {(unitPrice * quantity).toLocaleString('fr-FR')} F
+        </span>
+      </div>
+
       <Button
         variant="primary"
         size="lg"
         className="w-full"
-        disabled={ticketType === 'VIP' ? vipSoldOut : soldOut}
+        disabled={soldOut}
         onClick={handleReserve}
         isLoading={buying}
       >
@@ -131,7 +167,7 @@ export function TicketReservation({ concert }: TicketReservationProps) {
         ) : (
           <Ticket className="h-5 w-5 mr-2" />
         )}
-        {(ticketType === 'VIP' ? vipSoldOut : soldOut) ? 'Complet' : 'Réserver maintenant'}
+        {soldOut ? 'Complet' : `Réserver${quantity > 1 ? ` (${quantity}x)` : ''}`}
       </Button>
 
       <p className="text-xs text-text-muted text-center">

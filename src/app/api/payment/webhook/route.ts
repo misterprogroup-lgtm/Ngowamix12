@@ -97,33 +97,34 @@ export async function POST(request: Request) {
             });
           }
         } else if (transaction.type === 'TICKET_PURCHASE') {
-          const qrCode = crypto.randomUUID();
-          const ticketType = transaction.productId.endsWith(':VIP') ? 'VIP' : 'STANDARD';
+          const parts = transaction.productId.split(':');
+          const concertId = parts[0];
+          const ticketType = parts[1] as 'STANDARD' | 'VIP';
+          const quantity = parseInt(parts[2] || '1', 10);
 
-          const concertId = ticketType === 'VIP'
-            ? transaction.productId.replace(':VIP', '')
-            : transaction.productId.replace(':STANDARD', '');
-
-          await tx.ticket.create({
-            data: {
-              concertId,
-              userId: transaction.userId,
-              type: ticketType as never,
-              price: transaction.amount,
-              qrCode,
-              status: 'PURCHASED',
-            },
-          });
+          for (let i = 0; i < quantity; i++) {
+            const qrCode = crypto.randomUUID();
+            await tx.ticket.create({
+              data: {
+                concertId,
+                userId: transaction.userId,
+                type: ticketType,
+                price: Math.floor(transaction.amount / quantity),
+                qrCode,
+                status: 'PURCHASED',
+              },
+            });
+          }
 
           if (ticketType === 'VIP') {
             await tx.concert.update({
               where: { id: concertId },
-              data: { vipAvailableTickets: { decrement: 1 } },
+              data: { vipAvailableTickets: { decrement: quantity } },
             });
           } else {
             await tx.concert.update({
               where: { id: concertId },
-              data: { availableTickets: { decrement: 1 } },
+              data: { availableTickets: { decrement: quantity } },
             });
           }
 
