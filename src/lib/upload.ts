@@ -1,3 +1,4 @@
+import { utapi } from './uploadthing';
 import fs from 'fs';
 import path from 'path';
 
@@ -9,26 +10,28 @@ interface UploadResult {
 export async function uploadFile(
   buffer: Buffer,
   filename: string,
-  folder: 'covers' | 'avatars' | 'audio'
+  _folder: 'covers' | 'avatars' | 'audio'
 ): Promise<UploadResult> {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    const { put } = await import('@vercel/blob');
-    const blob = await put(`uploads/${folder}/${filename}`, buffer, {
-      access: 'public',
-    });
-    return { url: blob.url, pathname: blob.pathname };
+  if (process.env.UPLOADTHING_SECRET) {
+    try {
+      const file = new File([new Uint8Array(buffer)], filename);
+      const { data, error } = await utapi.uploadFiles(file);
+      if (error || !data) throw new Error(error?.message ?? 'Upload failed');
+      return { url: data.url, pathname: data.key };
+    } catch (err) {
+      console.error('Uploadthing upload failed:', err);
+    }
   }
 
-  const dir = path.join(process.cwd(), 'public', 'uploads', folder);
+  const dir = path.join(process.cwd(), 'public', 'uploads', _folder);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
   const filePath = path.join(dir, filename);
   fs.writeFileSync(filePath, buffer);
-
   return {
-    url: `/uploads/${folder}/${filename}`,
-    pathname: `/uploads/${folder}/${filename}`,
+    url: `/uploads/${_folder}/${filename}`,
+    pathname: `/uploads/${_folder}/${filename}`,
   };
 }
 
