@@ -55,6 +55,7 @@ export function Header() {
     { href: ROUTES.ADMIN_USERS, label: 'Utilisateurs' },
     { href: ROUTES.ADMIN_CATALOG, label: 'Catalogue' },
     { href: '/admin/verification', label: 'Vérifications' },
+    { href: ROUTES.ADMIN_SCANNER, label: 'Scanner' },
     { href: ROUTES.ADMIN_TRANSACTIONS, label: 'Transactions' },
   ];
 

@@ -63,5 +63,6 @@ export const ROUTES = {
   ADMIN_USERS: '/admin/users',
   ADMIN_CATALOG: '/admin/catalog',
   ADMIN_TRANSACTIONS: '/admin/transactions',
+  ADMIN_SCANNER: '/admin/scanner',
   MY_PLAYLIST: '/my-playlist',
 } as const;
