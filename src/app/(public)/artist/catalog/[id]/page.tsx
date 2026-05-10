@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/ui/modal';
 import { Badge } from '@/components/ui/badge';
 import { UploadthingUpload } from '@/components/ui/uploadthing-upload';
+import { DirectUpload } from '@/components/ui/direct-upload';
 import { formatDuration } from '@/lib/utils';
 
 interface Track {
@@ -207,8 +208,10 @@ export default function AlbumTracksPage() {
             min="1"
           />
 
-          <UploadthingUpload
+          <DirectUpload
             endpoint="audioTrack"
+            accept="audio/mp3,audio/mpeg,audio/wav,audio/m4a,audio/aac,audio/ogg,.mp3,.wav,.m4a,.aac,.ogg"
+            label="Sélectionner le fichier audio"
             onUploadComplete={(url) => setAudioUrl(url)}
           />
 
