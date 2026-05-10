@@ -6,9 +6,9 @@ import Link from 'next/link';
 import { Upload, ArrowLeft, Play, Trash2, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { FileUpload } from '@/components/ui/file-upload';
 import { Modal } from '@/components/ui/modal';
 import { Badge } from '@/components/ui/badge';
+import { UploadthingUpload } from '@/components/ui/uploadthing-upload';
 import { formatDuration } from '@/lib/utils';
 
 interface Track {
@@ -44,6 +44,7 @@ export default function AlbumTracksPage() {
     isPremiumOnly: false,
   });
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   useEffect(() => {
     fetchAlbum();
@@ -76,7 +77,7 @@ export default function AlbumTracksPage() {
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!audioFile) return;
+    if (!audioUrl && !audioFile) return;
     setUploading(true);
 
     try {
@@ -86,7 +87,11 @@ export default function AlbumTracksPage() {
       fd.append('trackNumber', trackData.trackNumber || (tracks.length + 1).toString());
       fd.append('isExplicit', trackData.isExplicit.toString());
       fd.append('isPremiumOnly', trackData.isPremiumOnly.toString());
-      fd.append('audio', audioFile);
+      if (audioUrl) {
+        fd.append('audioUrl', audioUrl);
+      } else if (audioFile) {
+        fd.append('audio', audioFile);
+      }
 
       const res = await fetch('/api/artist/tracks', { method: 'POST', body: fd });
       if (!res.ok) {
@@ -97,6 +102,7 @@ export default function AlbumTracksPage() {
       setShowUploadModal(false);
       setTrackData({ title: '', trackNumber: '', isExplicit: false, isPremiumOnly: false });
       setAudioFile(null);
+      setAudioUrl(null);
       fetchTracks();
       fetchAlbum();
     } catch (error) {
@@ -201,12 +207,14 @@ export default function AlbumTracksPage() {
             min="1"
           />
 
-          <FileUpload
-            label="Fichier audio"
-            accept="audio/mp3,audio/mpeg,audio/wav,audio/m4a,audio/aac,audio/ogg"
-            maxSizeMB={20}
-            onChange={setAudioFile}
+          <UploadthingUpload
+            endpoint="audioTrack"
+            onUploadComplete={(url) => setAudioUrl(url)}
           />
+
+          {audioUrl && (
+            <p className="text-xs text-success">Fichier uploadé avec succès ✓</p>
+          )}
 
           <div className="space-y-2">
             <label className="flex items-center gap-2 cursor-pointer">

@@ -45,7 +45,10 @@ export async function PUT(request: Request) {
       coverImage = formData.get('coverImage') as string || undefined;
 
       const avatarFile = formData.get('avatar') as File | null;
-      if (avatarFile && avatarFile.size > 0) {
+      const avatarUrl = formData.get('avatarUrl') as string | null;
+      if (avatarUrl) {
+        avatarPath = avatarUrl;
+      } else if (avatarFile && avatarFile.size > 0) {
         const buffer = Buffer.from(await avatarFile.arrayBuffer());
         const filename = `${Date.now()}-${avatarFile.name.replace(/\s/g, '-')}`;
         const result = await uploadFile(buffer, filename, 'avatars');

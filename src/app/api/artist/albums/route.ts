@@ -42,6 +42,7 @@ export async function POST(request: Request) {
     const releaseDate = formData.get('releaseDate') as string;
     const isPremiumOnly = formData.get('isPremiumOnly') === 'true';
     const coverFile = formData.get('cover') as File | null;
+    const coverUrl = formData.get('coverUrl') as string | null;
 
     if (!title) {
       return NextResponse.json(
@@ -53,7 +54,9 @@ export async function POST(request: Request) {
     const slug = slugify(title) + '-' + Date.now().toString(36);
 
     let coverPath: string | null = null;
-    if (coverFile && coverFile.size > 0) {
+    if (coverUrl) {
+      coverPath = coverUrl;
+    } else if (coverFile && coverFile.size > 0) {
       const buffer = Buffer.from(await coverFile.arrayBuffer());
       const filename = `${Date.now()}-${coverFile.name}`;
       const result = await uploadFile(buffer, filename, 'covers');

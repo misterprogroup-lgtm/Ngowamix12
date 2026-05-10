@@ -62,8 +62,9 @@ export async function POST(request: Request) {
     const isExplicit = formData.get('isExplicit') === 'true';
     const isPremiumOnly = formData.get('isPremiumOnly') === 'true';
     const audioFile = formData.get('audio') as File | null;
+    const audioUrl = formData.get('audioUrl') as string | null;
 
-    if (!albumId || !title || !audioFile) {
+    if (!albumId || !title || (!audioFile && !audioUrl)) {
       return NextResponse.json(
         { error: 'Album, titre et fichier audio sont requis' },
         { status: 400 }
@@ -82,28 +83,39 @@ export async function POST(request: Request) {
       );
     }
 
-    const buffer = Buffer.from(await audioFile.arrayBuffer());
-    const filename = `${Date.now()}-${audioFile.name}`;
+    let audioPath: string;
+    let fileSize: number | null = null;
+    let duration = 0;
 
-    const tempPath = getTempAudioPath(filename);
-    fs.writeFileSync(tempPath, buffer);
+    if (audioUrl) {
+      audioPath = audioUrl;
+    } else if (audioFile) {
+      const buffer = Buffer.from(await audioFile.arrayBuffer());
+      const filename = `${Date.now()}-${audioFile.name}`;
 
-    const finalPath = getFinalAudioPath(filename);
-    await applyVoiceTag(tempPath, finalPath);
+      const tempPath = getTempAudioPath(filename);
+      fs.writeFileSync(tempPath, buffer);
 
-    fs.unlinkSync(tempPath);
+      const finalPath = getFinalAudioPath(filename);
+      await applyVoiceTag(tempPath, finalPath);
 
-    const finalStats = fs.statSync(finalPath);
-    const duration = await getAudioDuration(finalPath);
+      fs.unlinkSync(tempPath);
 
-    const uploadResult = await uploadFile(
-      fs.readFileSync(finalPath),
-      filename,
-      'audio'
-    );
-    fs.unlinkSync(finalPath);
+      const finalStats = fs.statSync(finalPath);
+      fileSize = finalStats.size;
+      duration = await getAudioDuration(finalPath);
 
-    const audioPath = uploadResult.url;
+      const uploadResult = await uploadFile(
+        fs.readFileSync(finalPath),
+        filename,
+        'audio'
+      );
+      fs.unlinkSync(finalPath);
+
+      audioPath = uploadResult.url;
+    } else {
+      throw new Error('No audio source');
+    }
 
     const track = await db.track.create({
       data: {
@@ -115,7 +127,7 @@ export async function POST(request: Request) {
         audioFile: audioPath,
         isExplicit,
         isPremiumOnly,
-        fileSize: finalStats.size,
+        fileSize,
       },
     });
 
