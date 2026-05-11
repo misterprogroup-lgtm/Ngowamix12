@@ -56,14 +56,22 @@ export async function PUT(request: Request) {
     }
 
     if (type === 'payment-provider') {
-      await db.paymentProviderConfig.update({
+      await db.paymentProviderConfig.upsert({
         where: { provider: data.provider },
-        data: {
+        update: {
           apiKey: data.apiKey || null,
           siteId: data.siteId || null,
           isActive: data.isActive,
           merchantName: data.merchantName,
           description: data.description,
+        },
+        create: {
+          provider: data.provider,
+          apiKey: data.apiKey || null,
+          siteId: data.siteId || null,
+          isActive: data.isActive ?? true,
+          merchantName: data.merchantName || data.provider,
+          description: data.description || '',
         },
       });
       return NextResponse.json({ success: true });

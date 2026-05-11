@@ -186,8 +186,8 @@ export default function AdminSettingsPage() {
               Configurez vos moyens de paiement. Les clés API sont stockées dans la base de données et utilisées lors des transactions.
             </p>
 
-            {providers.map((provider) => (
-              <div key={provider.id} className="rounded-xl border border-border p-6 space-y-4">
+            {(providers.length === 0 ? [{ provider: 'CINETPAY', merchantName: 'CinetPay', description: 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money) et cartes bancaires', isActive: true, apiKey: '', siteId: '' }] : providers).map((provider) => (
+              <div key={provider.id || provider.provider} className="rounded-xl border border-border p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold">{provider.merchantName || provider.provider}</h3>
@@ -198,9 +198,10 @@ export default function AdminSettingsPage() {
                       type="checkbox"
                       checked={provider.isActive}
                       onChange={(e) => {
-                        setProviders((prev) =>
-                          prev.map((p) => (p.id === provider.id ? { ...p, isActive: e.target.checked } : p))
-                        );
+                        const newProviders = providers.length === 0
+                          ? [{ ...provider, isActive: e.target.checked }]
+                          : providers.map((p) => (p.id === provider.id ? { ...p, isActive: e.target.checked } : p));
+                        setProviders(newProviders);
                       }}
                       className="rounded border-border bg-surface text-primary focus:ring-primary"
                     />
@@ -212,41 +213,43 @@ export default function AdminSettingsPage() {
                   <div className="relative">
                     <Input
                       label="Clé API"
-                      type={showKeys[provider.id] ? 'text' : 'password'}
+                      type={showKeys[provider.id || provider.provider] ? 'text' : 'password'}
                       value={provider.apiKey || ''}
                       onChange={(e) => {
-                        setProviders((prev) =>
-                          prev.map((p) => (p.id === provider.id ? { ...p, apiKey: e.target.value } : p))
-                        );
+                        const newProviders = providers.length === 0
+                          ? [{ ...provider, apiKey: e.target.value }]
+                          : providers.map((p) => (p.id === provider.id ? { ...p, apiKey: e.target.value } : p));
+                        setProviders(newProviders);
                       }}
-                      placeholder="Entrez la clé API"
+                      placeholder="Entrez la clé API CinetPay"
                     />
                     <button
                       type="button"
-                      onClick={() => toggleShowKey(provider.id)}
+                      onClick={() => toggleShowKey(provider.id || provider.provider)}
                       className="absolute right-3 top-[38px] text-text-muted hover:text-text-primary"
                     >
-                      {showKeys[provider.id] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showKeys[provider.id || provider.provider] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                   <div className="relative">
                     <Input
                       label="Site ID"
-                      type={showKeys[`${provider.id}_site`] ? 'text' : 'password'}
+                      type={showKeys[`${provider.id || provider.provider}_site`] ? 'text' : 'password'}
                       value={provider.siteId || ''}
                       onChange={(e) => {
-                        setProviders((prev) =>
-                          prev.map((p) => (p.id === provider.id ? { ...p, siteId: e.target.value } : p))
-                        );
+                        const newProviders = providers.length === 0
+                          ? [{ ...provider, siteId: e.target.value }]
+                          : providers.map((p) => (p.id === provider.id ? { ...p, siteId: e.target.value } : p));
+                        setProviders(newProviders);
                       }}
-                      placeholder="Entrez le Site ID"
+                      placeholder="Entrez le Site ID CinetPay"
                     />
                     <button
                       type="button"
-                      onClick={() => toggleShowKey(`${provider.id}_site`)}
+                      onClick={() => toggleShowKey(`${provider.id || provider.provider}_site`)}
                       className="absolute right-3 top-[38px] text-text-muted hover:text-text-primary"
                     >
-                      {showKeys[`${provider.id}_site`] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showKeys[`${provider.id || provider.provider}_site`] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                 </div>
@@ -259,7 +262,7 @@ export default function AdminSettingsPage() {
                     onClick={() => handleSaveProvider(provider)}
                   >
                     <Save className="h-4 w-4 mr-1" />
-                    Enregistrer {provider.merchantName}
+                    Enregistrer {provider.merchantName || provider.provider}
                   </Button>
                 </div>
               </div>
