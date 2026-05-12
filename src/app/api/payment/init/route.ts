@@ -214,7 +214,6 @@ export async function POST(request: Request) {
         },
         metadata: { transaction_id: transaction.id },
         return_url: returnUrl,
-        methods: ['wave_ci', 'orange_ci', 'moov_ci', 'mtn_ci', 'card_xof'],
       });
 
       if (paymentData.data?.checkout_url) {
