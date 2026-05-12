@@ -185,7 +185,7 @@ export async function GET(request: Request) {
       isPaid = statusResponse.data?.status === 'ACCEPTED' || statusResponse.data?.status === 'PAID';
     } else if (transaction.paymentProvider === 'MONEROO') {
       const statusResponse = await monerooStatus(transaction.providerTransactionId || transactionId);
-      isPaid = statusResponse.data?.status === 'SUCCESS';
+      isPaid = statusResponse.data?.status === 'success';
     } else if (transaction.paymentProvider === 'STRIPE') {
       const { retrieveSession } = await import('@/lib/stripe');
       const session = await retrieveSession(transactionId);

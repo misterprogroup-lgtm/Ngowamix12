@@ -245,7 +245,7 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
-      paymentUrl = result.url;
+      paymentUrl = result.url || undefined;
     }
 
     return NextResponse.json({
