@@ -185,6 +185,30 @@ function PremiumContent() {
     );
   }
 
+  if (user?.isPremium && !transactionId) {
+    return (
+      <div className="container mx-auto px-4 py-12 pb-24 text-center">
+        <div className="max-w-md mx-auto">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 mx-auto mb-6">
+            <Crown className="h-10 w-10 text-primary" />
+          </div>
+          <h1 className="text-3xl font-bold mb-2">Vous êtes déjà Premium</h1>
+          <p className="text-text-secondary mb-6">
+            Votre abonnement est actif jusqu&apos;au {user.premiumExpiresAt ? new Date(user.premiumExpiresAt).toLocaleDateString('fr-FR') : '—'}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button variant="primary" onClick={() => router.push(ROUTES.USER_DASHBOARD)}>
+              Mon espace
+            </Button>
+            <Button variant="outline" onClick={() => router.push(ROUTES.EXPLORE)}>
+              Explorer le catalogue
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-12 pb-24">
       <div className="max-w-3xl mx-auto text-center mb-12">
