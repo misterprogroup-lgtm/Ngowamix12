@@ -148,16 +148,14 @@ export default function ScannerPage() {
               )}
             </Button>
           </div>
-          {cameraActive && (
-            <div className="bg-black relative">
-              <div id={readerId} className="w-full" style={{ minHeight: 300 }} />
-              <div className="p-3 text-center">
-                <p className="text-xs text-text-muted">
-                  Pointez la caméra vers le QR code
-                </p>
-              </div>
+          <div className={`bg-black relative ${cameraActive ? '' : 'hidden'}`}>
+            <div id={readerId} className="w-full" style={{ minHeight: 300 }} />
+            <div className="p-3 text-center">
+              <p className="text-xs text-text-muted">
+                Pointez la caméra vers le QR code
+              </p>
             </div>
-          )}
+          </div>
         </div>
 
         {loading && (
