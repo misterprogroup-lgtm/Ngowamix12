@@ -30,7 +30,8 @@ export async function POST(request: Request) {
       data: { resetToken, resetTokenExpiry },
     });
 
-    const resetLink = `${process.env.APP_URL}/reset-password?token=${resetToken}`;
+    const baseUrl = process.env.APP_URL || 'https://ngowamix12.vercel.app';
+    const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
     const name = user.firstName || user.displayName || user.email;
 
     const sent = await sendEmail(
