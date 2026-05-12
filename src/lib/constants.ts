@@ -50,6 +50,8 @@ export const ROUTES = {
   PREMIUM: '/premium',
   LOGIN: '/login',
   REGISTER: '/register',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
   USER_DASHBOARD: '/user/dashboard',
   USER_LIBRARY: '/user/library',
   USER_SUBSCRIPTION: '/user/subscription',

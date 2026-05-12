@@ -82,6 +82,12 @@ export function LoginForm() {
         autoComplete="current-password"
       />
 
+      <div className="flex justify-end -mt-2">
+        <Link href={ROUTES.FORGOT_PASSWORD} className="text-sm text-primary hover:underline">
+          Mot de passe oublié ?
+        </Link>
+      </div>
+
       <Button type="submit" variant="primary" size="lg" className="w-full" isLoading={isLoading}>
         Se connecter
       </Button>

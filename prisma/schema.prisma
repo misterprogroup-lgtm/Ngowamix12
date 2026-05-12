@@ -84,6 +84,8 @@ model User {
   downloadQuota         Int           @default(10)
   downloadsUsedThisMonth Int          @default(0)
   quotaResetAt          DateTime      @default(now())
+  resetToken            String?       @unique
+  resetTokenExpiry      DateTime?
   termsAccepted         Boolean       @default(false)
   termsAcceptedAt       DateTime?
   createdAt             DateTime      @default(now())
