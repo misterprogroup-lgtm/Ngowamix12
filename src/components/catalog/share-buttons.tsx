@@ -28,8 +28,8 @@ export function ShareButtons({ url, title, description }: ShareButtonsProps) {
       color: 'hover:text-[#1877F2]',
     },
     {
-      name: 'Twitter',
-      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+      name: 'X (Twitter)',
+      href: `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
       icon: Twitter,
       color: 'hover:text-[#1DA1F2]',
     },
@@ -55,10 +55,26 @@ export function ShareButtons({ url, title, description }: ShareButtonsProps) {
     } catch {}
   };
 
+  const supportsNativeShare = typeof navigator !== 'undefined' && !!navigator.share;
+
+  const handleShare = async () => {
+    if (supportsNativeShare) {
+      try {
+        await navigator.share({
+          title,
+          text: shareText,
+          url: shareUrl,
+        });
+        return;
+      } catch {}
+    }
+    setOpen(!open);
+  };
+
   return (
     <div className="relative">
       <button
-        onClick={() => setOpen(!open)}
+        onClick={handleShare}
         className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm text-text-secondary hover:text-text-primary hover:bg-surface transition-colors"
         title="Partager"
       >
@@ -66,10 +82,10 @@ export function ShareButtons({ url, title, description }: ShareButtonsProps) {
         Partager
       </button>
 
-      {open && (
+      {open && !supportsNativeShare && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 mt-2 z-50 bg-background border border-border rounded-lg shadow-lg p-2 min-w-[200px]">
+          <div className="absolute right-0 mt-2 z-50 bg-background border border-border rounded-lg shadow-lg p-2 min-w-[200px]">
             <div className="flex flex-col gap-1">
               {links.map((link) => (
                 <a
