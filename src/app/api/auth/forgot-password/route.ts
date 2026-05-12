@@ -44,8 +44,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Forgot password error:', error);
+    const msg = error instanceof Error ? error.message : 'Erreur inconnue';
     return NextResponse.json(
-      { error: 'Erreur lors de l\'envoi du lien' },
+      { error: msg },
       { status: 500 }
     );
   }
