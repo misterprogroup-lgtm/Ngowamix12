@@ -198,6 +198,17 @@ export default function ScannerPage() {
               muted
               className={`w-full h-64 object-cover ${cameraActive ? '' : 'hidden'}`}
             />
+            {cameraActive && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="relative">
+                  <div className="w-48 h-48 border-2 border-primary/60 rounded-xl" />
+                  <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-primary rounded-tl" />
+                  <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-primary rounded-tr" />
+                  <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-primary rounded-bl" />
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-primary rounded-br" />
+                </div>
+              </div>
+            )}
             {!cameraActive && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <Camera className="h-12 w-12 text-white/30" />
@@ -206,7 +217,7 @@ export default function ScannerPage() {
             <canvas ref={canvasRef} className="hidden" />
             <div className="p-3 text-center">
               <p className="text-xs text-text-muted">
-                {cameraActive ? 'Pointez la caméra vers le QR code' : 'Activez la caméra pour scanner'}
+                {cameraActive ? 'Pointez le QR code dans le cadre' : 'Activez la caméra pour scanner'}
               </p>
             </div>
           </div>
