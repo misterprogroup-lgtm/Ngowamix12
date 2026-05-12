@@ -146,6 +146,13 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
             {album.country && <span>{album.country}</span>}
           </div>
 
+          {album.playCount > 0 && (
+            <p className="text-sm text-text-muted mb-3 flex items-center gap-1">
+              <Headphones className="h-4 w-4" />
+              {album.playCount.toLocaleString('fr-FR')} écoutes
+            </p>
+          )}
+
           <AlbumActions
             album={{
               id: album.id,
@@ -159,13 +166,6 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
             tracks={tracks}
             isPurchased={isPurchased}
           />
-
-          {album.playCount > 0 && (
-            <p className="text-sm text-text-muted mt-3 flex items-center gap-1">
-              <Headphones className="h-4 w-4" />
-              {album.playCount.toLocaleString('fr-FR')} écoutes
-            </p>
-          )}
 
           <div className="mt-4">
             <ShareButtons
