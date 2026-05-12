@@ -186,14 +186,14 @@ export default function AdminSettingsPage() {
               Configurez vos moyens de paiement. Les clés API sont stockées dans la base de données et utilisées lors des transactions.
             </p>
 
-            {(providers.length === 0
-              ? [
-                  { provider: 'STRIPE', merchantName: 'Stripe', description: 'Cartes bancaires internationales (Visa, Mastercard)', isActive: false, apiKey: '', siteId: '' },
-                  { provider: 'CINETPAY', merchantName: 'CinetPay', description: 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money) et cartes bancaires', isActive: true, apiKey: '', siteId: '' },
-                  { provider: 'MONEROO', merchantName: 'Moneroo', description: 'Mobile Money (Orange Money, Wave, Free Money) et cartes bancaires', isActive: false, apiKey: '', siteId: '' },
-                ]
-              : providers
-            ).map((provider) => (
+            {[
+              { provider: 'STRIPE', merchantName: 'Stripe', description: 'Cartes bancaires internationales (Visa, Mastercard)', isActive: false, apiKey: '', siteId: '' },
+              { provider: 'CINETPAY', merchantName: 'CinetPay', description: 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money) et cartes bancaires', isActive: false, apiKey: '', siteId: '' },
+              { provider: 'MONEROO', merchantName: 'Moneroo', description: 'Mobile Money (Orange Money, Wave, Free Money) et cartes bancaires', isActive: false, apiKey: '', siteId: '' },
+            ].map((defaultProvider) => {
+              const dbProvider = providers.find((p: any) => p.provider === defaultProvider.provider);
+              return dbProvider || defaultProvider;
+            }).map((provider) => (
               <div key={provider.id || provider.provider} className="rounded-xl border border-border p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -205,9 +205,14 @@ export default function AdminSettingsPage() {
                       type="checkbox"
                       checked={provider.isActive}
                       onChange={(e) => {
-                        const newProviders = providers.length === 0
-                          ? [{ ...provider, isActive: e.target.checked }]
-                          : providers.map((p) => (p.id === provider.id ? { ...p, isActive: e.target.checked } : p));
+                        const newProviders = providers.map((p) =>
+                          p.provider === provider.provider
+                            ? { ...p, isActive: e.target.checked }
+                            : p
+                        );
+                        if (!providers.find((p) => p.provider === provider.provider)) {
+                          newProviders.push({ ...provider, isActive: e.target.checked });
+                        }
                         setProviders(newProviders);
                       }}
                       className="rounded border-border bg-surface text-primary focus:ring-primary"
@@ -223,9 +228,14 @@ export default function AdminSettingsPage() {
                       type={showKeys[provider.id || provider.provider] ? 'text' : 'password'}
                       value={provider.apiKey || ''}
                       onChange={(e) => {
-                        const newProviders = providers.length === 0
-                          ? [{ ...provider, apiKey: e.target.value }]
-                          : providers.map((p) => (p.id === provider.id ? { ...p, apiKey: e.target.value } : p));
+                        const newProviders = providers.map((p) =>
+                          p.provider === provider.provider
+                            ? { ...p, apiKey: e.target.value }
+                            : p
+                        );
+                        if (!providers.find((p) => p.provider === provider.provider)) {
+                          newProviders.push({ ...provider, apiKey: e.target.value });
+                        }
                         setProviders(newProviders);
                       }}
                       placeholder={`Entrez la clé API ${provider.merchantName || provider.provider}`}
@@ -245,9 +255,14 @@ export default function AdminSettingsPage() {
                         type={showKeys[`${provider.id || provider.provider}_site`] ? 'text' : 'password'}
                         value={provider.siteId || ''}
                         onChange={(e) => {
-                          const newProviders = providers.length === 0
-                            ? [{ ...provider, siteId: e.target.value }]
-                            : providers.map((p) => (p.id === provider.id ? { ...p, siteId: e.target.value } : p));
+                          const newProviders = providers.map((p) =>
+                            p.provider === provider.provider
+                              ? { ...p, siteId: e.target.value }
+                              : p
+                          );
+                          if (!providers.find((p) => p.provider === provider.provider)) {
+                            newProviders.push({ ...provider, siteId: e.target.value });
+                          }
                           setProviders(newProviders);
                         }}
                         placeholder="Entrez le Site ID CinetPay"
