@@ -68,7 +68,7 @@ export default function ScannerPage() {
 
         setCameraActive(true);
       } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Erreur inconnue';
+        const msg = err instanceof Error ? err.message : String(err);
         alert('Erreur caméra: ' + msg);
       }
     }
