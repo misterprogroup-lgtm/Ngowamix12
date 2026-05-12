@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { initPayment as cinetpayInit, generateTransactionId as cinetpayTid, isCinetpayActive } from '@/lib/cinetpay';
 import { initPayment as monerooInit, generateTransactionId as monerooTid, isMonerooActive } from '@/lib/moneroo';
+import { createCheckoutSession, isStripeActive } from '@/lib/stripe';
 import { z } from 'zod';
 
 const paymentSchema = z.object({
@@ -11,9 +12,15 @@ const paymentSchema = z.object({
   type: z.enum(['SUBSCRIPTION', 'ALBUM_PURCHASE', 'TICKET_PURCHASE']),
   productId: z.string(),
   paymentMethod: z.enum(['MOBILE_MONEY', 'CARD', 'STRIPE']).default('MOBILE_MONEY'),
-  provider: z.enum(['CINETPAY', 'MONEROO']).optional(),
+  provider: z.enum(['CINETPAY', 'MONEROO', 'STRIPE']).optional(),
   recipientEmail: z.string().email().optional(),
 });
+
+function generateTransactionId(prefix: string): string {
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).substring(2, 8);
+  return `${prefix}_${timestamp}_${random}`.toUpperCase();
+}
 
 export async function POST(request: Request) {
   try {
@@ -40,12 +47,18 @@ export async function POST(request: Request) {
     let selectedProvider = provider || '';
 
     if (!selectedProvider) {
+      const stripeActive = await isStripeActive();
       const monerooActive = await isMonerooActive();
       const cinetpayActive = await isCinetpayActive();
-      if (monerooActive) {
+
+      if (paymentMethod === 'CARD' && stripeActive) {
+        selectedProvider = 'STRIPE';
+      } else if (monerooActive) {
         selectedProvider = 'MONEROO';
       } else if (cinetpayActive) {
         selectedProvider = 'CINETPAY';
+      } else if (stripeActive) {
+        selectedProvider = 'STRIPE';
       } else {
         return NextResponse.json(
           { error: 'Aucun moyen de paiement disponible' },
@@ -65,6 +78,14 @@ export async function POST(request: Request) {
       if (!active) {
         return NextResponse.json(
           { error: 'Moneroo est temporairement indisponible' },
+          { status: 503 }
+        );
+      }
+    } else if (selectedProvider === 'STRIPE') {
+      const active = await isStripeActive();
+      if (!active) {
+        return NextResponse.json(
+          { error: 'Stripe est temporairement indisponible' },
           { status: 503 }
         );
       }
@@ -120,9 +141,9 @@ export async function POST(request: Request) {
       }
     }
 
-    const tId = selectedProvider === 'CINETPAY' ? cinetpayTid() : monerooTid();
+    const tId = generateTransactionId(selectedProvider === 'STRIPE' ? 'STR' : selectedProvider === 'MONEROO' ? 'MON' : 'AFS');
 
-    const metadata = type === 'TICKET_PURCHASE' && recipientEmail
+    const meta = type === 'TICKET_PURCHASE' && recipientEmail
       ? JSON.stringify({ recipientEmail })
       : null;
 
@@ -133,11 +154,11 @@ export async function POST(request: Request) {
         amount,
         currency: 'XOF',
         status: 'PENDING',
-        paymentMethod: paymentMethod as never,
+        paymentMethod: selectedProvider === 'STRIPE' ? 'CARD' : (paymentMethod as never),
         paymentProvider: selectedProvider as never,
         providerTransactionId: tId,
         productId,
-        metadata,
+        metadata: meta,
       },
     });
 
@@ -178,7 +199,7 @@ export async function POST(request: Request) {
         );
       }
       paymentUrl = paymentData.data?.payment_url;
-    } else {
+    } else if (selectedProvider === 'MONEROO') {
       const paymentData = await monerooInit({
         amount,
         currency: 'XOF',
@@ -200,6 +221,24 @@ export async function POST(request: Request) {
         );
       }
       paymentUrl = paymentData.data?.checkout_url;
+    } else if (selectedProvider === 'STRIPE') {
+      const result = await createCheckoutSession({
+        amount,
+        currency: 'XOF',
+        transactionId: transaction.id,
+        description,
+        customerEmail: user.email,
+        successUrl: returnUrl,
+        cancelUrl: `${process.env.APP_URL}/payment?cancelled=1`,
+      });
+
+      if (result.error) {
+        return NextResponse.json(
+          { error: result.error },
+          { status: 400 }
+        );
+      }
+      paymentUrl = result.url;
     }
 
     return NextResponse.json({

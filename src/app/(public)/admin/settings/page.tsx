@@ -188,6 +188,7 @@ export default function AdminSettingsPage() {
 
             {(providers.length === 0
               ? [
+                  { provider: 'STRIPE', merchantName: 'Stripe', description: 'Cartes bancaires internationales (Visa, Mastercard)', isActive: false, apiKey: '', siteId: '' },
                   { provider: 'CINETPAY', merchantName: 'CinetPay', description: 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money) et cartes bancaires', isActive: true, apiKey: '', siteId: '' },
                   { provider: 'MONEROO', merchantName: 'Moneroo', description: 'Mobile Money (Orange Money, Wave, Free Money) et cartes bancaires', isActive: false, apiKey: '', siteId: '' },
                 ]

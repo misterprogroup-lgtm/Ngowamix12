@@ -6,6 +6,133 @@ import { checkPaymentStatus as monerooStatus } from '@/lib/moneroo';
 import { PREMIUM_DOWNLOAD_QUOTA } from '@/lib/constants';
 import crypto from 'crypto';
 
+async function fulfillTransaction(transactionId: string, userId: string) {
+  const transaction = await db.transaction.findUnique({
+    where: { id: transactionId },
+    include: { user: true },
+  });
+
+  if (!transaction || transaction.status === 'PAID' || transaction.userId !== userId) return false;
+
+  await db.$transaction(async (tx) => {
+    await tx.transaction.update({
+      where: { id: transactionId },
+      data: { status: 'PAID' },
+    });
+
+    if (transaction.type === 'SUBSCRIPTION') {
+      const endDate = new Date();
+      endDate.setMonth(endDate.getMonth() + 1);
+      const quotaResetAt = new Date();
+      quotaResetAt.setMonth(quotaResetAt.getMonth() + 1);
+
+      await tx.subscription.create({
+        data: {
+          userId,
+          amount: transaction.amount,
+          currency: 'XOF',
+          startDate: new Date(),
+          endDate,
+          status: 'ACTIVE',
+          transactionId,
+        },
+      });
+
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          isPremium: true,
+          premiumExpiresAt: endDate,
+          downloadQuota: PREMIUM_DOWNLOAD_QUOTA,
+          downloadsUsedThisMonth: 0,
+          quotaResetAt,
+        },
+      });
+    } else if (transaction.type === 'ALBUM_PURCHASE') {
+      await tx.purchase.create({
+        data: {
+          userId,
+          albumId: transaction.productId,
+          transactionId,
+          amount: transaction.amount,
+          currency: 'XOF',
+        },
+      });
+
+      await tx.album.update({
+        where: { id: transaction.productId },
+        data: { purchaseCount: { increment: 1 } },
+      });
+
+      const album = await tx.album.findUnique({
+        where: { id: transaction.productId },
+        select: { artistId: true },
+      });
+
+      if (album) {
+        const artistShare = Math.floor(transaction.amount * 0.85);
+        await tx.artist.update({
+          where: { id: album.artistId },
+          data: { balance: { increment: artistShare } },
+        });
+      }
+    } else if (transaction.type === 'TICKET_PURCHASE') {
+      const parts = transaction.productId.split(':');
+      const concertId = parts[0];
+      const ticketType = parts[1] as 'STANDARD' | 'VIP';
+      const quantity = parseInt(parts[2] || '1', 10);
+      let recipientEmail: string | null = null;
+      try {
+        const meta = transaction.metadata ? JSON.parse(transaction.metadata) : null;
+        recipientEmail = meta?.recipientEmail || null;
+      } catch {}
+      const userEmail = transaction.user?.email || null;
+
+      for (let i = 0; i < quantity; i++) {
+        const qrCode = crypto.randomUUID();
+        await tx.ticket.create({
+          data: {
+            concertId,
+            userId,
+            type: ticketType,
+            price: Math.floor(transaction.amount / quantity),
+            qrCode,
+            status: 'PURCHASED',
+            recipientEmail: recipientEmail || userEmail,
+          },
+        });
+      }
+
+      if (ticketType === 'VIP') {
+        await tx.concert.update({
+          where: { id: concertId },
+          data: { vipAvailableTickets: { decrement: quantity } },
+        });
+      } else {
+        await tx.concert.update({
+          where: { id: concertId },
+          data: { availableTickets: { decrement: quantity } },
+        });
+      }
+
+      const concert = await tx.concert.findUnique({
+        where: { id: concertId },
+        select: { artistId: true },
+      });
+
+      if (concert) {
+        const artistShare = Math.floor(transaction.amount * 0.95);
+        await tx.artist.update({
+          where: { id: concert.artistId },
+          data: { balance: { increment: artistShare } },
+        });
+      }
+    }
+  });
+
+  return true;
+}
+
 export async function GET(request: Request) {
   try {
     const user = await getCurrentUser();
@@ -59,124 +186,14 @@ export async function GET(request: Request) {
     } else if (transaction.paymentProvider === 'MONEROO') {
       const statusResponse = await monerooStatus(transaction.providerTransactionId || transactionId);
       isPaid = statusResponse.data?.status === 'SUCCESS';
+    } else if (transaction.paymentProvider === 'STRIPE') {
+      const { retrieveSession } = await import('@/lib/stripe');
+      const session = await retrieveSession(transactionId);
+      isPaid = session?.payment_status === 'paid';
     }
 
     if (isPaid) {
-      await db.$transaction(async (tx) => {
-        await tx.transaction.update({
-          where: { id: transactionId },
-          data: { status: 'PAID' },
-        });
-
-        if (transaction.type === 'SUBSCRIPTION') {
-          const endDate = new Date();
-          endDate.setMonth(endDate.getMonth() + 1);
-          const quotaResetAt = new Date();
-          quotaResetAt.setMonth(quotaResetAt.getMonth() + 1);
-
-          await tx.subscription.create({
-            data: {
-              userId: user.sub,
-              amount: transaction.amount,
-              currency: 'XOF',
-              startDate: new Date(),
-              endDate,
-              status: 'ACTIVE',
-              transactionId: transactionId,
-            },
-          });
-
-          await tx.user.update({
-            where: { id: user.sub },
-            data: {
-              isPremium: true,
-              premiumExpiresAt: endDate,
-              downloadQuota: PREMIUM_DOWNLOAD_QUOTA,
-              downloadsUsedThisMonth: 0,
-              quotaResetAt,
-            },
-          });
-        } else if (transaction.type === 'ALBUM_PURCHASE') {
-          await tx.purchase.create({
-            data: {
-              userId: user.sub,
-              albumId: transaction.productId,
-              transactionId: transactionId,
-              amount: transaction.amount,
-              currency: 'XOF',
-            },
-          });
-
-          await tx.album.update({
-            where: { id: transaction.productId },
-            data: { purchaseCount: { increment: 1 } },
-          });
-
-          const album = await tx.album.findUnique({
-            where: { id: transaction.productId },
-            select: { artistId: true },
-          });
-
-          if (album) {
-            const artistShare = Math.floor(transaction.amount * 0.85);
-            await tx.artist.update({
-              where: { id: album.artistId },
-              data: { balance: { increment: artistShare } },
-            });
-          }
-        } else if (transaction.type === 'TICKET_PURCHASE') {
-          const parts = transaction.productId.split(':');
-          const concertId = parts[0];
-          const ticketType = parts[1] as 'STANDARD' | 'VIP';
-          const quantity = parseInt(parts[2] || '1', 10);
-          let recipientEmail: string | null = null;
-          try {
-            const meta = transaction.metadata ? JSON.parse(transaction.metadata) : null;
-            recipientEmail = meta?.recipientEmail || null;
-          } catch {}
-          const userEmail = transaction.user?.email || null;
-
-          for (let i = 0; i < quantity; i++) {
-            const qrCode = crypto.randomUUID();
-            await tx.ticket.create({
-              data: {
-                concertId,
-                userId: user.sub,
-                type: ticketType,
-                price: Math.floor(transaction.amount / quantity),
-                qrCode,
-                status: 'PURCHASED',
-                recipientEmail: recipientEmail || userEmail,
-              },
-            });
-          }
-
-          if (ticketType === 'VIP') {
-            await tx.concert.update({
-              where: { id: concertId },
-              data: { vipAvailableTickets: { decrement: quantity } },
-            });
-          } else {
-            await tx.concert.update({
-              where: { id: concertId },
-              data: { availableTickets: { decrement: quantity } },
-            });
-          }
-
-          const concert = await tx.concert.findUnique({
-            where: { id: concertId },
-            select: { artistId: true },
-          });
-
-          if (concert) {
-            const artistShare = Math.floor(transaction.amount * 0.95);
-            await tx.artist.update({
-              where: { id: concert.artistId },
-              data: { balance: { increment: artistShare } },
-            });
-          }
-        }
-      });
+      await fulfillTransaction(transactionId, user.sub);
 
       return NextResponse.json({
         transaction: {
