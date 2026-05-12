@@ -135,12 +135,6 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
               {formatDuration(totalDuration)}
             </span>
             <span>{album.totalTracks} titre{album.totalTracks !== 1 ? 's' : ''}</span>
-            {album.playCount > 0 && (
-              <span className="flex items-center gap-1">
-                <Headphones className="h-4 w-4" />
-                {album.playCount.toLocaleString('fr-FR')} écoutes
-              </span>
-            )}
             {album.releaseDate && (
               <span>
                 {new Date(album.releaseDate).toLocaleDateString('fr-FR', {
@@ -165,6 +159,13 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
             tracks={tracks}
             isPurchased={isPurchased}
           />
+
+          {album.playCount > 0 && (
+            <p className="text-sm text-text-muted mt-3 flex items-center gap-1">
+              <Headphones className="h-4 w-4" />
+              {album.playCount.toLocaleString('fr-FR')} écoutes
+            </p>
+          )}
 
           <div className="mt-4">
             <ShareButtons
