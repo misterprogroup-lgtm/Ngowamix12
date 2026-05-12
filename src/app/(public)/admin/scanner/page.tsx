@@ -67,8 +67,9 @@ export default function ScannerPage() {
         );
 
         setCameraActive(true);
-      } catch {
-        alert('Impossible d\'accéder à la caméra');
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Erreur inconnue';
+        alert('Erreur caméra: ' + msg);
       }
     }
   };
