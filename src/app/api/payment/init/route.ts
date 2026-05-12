@@ -97,7 +97,7 @@ export async function POST(request: Request) {
     if (type === 'SUBSCRIPTION') {
       const siteConfig = await db.siteConfig.findUnique({ where: { id: 'default' } });
       const expectedPrice = siteConfig?.premiumPrice ?? 5000;
-      if (amount !== expectedPrice) {
+      if (amount !== expectedPrice && (!originalAmount || originalAmount !== expectedPrice)) {
         return NextResponse.json(
           { error: 'Montant invalide' },
           { status: 400 }
