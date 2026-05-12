@@ -22,6 +22,7 @@ export function RegisterForm() {
   const [accountType, setAccountType] = useState('LISTENER');
   const [artistName, setArtistName] = useState('');
   const [labelName, setLabelName] = useState('');
+  const [referralCode, setReferralCode] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -71,6 +72,7 @@ export function RegisterForm() {
           role: accountType,
           artistName: accountType === 'ARTIST' ? artistName : undefined,
           labelName: accountType === 'LABEL' ? labelName : undefined,
+          referralCode: referralCode || undefined,
           acceptTerms: true,
         }),
       });
@@ -191,6 +193,13 @@ export function RegisterForm() {
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
         autoComplete="new-password"
+      />
+
+      <Input
+        label="Code de parrainage (optionnel)"
+        placeholder="Nom d'un artiste (ex: DAVINCI)"
+        value={referralCode}
+        onChange={(e) => setReferralCode(e.target.value)}
       />
 
       <label className="flex items-start gap-3 cursor-pointer group">

@@ -130,6 +130,11 @@ async function fulfillTransaction(transactionId: string, userId: string) {
     }
   });
 
+  if (transaction?.type === 'SUBSCRIPTION') {
+    const { awardReferralCommission } = await import('@/lib/commission');
+    await awardReferralCommission(userId, transaction.amount, transactionId);
+  }
+
   return true;
 }
 

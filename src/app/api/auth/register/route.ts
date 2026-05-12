@@ -13,6 +13,7 @@ const registerSchema = z.object({
   role: z.enum(['LISTENER', 'ARTIST', 'LABEL']).optional(),
   artistName: z.string().optional(),
   labelName: z.string().optional(),
+  referralCode: z.string().optional(),
   acceptTerms: z.literal(true, {
     errorMap: () => ({ message: 'Vous devez accepter les conditions d\'utilisation' }),
   }),
@@ -30,7 +31,23 @@ export async function POST(request: Request) {
       );
     }
 
-    const { firstName, lastName, email, password, phone, role = 'LISTENER', artistName, labelName } = result.data;
+    const { firstName, lastName, email, password, phone, role = 'LISTENER', artistName, labelName, referralCode } = result.data;
+
+    let referredBy: string | null = null;
+    if (referralCode) {
+      const code = referralCode.toLowerCase().trim();
+      const artist = await db.artist.findFirst({
+        where: {
+          OR: [
+            { slug: code },
+            { name: { equals: code, mode: 'insensitive' } },
+          ],
+        },
+      });
+      if (artist) {
+        referredBy = artist.userId;
+      }
+    }
 
     const existingUser = await db.user.findUnique({
       where: { email },
@@ -58,6 +75,7 @@ export async function POST(request: Request) {
         role: role as never,
         termsAccepted: true,
         termsAcceptedAt: new Date(),
+        ...(referredBy ? { referredBy } : {}),
         ...(role === 'ARTIST' && artistName && {
           artist: {
             create: {

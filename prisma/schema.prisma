@@ -89,6 +89,7 @@ model User {
   resetTokenExpiry      DateTime?
   termsAccepted         Boolean       @default(false)
   termsAcceptedAt       DateTime?
+  referredBy            String?
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 
@@ -147,6 +148,7 @@ model Artist {
   label                 Label?        @relation(fields: [labelId], references: [id])
   albums                Album[]
   concerts              Concert[]
+  commissions           Commission[]
 
   @@index([slug])
   @@index([name])
@@ -517,4 +519,21 @@ model UsedPromoCode {
   @@index([promoCodeId])
   @@index([referralCodeId])
   @@unique([transactionId])
+}
+
+model Commission {
+  id                    String        @id @default(uuid())
+  artistId              String
+  referredUserId        String
+  transactionId         String
+  subscriptionAmount    Int
+  commissionPercent     Int           @default(10)
+  commissionAmount      Int
+  status                String        @default("PENDING")
+  createdAt             DateTime      @default(now())
+
+  artist                Artist        @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId])
+  @@index([status])
 }

@@ -20,6 +20,12 @@ export async function ensureSchema() {
     await db.$executeRawUnsafe(
       `CREATE TABLE IF NOT EXISTS "UsedPromoCode" ("id" TEXT NOT NULL, "promoCodeId" TEXT, "referralCodeId" TEXT, "userId" TEXT NOT NULL, "transactionId" TEXT NOT NULL, "discountAmount" INTEGER NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "UsedPromoCode_pkey" PRIMARY KEY ("id"))`
     );
+    await db.$executeRawUnsafe(
+      `ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "referredBy" TEXT`
+    );
+    await db.$executeRawUnsafe(
+      `CREATE TABLE IF NOT EXISTS "Commission" ("id" TEXT NOT NULL, "artistId" TEXT NOT NULL, "referredUserId" TEXT NOT NULL, "transactionId" TEXT NOT NULL, "subscriptionAmount" INTEGER NOT NULL, "commissionPercent" INTEGER NOT NULL DEFAULT 10, "commissionAmount" INTEGER NOT NULL, "status" TEXT NOT NULL DEFAULT 'PENDING', "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "Commission_pkey" PRIMARY KEY ("id"))`
+    );
     console.log('[migrate] Schema sync OK');
   } catch (e) {
     console.warn('[migrate] Schema sync failed (non-fatal):', e);
