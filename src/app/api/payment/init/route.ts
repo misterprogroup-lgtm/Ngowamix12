@@ -226,10 +226,7 @@ export async function POST(request: Request) {
           });
         }
       } else {
-        return NextResponse.json(
-          { error: paymentData.message || 'Erreur Moneroo' },
-          { status: 400 }
-        );
+        throw new Error(paymentData.message || 'Réponse Moneroo invalide');
       }
     } else if (selectedProvider === 'STRIPE') {
       const result = await createCheckoutSession({
@@ -258,9 +255,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Payment init error:', error);
-    return NextResponse.json(
-      { error: 'Erreur lors de l\'initialisation du paiement' },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : 'Erreur lors de l\'initialisation du paiement';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
