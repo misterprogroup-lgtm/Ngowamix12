@@ -37,9 +37,22 @@ export async function POST(request: Request) {
 
     const { amount, description, type, productId, paymentMethod, provider, recipientEmail } = result.data;
 
-    const selectedProvider = provider || 'MONEROO';
+    let selectedProvider = provider || '';
 
-    if (selectedProvider === 'CINETPAY') {
+    if (!selectedProvider) {
+      const monerooActive = await isMonerooActive();
+      const cinetpayActive = await isCinetpayActive();
+      if (monerooActive) {
+        selectedProvider = 'MONEROO';
+      } else if (cinetpayActive) {
+        selectedProvider = 'CINETPAY';
+      } else {
+        return NextResponse.json(
+          { error: 'Aucun moyen de paiement disponible' },
+          { status: 503 }
+        );
+      }
+    } else if (selectedProvider === 'CINETPAY') {
       const active = await isCinetpayActive();
       if (!active) {
         return NextResponse.json(
