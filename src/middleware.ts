@@ -7,7 +7,7 @@ const JWT_SECRET = new TextEncoder().encode(
 );
 
 const protectedRoutes = ['/user', '/admin'];
-const artistProtectedRoutes = ['/artist/dashboard', '/artist/catalog', '/artist/profile'];
+const artistProtectedRoutes = ['/artist/dashboard', '/artist/catalog', '/artist/profile', '/artist/referral'];
 const labelProtectedRoutes = ['/label'];
 const authRoutes = ['/login', '/register'];
 

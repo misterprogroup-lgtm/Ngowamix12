@@ -35,17 +35,10 @@ export async function POST(request: Request) {
 
     let referredBy: string | null = null;
     if (referralCode) {
-      const code = referralCode.toLowerCase().trim();
-      const artist = await db.artist.findFirst({
-        where: {
-          OR: [
-            { slug: code },
-            { name: { equals: code, mode: 'insensitive' } },
-          ],
-        },
-      });
-      if (artist) {
-        referredBy = artist.userId;
+      const code = referralCode.toUpperCase().trim();
+      const ref = await db.referralCode.findUnique({ where: { code } });
+      if (ref) {
+        referredBy = ref.userId;
       }
     }
 

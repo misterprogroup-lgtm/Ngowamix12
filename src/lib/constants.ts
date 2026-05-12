@@ -61,6 +61,7 @@ export const ROUTES = {
   ARTIST_DASHBOARD: '/artist/dashboard',
   ARTIST_CATALOG: '/artist/catalog',
   ARTIST_PROFILE: '/artist/profile',
+  ARTIST_REFERRAL: '/artist/referral',
   ADMIN_DASHBOARD: '/admin/dashboard',
   ADMIN_USERS: '/admin/users',
   ADMIN_CATALOG: '/admin/catalog',

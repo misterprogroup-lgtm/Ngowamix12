@@ -65,6 +65,7 @@ export function Header() {
     { href: ROUTES.ARTIST_DASHBOARD, label: 'Dashboard' },
     { href: ROUTES.ARTIST_CATALOG, label: 'Catalogue' },
     { href: ROUTES.ARTIST_PROFILE, label: 'Profil' },
+    { href: ROUTES.ARTIST_REFERRAL, label: 'Parrainage' },
   ];
 
   return (
