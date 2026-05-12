@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useRef, useEffect } from 'react';
 import { Scan, Search, CheckCircle, XCircle, Ticket, MapPin, Calendar, Clock, Loader2, Camera, CameraOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import jsQR from 'jsqr';
+import { Html5Qrcode } from 'html5-qrcode';
 
 interface TicketResult {
   valid: boolean;
@@ -28,86 +27,46 @@ interface TicketResult {
 }
 
 export default function ScannerPage() {
-  const router = useRouter();
   const [code, setCode] = useState('');
   const [result, setResult] = useState<TicketResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
-  const [scanning, setScanning] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const animFrameRef = useRef<number>(0);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const readerId = 'qr-reader';
 
   useEffect(() => {
     return () => {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((t) => t.stop());
+      if (scannerRef.current) {
+        scannerRef.current.stop().catch(() => {});
       }
-      cancelAnimationFrame(animFrameRef.current);
     };
-  }, []);
-
-  const scanFrame = useCallback(() => {
-    if (!videoRef.current || !canvasRef.current || !videoRef.current.videoWidth) {
-      animFrameRef.current = requestAnimationFrame(scanFrame);
-      return;
-    }
-
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      animFrameRef.current = requestAnimationFrame(scanFrame);
-      return;
-    }
-
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const result = jsQR(imageData.data, imageData.width, imageData.height, {
-      inversionAttempts: 'dontInvert',
-    });
-
-    if (result && result.data) {
-      setScanning(false);
-      setCameraActive(false);
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((t) => t.stop());
-        streamRef.current = null;
-      }
-      cancelAnimationFrame(animFrameRef.current);
-      verifyCode(result.data);
-      return;
-    }
-
-    animFrameRef.current = requestAnimationFrame(scanFrame);
   }, []);
 
   const toggleCamera = async () => {
     if (cameraActive) {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((t) => t.stop());
-        streamRef.current = null;
+      if (scannerRef.current) {
+        try { await scannerRef.current.stop(); } catch {}
+        scannerRef.current = null;
       }
-      cancelAnimationFrame(animFrameRef.current);
       setCameraActive(false);
-      setScanning(false);
     } else {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
-        });
-        streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-        }
+        const scanner = new Html5Qrcode(readerId);
+        scannerRef.current = scanner;
+
+        await scanner.start(
+          { facingMode: 'environment' },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            scanner.stop().catch(() => {});
+            scannerRef.current = null;
+            setCameraActive(false);
+            verifyCode(decodedText);
+          },
+          () => {}
+        );
+
         setCameraActive(true);
-        setScanning(true);
-        animFrameRef.current = requestAnimationFrame(scanFrame);
       } catch {
         alert('Impossible d\'accéder à la caméra');
       }
@@ -118,8 +77,7 @@ export default function ScannerPage() {
     setLoading(true);
     setResult(null);
     try {
-      const query = `?code=${encodeURIComponent(qrCode)}`;
-      const res = await fetch(`/api/tickets/verify${query}`);
+      const res = await fetch(`/api/tickets/verify?code=${encodeURIComponent(qrCode)}`);
       const data = await res.json();
 
       if (data.valid && data.ticket?.status === 'PURCHASED') {
@@ -191,22 +149,10 @@ export default function ScannerPage() {
           </div>
           {cameraActive && (
             <div className="bg-black relative">
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className="w-full h-64 object-cover"
-              />
-              <canvas ref={canvasRef} className="hidden" />
-              {scanning && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-48 h-48 border-2 border-primary rounded-lg opacity-70" />
-                </div>
-              )}
+              <div id={readerId} className="w-full" style={{ minHeight: 300 }} />
               <div className="p-3 text-center">
                 <p className="text-xs text-text-muted">
-                  {scanning ? 'Recherche d\'un QR code...' : 'Pointez la caméra vers le QR code'}
+                  Pointez la caméra vers le QR code
                 </p>
               </div>
             </div>
