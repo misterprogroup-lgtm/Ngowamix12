@@ -46,6 +46,7 @@ export default function AlbumTracksPage() {
   });
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioDuration, setAudioDuration] = useState(0);
 
   useEffect(() => {
     fetchAlbum();
@@ -88,6 +89,9 @@ export default function AlbumTracksPage() {
       fd.append('trackNumber', trackData.trackNumber || (tracks.length + 1).toString());
       fd.append('isExplicit', trackData.isExplicit.toString());
       fd.append('isPremiumOnly', trackData.isPremiumOnly.toString());
+      if (audioDuration > 0) {
+        fd.append('duration', String(audioDuration));
+      }
       if (audioUrl) {
         fd.append('audioUrl', audioUrl);
       } else if (audioFile) {
@@ -213,6 +217,20 @@ export default function AlbumTracksPage() {
             accept="audio/mp3,audio/mpeg,audio/wav,audio/m4a,audio/aac,audio/ogg,.mp3,.wav,.m4a,.aac,.ogg"
             label="Sélectionner le fichier audio"
             onUploadComplete={(url) => setAudioUrl(url)}
+            onFileSelected={async (file) => {
+              const audio = new Audio(URL.createObjectURL(file));
+              await new Promise((resolve) => {
+                audio.addEventListener('loadedmetadata', () => {
+                  setAudioDuration(Math.round(audio.duration));
+                  resolve(undefined);
+                });
+                audio.addEventListener('error', () => {
+                  setAudioDuration(0);
+                  resolve(undefined);
+                });
+              });
+              URL.revokeObjectURL(audio.src);
+            }}
           />
 
           {audioUrl && (

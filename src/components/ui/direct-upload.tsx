@@ -10,6 +10,7 @@ const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 interface DirectUploadProps {
   endpoint: keyof OurFileRouter;
   onUploadComplete: (url: string) => void;
+  onFileSelected?: (file: File) => void;
   accept?: string;
   label?: string;
 }
@@ -17,6 +18,7 @@ interface DirectUploadProps {
 export function DirectUpload({
   endpoint,
   onUploadComplete,
+  onFileSelected,
   accept = '*/*',
   label = 'Choisir un fichier',
 }: DirectUploadProps) {
@@ -43,8 +45,9 @@ export function DirectUpload({
   const handleFile = useCallback(async (file: File) => {
     setError('');
     setUploadProgress(0);
+    onFileSelected?.(file);
     await startUpload([file]);
-  }, [startUpload]);
+  }, [startUpload, onFileSelected]);
 
   if (uploadedUrl) {
     return (

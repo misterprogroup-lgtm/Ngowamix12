@@ -63,6 +63,7 @@ export async function POST(request: Request) {
     const isPremiumOnly = formData.get('isPremiumOnly') === 'true';
     const audioFile = formData.get('audio') as File | null;
     const audioUrl = formData.get('audioUrl') as string | null;
+    const clientDuration = parseInt(formData.get('duration') as string) || 0;
 
     if (!albumId || !title || (!audioFile && !audioUrl)) {
       return NextResponse.json(
@@ -89,6 +90,7 @@ export async function POST(request: Request) {
 
     if (audioUrl) {
       audioPath = audioUrl;
+      duration = clientDuration;
     } else if (audioFile) {
       const buffer = Buffer.from(await audioFile.arrayBuffer());
       const filename = `${Date.now()}-${audioFile.name}`;

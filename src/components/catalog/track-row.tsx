@@ -124,8 +124,8 @@ export function TrackRow({
             <span className="text-xs text-text-muted w-10 text-right">
               {formatDuration(track.duration)}
             </span>
-            <span className="text-[10px] text-text-muted hidden sm:block">
-              {track.playCount > 0 ? `${track.playCount.toLocaleString('fr-FR')} écoutes` : ''}
+            <span className="text-[10px] text-text-muted">
+              {track.playCount > 0 ? `${track.playCount.toLocaleString('fr-FR')} éc.` : ''}
             </span>
       </div>
     </div>
