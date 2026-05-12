@@ -57,6 +57,7 @@ export function Header() {
     { href: '/admin/verification', label: 'Vérifications' },
     { href: ROUTES.ADMIN_SCANNER, label: 'Scanner' },
     { href: ROUTES.ADMIN_TRANSACTIONS, label: 'Transactions' },
+    { href: ROUTES.ADMIN_SETTINGS, label: 'Paramètres' },
   ];
 
   const artistLinks = [

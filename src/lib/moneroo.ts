@@ -72,7 +72,7 @@ export async function initPayment(params: MonerooInitRequest): Promise<MonerooIn
 export async function checkPaymentStatus(paymentId: string): Promise<MonerooStatusResponse> {
   const { apiKey } = await getConfig();
 
-  const response = await fetch(`${MONEROO_API}/${paymentId}/status`, {
+  const response = await fetch(`${MONEROO_API}/${paymentId}/verify`, {
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Accept': 'application/json',
