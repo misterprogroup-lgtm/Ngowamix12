@@ -22,12 +22,18 @@ export async function sendEmail(
   }
 
   try {
-    await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'Ngowamix <noreply@ngowamix.com>',
+    const from = process.env.EMAIL_FROM || 'Ngowamix <onboarding@resend.dev>';
+    const { error } = await resend.emails.send({
+      from,
       to,
       subject,
       html,
     });
+
+    if (error) {
+      console.error('[EMAIL] Resend error:', error);
+      return false;
+    }
     return true;
   } catch (error) {
     console.error('[EMAIL] Send error:', error);

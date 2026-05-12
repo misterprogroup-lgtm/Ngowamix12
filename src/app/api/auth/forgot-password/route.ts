@@ -33,11 +33,15 @@ export async function POST(request: Request) {
     const resetLink = `${process.env.APP_URL}/reset-password?token=${resetToken}`;
     const name = user.firstName || user.displayName || user.email;
 
-    await sendEmail(
+    const sent = await sendEmail(
       user.email,
       generateResetEmail(name, resetLink).subject,
       generateResetEmail(name, resetLink).html
     );
+
+    if (!sent) {
+      console.error('Email sending failed for', user.email);
+    }
 
     return NextResponse.json({
       message: 'Si cet email existe, un lien de réinitialisation a été envoyé.',
