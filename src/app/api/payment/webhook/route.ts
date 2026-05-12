@@ -1,24 +1,48 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { verifySignature, checkPaymentStatus } from '@/lib/cinetpay';
+import { verifySignature as cinetpayVerify } from '@/lib/cinetpay';
 import { PREMIUM_PRICE, PREMIUM_DOWNLOAD_QUOTA } from '@/lib/constants';
 import crypto from 'crypto';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    const headers = request.headers;
 
-    if (!verifySignature(body)) {
-      return NextResponse.json(
-        { error: 'Signature invalide' },
-        { status: 400 }
-      );
+    let transactionId: string;
+    let isPaid = false;
+
+    if (body.event && body.data) {
+      const config = await db.paymentProviderConfig.findUnique({
+        where: { provider: 'MONEROO' },
+        select: { apiKey: true },
+      });
+
+      const expectedSig = crypto
+        .createHmac('sha256', config?.apiKey || process.env.MONEROO_WEBHOOK_SECRET || '')
+        .update(JSON.stringify(body))
+        .digest('hex');
+      const receivedSig = headers.get('x-moneroo-signature') || '';
+      if (receivedSig !== expectedSig) {
+        return NextResponse.json({ error: 'Signature invalide' }, { status: 400 });
+      }
+
+      transactionId = body.data.metadata?.transactionId || body.data.reference;
+      isPaid = body.event === 'checkout.completed' && body.data?.status === 'SUCCESS';
+    } else {
+      if (!cinetpayVerify(body)) {
+        return NextResponse.json(
+          { error: 'Signature invalide' },
+          { status: 400 }
+        );
+      }
+
+      transactionId = body.transactionId;
+      isPaid = body.status === 'ACCEPTED' || body.status === 'PAID';
     }
 
-    const { transaction_id, status, amount, currency } = body;
-
     const transaction = await db.transaction.findUnique({
-      where: { id: transaction_id },
+      where: { id: transactionId },
       include: { user: true },
     });
 
@@ -33,10 +57,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Transaction déjà traitée' });
     }
 
-    if (status === 'ACCEPTED' || status === 'PAID') {
+    if (isPaid) {
       await db.$transaction(async (tx) => {
         await tx.transaction.update({
-          where: { id: transaction_id },
+          where: { id: transactionId },
           data: { status: 'PAID' },
         });
 
@@ -54,7 +78,7 @@ export async function POST(request: Request) {
               startDate: new Date(),
               endDate,
               status: 'ACTIVE',
-              transactionId: transaction_id,
+              transactionId: transactionId,
             },
           });
 
@@ -73,7 +97,7 @@ export async function POST(request: Request) {
             data: {
               userId: transaction.userId,
               albumId: transaction.productId,
-              transactionId: transaction_id,
+              transactionId: transactionId,
               amount: transaction.amount,
               currency: 'XOF',
             },
@@ -151,7 +175,7 @@ export async function POST(request: Request) {
       });
     } else {
       await db.transaction.update({
-        where: { id: transaction_id },
+        where: { id: transactionId },
         data: { status: 'FAILED' },
       });
     }

@@ -186,7 +186,13 @@ export default function AdminSettingsPage() {
               Configurez vos moyens de paiement. Les clés API sont stockées dans la base de données et utilisées lors des transactions.
             </p>
 
-            {(providers.length === 0 ? [{ provider: 'CINETPAY', merchantName: 'CinetPay', description: 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money) et cartes bancaires', isActive: true, apiKey: '', siteId: '' }] : providers).map((provider) => (
+            {(providers.length === 0
+              ? [
+                  { provider: 'CINETPAY', merchantName: 'CinetPay', description: 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money) et cartes bancaires', isActive: true, apiKey: '', siteId: '' },
+                  { provider: 'MONEROO', merchantName: 'Moneroo', description: 'Mobile Money (Orange Money, Wave, Free Money) et cartes bancaires', isActive: false, apiKey: '', siteId: '' },
+                ]
+              : providers
+            ).map((provider) => (
               <div key={provider.id || provider.provider} className="rounded-xl border border-border p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -221,7 +227,7 @@ export default function AdminSettingsPage() {
                           : providers.map((p) => (p.id === provider.id ? { ...p, apiKey: e.target.value } : p));
                         setProviders(newProviders);
                       }}
-                      placeholder="Entrez la clé API CinetPay"
+                      placeholder={`Entrez la clé API ${provider.merchantName || provider.provider}`}
                     />
                     <button
                       type="button"
@@ -231,27 +237,29 @@ export default function AdminSettingsPage() {
                       {showKeys[provider.id || provider.provider] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  <div className="relative">
-                    <Input
-                      label="Site ID"
-                      type={showKeys[`${provider.id || provider.provider}_site`] ? 'text' : 'password'}
-                      value={provider.siteId || ''}
-                      onChange={(e) => {
-                        const newProviders = providers.length === 0
-                          ? [{ ...provider, siteId: e.target.value }]
-                          : providers.map((p) => (p.id === provider.id ? { ...p, siteId: e.target.value } : p));
-                        setProviders(newProviders);
-                      }}
-                      placeholder="Entrez le Site ID CinetPay"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => toggleShowKey(`${provider.id || provider.provider}_site`)}
-                      className="absolute right-3 top-[38px] text-text-muted hover:text-text-primary"
-                    >
-                      {showKeys[`${provider.id || provider.provider}_site`] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
+                  {provider.provider === 'CINETPAY' && (
+                    <div className="relative">
+                      <Input
+                        label="Site ID"
+                        type={showKeys[`${provider.id || provider.provider}_site`] ? 'text' : 'password'}
+                        value={provider.siteId || ''}
+                        onChange={(e) => {
+                          const newProviders = providers.length === 0
+                            ? [{ ...provider, siteId: e.target.value }]
+                            : providers.map((p) => (p.id === provider.id ? { ...p, siteId: e.target.value } : p));
+                          setProviders(newProviders);
+                        }}
+                        placeholder="Entrez le Site ID CinetPay"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => toggleShowKey(`${provider.id || provider.provider}_site`)}
+                        className="absolute right-3 top-[38px] text-text-muted hover:text-text-primary"
+                      >
+                        {showKeys[`${provider.id || provider.provider}_site`] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex justify-end">
@@ -271,6 +279,9 @@ export default function AdminSettingsPage() {
             <div className="rounded-lg border border-border p-4 bg-surface">
               <h4 className="font-medium text-sm mb-1">Méthodes de paiement acceptées</h4>
               <p className="text-sm text-text-secondary">
+                <strong>Moneroo</strong> — Mobile Money (Orange Money, Wave, Free Money) et cartes bancaires
+              </p>
+              <p className="text-sm text-text-secondary mt-1">
                 <strong>CinetPay</strong> — Mobile Money (Wave, Orange Money, MTN, Moov, Free Money) et cartes bancaires (Visa, Mastercard)
               </p>
               <p className="text-sm text-text-secondary mt-1">

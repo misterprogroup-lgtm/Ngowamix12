@@ -58,6 +58,7 @@ enum PaymentMethod {
 enum PaymentProvider {
   CINETPAY
   STRIPE
+  MONEROO
 }
 
 enum DownloadType {

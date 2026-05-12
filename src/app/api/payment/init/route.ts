@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
-import { initPayment, generateTransactionId, isCinetpayActive } from '@/lib/cinetpay';
+import { initPayment as cinetpayInit, generateTransactionId as cinetpayTid, isCinetpayActive } from '@/lib/cinetpay';
+import { initPayment as monerooInit, generateTransactionId as monerooTid, isMonerooActive } from '@/lib/moneroo';
 import { z } from 'zod';
 
 const paymentSchema = z.object({
@@ -10,6 +11,7 @@ const paymentSchema = z.object({
   type: z.enum(['SUBSCRIPTION', 'ALBUM_PURCHASE', 'TICKET_PURCHASE']),
   productId: z.string(),
   paymentMethod: z.enum(['MOBILE_MONEY', 'CARD', 'STRIPE']).default('MOBILE_MONEY'),
+  provider: z.enum(['CINETPAY', 'MONEROO']).optional(),
   recipientEmail: z.string().email().optional(),
 });
 
@@ -33,21 +35,26 @@ export async function POST(request: Request) {
       );
     }
 
-    const { amount, description, type, productId, paymentMethod, recipientEmail } = result.data;
+    const { amount, description, type, productId, paymentMethod, provider, recipientEmail } = result.data;
 
-    if (paymentMethod === 'STRIPE') {
-      return NextResponse.json(
-        { error: 'Stripe sera disponible prochainement' },
-        { status: 400 }
-      );
-    }
+    const selectedProvider = provider || 'MONEROO';
 
-    const cinetpayActive = await isCinetpayActive();
-    if (!cinetpayActive) {
-      return NextResponse.json(
-        { error: 'Le paiement par mobile money est temporairement indisponible' },
-        { status: 503 }
-      );
+    if (selectedProvider === 'CINETPAY') {
+      const active = await isCinetpayActive();
+      if (!active) {
+        return NextResponse.json(
+          { error: 'CinetPay est temporairement indisponible' },
+          { status: 503 }
+        );
+      }
+    } else if (selectedProvider === 'MONEROO') {
+      const active = await isMonerooActive();
+      if (!active) {
+        return NextResponse.json(
+          { error: 'Moneroo est temporairement indisponible' },
+          { status: 503 }
+        );
+      }
     }
 
     if (type === 'SUBSCRIPTION') {
@@ -100,7 +107,7 @@ export async function POST(request: Request) {
       }
     }
 
-    const transactionId = generateTransactionId();
+    const tId = selectedProvider === 'CINETPAY' ? cinetpayTid() : monerooTid();
 
     const metadata = type === 'TICKET_PURCHASE' && recipientEmail
       ? JSON.stringify({ recipientEmail })
@@ -114,8 +121,8 @@ export async function POST(request: Request) {
         currency: 'XOF',
         status: 'PENDING',
         paymentMethod: paymentMethod as never,
-        paymentProvider: 'CINETPAY',
-        providerTransactionId: transactionId,
+        paymentProvider: selectedProvider as never,
+        providerTransactionId: tId,
         productId,
         metadata,
       },
@@ -126,39 +133,65 @@ export async function POST(request: Request) {
       select: { firstName: true, lastName: true, email: true },
     });
 
-    const channels = paymentMethod === 'MOBILE_MONEY' ? 'MOBILE_MONEY' : 'CARD';
-
     const returnUrl = type === 'SUBSCRIPTION'
       ? `${process.env.APP_URL}/premium?transactionId=${transaction.id}`
       : type === 'TICKET_PURCHASE'
         ? `${process.env.APP_URL}/tickets/success?transactionId=${transaction.id}`
         : `${process.env.APP_URL}/purchase/success?transactionId=${transaction.id}`;
 
-    const paymentData = await initPayment({
-      amount,
-      currency: 'XOF',
-      transaction_id: transaction.id,
-      description,
-      customer_name: userDb?.firstName || '',
-      customer_surname: userDb?.lastName || '',
-      customer_email: user.email,
-      customer_phone_number: '',
-      channels,
-      return_url: returnUrl,
-      notify_url: `${process.env.APP_URL}/api/payment/webhook`,
-      lang: 'fr',
-    });
+    let paymentUrl: string | undefined;
 
-    if (paymentData.code !== '00') {
-      return NextResponse.json(
-        { error: paymentData.description || 'Erreur lors de l\'initialisation du paiement' },
-        { status: 400 }
-      );
+    if (selectedProvider === 'CINETPAY') {
+      const channels = paymentMethod === 'MOBILE_MONEY' ? 'MOBILE_MONEY' : 'CARD';
+      const paymentData = await cinetpayInit({
+        amount,
+        currency: 'XOF',
+        transaction_id: transaction.id,
+        description,
+        customer_name: userDb?.firstName || '',
+        customer_surname: userDb?.lastName || '',
+        customer_email: user.email,
+        customer_phone_number: '',
+        channels,
+        return_url: returnUrl,
+        notify_url: `${process.env.APP_URL}/api/payment/webhook`,
+        lang: 'fr',
+      });
+
+      if (paymentData.code !== '00') {
+        return NextResponse.json(
+          { error: paymentData.description || 'Erreur CinetPay' },
+          { status: 400 }
+        );
+      }
+      paymentUrl = paymentData.data?.payment_url;
+    } else {
+      const paymentData = await monerooInit({
+        amount,
+        currency: 'XOF',
+        customer: {
+          name: `${userDb?.firstName || ''} ${userDb?.lastName || ''}`.trim() || user.email,
+          email: user.email,
+        },
+        description,
+        metadata: { transaction_id: transaction.id },
+        callback_url: `${process.env.APP_URL}/api/payment/webhook`,
+        success_url: returnUrl,
+        failure_url: `${process.env.APP_URL}/payment?error=1`,
+      });
+
+      if (!paymentData.success) {
+        return NextResponse.json(
+          { error: paymentData.message || 'Erreur Moneroo' },
+          { status: 400 }
+        );
+      }
+      paymentUrl = paymentData.data?.checkout_url;
     }
 
     return NextResponse.json({
       transactionId: transaction.id,
-      paymentUrl: paymentData.data?.payment_url,
+      paymentUrl,
       message: 'Paiement initié',
     });
   } catch (error) {

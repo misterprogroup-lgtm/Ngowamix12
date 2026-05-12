@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
-import { checkPaymentStatus } from '@/lib/cinetpay';
+import { checkPaymentStatus as cinetpayStatus } from '@/lib/cinetpay';
+import { checkPaymentStatus as monerooStatus } from '@/lib/moneroo';
 import { PREMIUM_DOWNLOAD_QUOTA } from '@/lib/constants';
 import crypto from 'crypto';
 
@@ -50,9 +51,17 @@ export async function GET(request: Request) {
       });
     }
 
-    const statusResponse = await checkPaymentStatus(transaction.providerTransactionId || transactionId);
+    let isPaid = false;
 
-    if (statusResponse.data?.status === 'ACCEPTED' || statusResponse.data?.status === 'PAID') {
+    if (transaction.paymentProvider === 'CINETPAY') {
+      const statusResponse = await cinetpayStatus(transaction.providerTransactionId || transactionId);
+      isPaid = statusResponse.data?.status === 'ACCEPTED' || statusResponse.data?.status === 'PAID';
+    } else if (transaction.paymentProvider === 'MONEROO') {
+      const statusResponse = await monerooStatus(transaction.providerTransactionId || transactionId);
+      isPaid = statusResponse.data?.status === 'SUCCESS';
+    }
+
+    if (isPaid) {
       await db.$transaction(async (tx) => {
         await tx.transaction.update({
           where: { id: transactionId },
