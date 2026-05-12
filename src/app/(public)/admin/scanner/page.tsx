@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Scan, Search, CheckCircle, XCircle, Ticket, MapPin, Calendar, Clock, Loader2, Camera, CameraOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import jsQR from 'jsqr';
 
 interface TicketResult {
   valid: boolean;
@@ -33,15 +33,57 @@ export default function ScannerPage() {
   const [result, setResult] = useState<TicketResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
+  const [scanning, setScanning] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const animFrameRef = useRef<number>(0);
 
   useEffect(() => {
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((t) => t.stop());
       }
+      cancelAnimationFrame(animFrameRef.current);
     };
+  }, []);
+
+  const scanFrame = useCallback(() => {
+    if (!videoRef.current || !canvasRef.current || !videoRef.current.videoWidth) {
+      animFrameRef.current = requestAnimationFrame(scanFrame);
+      return;
+    }
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      animFrameRef.current = requestAnimationFrame(scanFrame);
+      return;
+    }
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const result = jsQR(imageData.data, imageData.width, imageData.height, {
+      inversionAttempts: 'dontInvert',
+    });
+
+    if (result && result.data) {
+      setScanning(false);
+      setCameraActive(false);
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((t) => t.stop());
+        streamRef.current = null;
+      }
+      cancelAnimationFrame(animFrameRef.current);
+      verifyCode(result.data);
+      return;
+    }
+
+    animFrameRef.current = requestAnimationFrame(scanFrame);
   }, []);
 
   const toggleCamera = async () => {
@@ -50,17 +92,22 @@ export default function ScannerPage() {
         streamRef.current.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
       }
+      cancelAnimationFrame(animFrameRef.current);
       setCameraActive(false);
+      setScanning(false);
     } else {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' },
+          video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
         });
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
+          videoRef.current.play();
         }
         setCameraActive(true);
+        setScanning(true);
+        animFrameRef.current = requestAnimationFrame(scanFrame);
       } catch {
         alert('Impossible d\'accéder à la caméra');
       }
@@ -71,7 +118,7 @@ export default function ScannerPage() {
     setLoading(true);
     setResult(null);
     try {
-      const query = qrCode.startsWith('?') ? qrCode : `?code=${encodeURIComponent(qrCode)}`;
+      const query = `?code=${encodeURIComponent(qrCode)}`;
       const res = await fetch(`/api/tickets/verify${query}`);
       const data = await res.json();
 
@@ -143,16 +190,23 @@ export default function ScannerPage() {
             </Button>
           </div>
           {cameraActive && (
-            <div className="bg-black">
+            <div className="bg-black relative">
               <video
                 ref={videoRef}
                 autoPlay
                 playsInline
+                muted
                 className="w-full h-64 object-cover"
               />
+              <canvas ref={canvasRef} className="hidden" />
+              {scanning && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-48 h-48 border-2 border-primary rounded-lg opacity-70" />
+                </div>
+              )}
               <div className="p-3 text-center">
                 <p className="text-xs text-text-muted">
-                  Pointez la caméra vers le QR code. La détection automatique sera bientôt disponible.
+                  {scanning ? 'Recherche d\'un QR code...' : 'Pointez la caméra vers le QR code'}
                 </p>
               </div>
             </div>
