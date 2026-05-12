@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Scan, Search, CheckCircle, XCircle, Ticket, MapPin, Calendar, Clock, Loader2, Camera, CameraOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Html5Qrcode } from 'html5-qrcode';
+import jsQR from 'jsqr';
 
 interface TicketResult {
   valid: boolean;
@@ -31,48 +31,90 @@ export default function ScannerPage() {
   const [result, setResult] = useState<TicketResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-  const readerId = 'qr-reader';
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const scanningRef = useRef(false);
 
   useEffect(() => {
     return () => {
-      if (scannerRef.current) {
-        scannerRef.current.stop().catch(() => {});
-      }
+      stopCamera();
     };
   }, []);
 
+  function stopCamera() {
+    scanningRef.current = false;
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  }
+
   const toggleCamera = async () => {
     if (cameraActive) {
-      if (scannerRef.current) {
-        try { await scannerRef.current.stop(); } catch {}
-        scannerRef.current = null;
-      }
+      stopCamera();
       setCameraActive(false);
     } else {
       try {
-        const scanner = new Html5Qrcode(readerId);
-        scannerRef.current = scanner;
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' },
+          audio: false,
+        });
+        streamRef.current = stream;
 
-        await scanner.start(
-          { facingMode: 'environment' },
-          { fps: 10, qrbox: { width: 250, height: 250 } },
-          (decodedText) => {
-            scanner.stop().catch(() => {});
-            scannerRef.current = null;
-            setCameraActive(false);
-            verifyCode(decodedText);
-          },
-          () => {}
-        );
+        const video = videoRef.current;
+        if (!video) return;
+
+        video.srcObject = stream;
+
+        await video.play();
 
         setCameraActive(true);
+        scanningRef.current = true;
+        scanLoop();
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         alert('Erreur caméra: ' + msg);
       }
     }
   };
+
+  function scanLoop() {
+    if (!scanningRef.current) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas || video.readyState < 2) {
+      requestAnimationFrame(scanLoop);
+      return;
+    }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      requestAnimationFrame(scanLoop);
+      return;
+    }
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const qr = jsQR(imageData.data, imageData.width, imageData.height, {
+      inversionAttempts: 'dontInvert',
+    });
+
+    if (qr && qr.data) {
+      scanningRef.current = false;
+      stopCamera();
+      setCameraActive(false);
+      verifyCode(qr.data);
+      return;
+    }
+
+    requestAnimationFrame(scanLoop);
+  }
 
   const verifyCode = async (qrCode: string) => {
     setLoading(true);
@@ -148,11 +190,23 @@ export default function ScannerPage() {
               )}
             </Button>
           </div>
-          <div className={`bg-black relative ${cameraActive ? '' : 'hidden'}`}>
-            <div id={readerId} className="w-full" style={{ minHeight: 300 }} />
+          <div className="bg-black relative" style={{ minHeight: 256 }}>
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className={`w-full h-64 object-cover ${cameraActive ? '' : 'hidden'}`}
+            />
+            {!cameraActive && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Camera className="h-12 w-12 text-white/30" />
+              </div>
+            )}
+            <canvas ref={canvasRef} className="hidden" />
             <div className="p-3 text-center">
               <p className="text-xs text-text-muted">
-                Pointez la caméra vers le QR code
+                {cameraActive ? 'Pointez la caméra vers le QR code' : 'Activez la caméra pour scanner'}
               </p>
             </div>
           </div>
