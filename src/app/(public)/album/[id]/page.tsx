@@ -76,8 +76,8 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
   return (
     <div className="container mx-auto px-4 py-8 pb-24">
       <div className="flex flex-col md:flex-row gap-8 mb-12">
-        <div className="shrink-0">
-          <div className="relative h-64 w-64 md:h-72 md:w-72 rounded-xl overflow-hidden shadow-2xl">
+        <div className="shrink-0 w-full md:w-auto">
+          <div className="relative w-full max-w-md mx-auto md:mx-0 md:w-auto aspect-square md:h-72 md:w-72 rounded-xl overflow-hidden shadow-2xl">
             {album.coverImage ? (
               <Image
                 src={album.coverImage}
