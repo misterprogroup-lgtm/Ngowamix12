@@ -73,7 +73,7 @@ export default async function HomePage() {
   return (
     <div className="pb-24">
       {/* Hero Section */}
-      <section className="relative h-[1080px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <HeroSlider />
 
         <div className="relative z-20 max-w-3xl mx-auto px-4 text-center">
