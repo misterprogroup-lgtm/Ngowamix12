@@ -160,19 +160,26 @@ export async function POST(request: Request) {
         where: { provider: 'MONEROO' },
         select: { apiKey: true },
       });
+      const secret = config?.apiKey || process.env.MONEROO_WEBHOOK_SECRET || '';
 
+      const rawPayload = await request.text();
       const expectedSig = crypto
-        .createHmac('sha256', config?.apiKey || process.env.MONEROO_WEBHOOK_SECRET || '')
-        .update(JSON.stringify(body))
+        .createHmac('sha256', secret)
+        .update(rawPayload)
         .digest('hex');
       const receivedSig = request.headers.get('x-moneroo-signature') || '';
       if (receivedSig !== expectedSig) {
         return NextResponse.json({ error: 'Signature Moneroo invalide' }, { status: 400 });
       }
 
-      const txnId = body.data.metadata?.transaction_id || body.data.reference;
-      if (body.event === 'checkout.completed' && body.data?.status === 'SUCCESS') {
-        await fulfillTransaction(txnId);
+      const paymentId = body.data?.id;
+      if (body.event === 'payment.success' && body.data?.status === 'success' && paymentId) {
+        const txn = await db.transaction.findFirst({
+          where: { providerTransactionId: paymentId },
+        });
+        if (txn) {
+          await fulfillTransaction(txn.id);
+        }
       }
 
       return NextResponse.json({ message: 'Webhook Moneroo traité' });

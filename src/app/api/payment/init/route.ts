@@ -200,27 +200,37 @@ export async function POST(request: Request) {
       }
       paymentUrl = paymentData.data?.payment_url;
     } else if (selectedProvider === 'MONEROO') {
+      const [firstName, ...rest] = (userDb?.firstName || user.email).split(' ');
+      const lastName = userDb?.lastName || rest.join(' ') || '';
+
       const paymentData = await monerooInit({
         amount,
         currency: 'XOF',
-        customer: {
-          name: `${userDb?.firstName || ''} ${userDb?.lastName || ''}`.trim() || user.email,
-          email: user.email,
-        },
         description,
+        customer: {
+          email: user.email,
+          first_name: firstName || user.email,
+          last_name: lastName || 'User',
+        },
         metadata: { transaction_id: transaction.id },
-        callback_url: `${process.env.APP_URL}/api/payment/webhook`,
-        success_url: returnUrl,
-        failure_url: `${process.env.APP_URL}/payment?error=1`,
+        return_url: returnUrl,
+        methods: ['wave_ci', 'orange_ci', 'moov_ci', 'mtn_ci', 'card'],
       });
 
-      if (!paymentData.success) {
+      if (paymentData.data?.checkout_url) {
+        paymentUrl = paymentData.data.checkout_url;
+        if (paymentData.data.id) {
+          await db.transaction.update({
+            where: { id: transaction.id },
+            data: { providerTransactionId: paymentData.data.id },
+          });
+        }
+      } else {
         return NextResponse.json(
           { error: paymentData.message || 'Erreur Moneroo' },
           { status: 400 }
         );
       }
-      paymentUrl = paymentData.data?.checkout_url;
     } else if (selectedProvider === 'STRIPE') {
       const result = await createCheckoutSession({
         amount,

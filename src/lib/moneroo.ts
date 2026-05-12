@@ -1,7 +1,7 @@
 import { db } from '@/lib/db';
 import crypto from 'crypto';
 
-const MONEROO_API_URL = 'https://api.moneroo.io/v1';
+const MONEROO_API = 'https://api.moneroo.io/v1/payments';
 
 async function getConfig() {
   const config = await db.paymentProviderConfig.findUnique({
@@ -13,70 +13,73 @@ async function getConfig() {
   };
 }
 
-interface MonerooCustomer {
-  name: string;
-  email: string;
-  phone?: string;
-}
-
 interface MonerooInitRequest {
   amount: number;
   currency: string;
-  customer: MonerooCustomer;
+  description: string;
+  customer: {
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone?: string;
+  };
+  return_url: string;
   metadata?: Record<string, string>;
-  callback_url: string;
-  success_url: string;
-  failure_url?: string;
-  description?: string;
+  methods?: string[];
 }
 
 interface MonerooInitResponse {
-  success: boolean;
-  message?: string;
+  message: string;
   data?: {
+    id: string;
     checkout_url: string;
-    reference: string;
   };
 }
 
 interface MonerooStatusResponse {
-  success: boolean;
-  message?: string;
+  message: string;
   data?: {
-    status: 'PENDING' | 'SUCCESS' | 'FAILED' | 'CANCELLED';
-    reference: string;
+    status: 'pending' | 'success' | 'failed' | 'cancelled';
+    id: string;
     amount: number;
     currency: string;
-    customer: MonerooCustomer;
     paid_at?: string;
+    customer: {
+      email: string;
+      first_name: string;
+      last_name: string;
+    };
   };
 }
 
 export async function initPayment(params: MonerooInitRequest): Promise<MonerooInitResponse> {
   const { apiKey } = await getConfig();
 
-  const response = await fetch(`${MONEROO_API_URL}/checkout`, {
+  const response = await fetch(MONEROO_API + '/initialize', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`,
+      'Accept': 'application/json',
     },
     body: JSON.stringify(params),
   });
 
-  return response.json();
+  const data = await response.json();
+  return data as MonerooInitResponse;
 }
 
-export async function checkPaymentStatus(reference: string): Promise<MonerooStatusResponse> {
+export async function checkPaymentStatus(paymentId: string): Promise<MonerooStatusResponse> {
   const { apiKey } = await getConfig();
 
-  const response = await fetch(`${MONEROO_API_URL}/checkout/${reference}/status`, {
+  const response = await fetch(`${MONEROO_API}/${paymentId}/status`, {
     headers: {
       'Authorization': `Bearer ${apiKey}`,
+      'Accept': 'application/json',
     },
   });
 
-  return response.json();
+  return response.json() as Promise<MonerooStatusResponse>;
 }
 
 export async function isMonerooActive(): Promise<boolean> {
@@ -92,14 +95,4 @@ export function generateTransactionId(): string {
   const timestamp = Date.now().toString(36);
   const random = Math.random().toString(36).substring(2, 8);
   return `MON_${timestamp}_${random}`.toUpperCase();
-}
-
-export function verifySignature(payload: Record<string, unknown>, secret: string): boolean {
-  const receivedSignature = payload.signature as string;
-  if (!receivedSignature) return false;
-  const expected = crypto
-    .createHmac('sha256', secret)
-    .update(JSON.stringify(payload))
-    .digest('hex');
-  return receivedSignature === expected;
 }
