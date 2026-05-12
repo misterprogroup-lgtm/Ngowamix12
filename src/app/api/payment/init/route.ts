@@ -8,12 +8,15 @@ import { z } from 'zod';
 
 const paymentSchema = z.object({
   amount: z.number().positive(),
+  originalAmount: z.number().positive().optional(),
   description: z.string(),
   type: z.enum(['SUBSCRIPTION', 'ALBUM_PURCHASE', 'TICKET_PURCHASE']),
   productId: z.string(),
   paymentMethod: z.enum(['MOBILE_MONEY', 'CARD', 'STRIPE']).default('MOBILE_MONEY'),
   provider: z.enum(['CINETPAY', 'MONEROO', 'STRIPE']).optional(),
   recipientEmail: z.string().email().optional(),
+  promoCodeId: z.string().optional(),
+  promoCode: z.string().optional(),
 });
 
 function generateTransactionId(prefix: string): string {
@@ -42,7 +45,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { amount, description, type, productId, paymentMethod, provider, recipientEmail } = result.data;
+    const { amount, originalAmount, description, type, productId, paymentMethod, provider, recipientEmail, promoCodeId, promoCode: promoCodeStr } = result.data;
 
     let selectedProvider = provider || '';
 
@@ -245,6 +248,24 @@ export async function POST(request: Request) {
         );
       }
       paymentUrl = result.url || undefined;
+    }
+
+    if (promoCodeId) {
+      const promo = await db.promoCode.findUnique({ where: { id: promoCodeId } });
+      if (promo) {
+        await db.promoCode.update({
+          where: { id: promoCodeId },
+          data: { currentUses: { increment: 1 } },
+        });
+        await db.usedPromoCode.create({
+          data: {
+            promoCodeId,
+            userId: user.sub,
+            transactionId: transaction.id,
+            discountAmount: (originalAmount || amount) - amount,
+          },
+        });
+      }
     }
 
     return NextResponse.json({

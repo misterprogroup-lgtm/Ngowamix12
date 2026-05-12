@@ -103,6 +103,8 @@ model User {
   listenHistory         ListenHistory[]
   notifications         Notification[]
   pushSubscriptions     PushSubscription[]
+  referralCode          ReferralCode?
+  promoCodeUses         UsedPromoCode[]
 
   @@index([email])
   @@index([role])
@@ -241,6 +243,7 @@ model Transaction {
 
   user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   purchases             Purchase[]
+  promoCodeUse          UsedPromoCode?
 
   @@index([userId])
   @@index([status])
@@ -457,4 +460,61 @@ model PaymentProviderConfig {
   merchantName          String?
   description           String?
   updatedAt             DateTime      @updatedAt
+}
+
+model PromoCode {
+  id                    String        @id @default(uuid())
+  code                  String        @unique
+  discountType          String        @default("PERCENTAGE")
+  discountValue         Int
+  maxUses               Int           @default(0)
+  currentUses           Int           @default(0)
+  minAmount             Int           @default(0)
+  maxAmount             Int?
+  expiresAt             DateTime?
+  isActive              Boolean       @default(true)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  uses                  UsedPromoCode[]
+
+  @@index([code])
+  @@index([isActive])
+}
+
+model ReferralCode {
+  id                    String        @id @default(uuid())
+  code                  String        @unique
+  userId                String        @unique
+  discountPercent       Int           @default(10)
+  maxUses               Int           @default(50)
+  currentUses           Int           @default(0)
+  expiresAt             DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  uses                  UsedPromoCode[]
+
+  @@index([code])
+}
+
+model UsedPromoCode {
+  id                    String        @id @default(uuid())
+  promoCodeId           String?
+  referralCodeId        String?
+  userId                String
+  transactionId         String
+  discountAmount        Int
+  createdAt             DateTime      @default(now())
+
+  promoCode             PromoCode?    @relation(fields: [promoCodeId], references: [id])
+  referralCode          ReferralCode? @relation(fields: [referralCodeId], references: [id])
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transaction           Transaction   @relation(fields: [transactionId], references: [id])
+
+  @@index([userId])
+  @@index([promoCodeId])
+  @@index([referralCodeId])
+  @@unique([transactionId])
 }

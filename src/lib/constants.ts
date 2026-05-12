@@ -67,5 +67,6 @@ export const ROUTES = {
   ADMIN_TRANSACTIONS: '/admin/transactions',
   ADMIN_SCANNER: '/admin/scanner',
   ADMIN_SETTINGS: '/admin/settings',
+  ADMIN_PROMO_CODES: '/admin/promo-codes',
   MY_PLAYLIST: '/my-playlist',
 } as const;

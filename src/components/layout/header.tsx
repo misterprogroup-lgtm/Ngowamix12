@@ -58,6 +58,7 @@ export function Header() {
     { href: ROUTES.ADMIN_SCANNER, label: 'Scanner' },
     { href: ROUTES.ADMIN_TRANSACTIONS, label: 'Transactions' },
     { href: ROUTES.ADMIN_SETTINGS, label: 'Paramètres' },
+    { href: ROUTES.ADMIN_PROMO_CODES, label: 'Codes Promo' },
   ];
 
   const artistLinks = [

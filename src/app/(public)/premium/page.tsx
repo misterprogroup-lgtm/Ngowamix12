@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Crown, Check, AlertCircle, Loader2, Smartphone, CreditCard } from 'lucide-react';
+import { Crown, Check, AlertCircle, Loader2, Smartphone, CreditCard, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ROUTES, PREMIUM_PRICE, PREMIUM_CURRENCY } from '@/lib/constants';
@@ -22,6 +22,13 @@ function PremiumContent() {
     premiumCurrency: PREMIUM_CURRENCY,
   });
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('MOBILE_MONEY');
+  const [promoCode, setPromoCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [promoData, setPromoData] = useState<{ promoCodeId: string; code: string } | null>(null);
+  const [promoError, setPromoError] = useState('');
+  const [promoLoading, setPromoLoading] = useState(false);
+
+  const finalPrice = Math.max(0, config.premiumPrice - discount);
 
   const transactionId = searchParams.get('transactionId');
 
@@ -62,6 +69,32 @@ function PremiumContent() {
     }
   };
 
+  const validatePromo = async () => {
+    if (!promoCode.trim()) return;
+    setPromoLoading(true);
+    setPromoError('');
+    setDiscount(0);
+    setPromoData(null);
+    try {
+      const res = await fetch('/api/promo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: promoCode, amount: config.premiumPrice }),
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        setDiscount(data.discount);
+        setPromoData({ promoCodeId: data.promoCodeId, code: data.code });
+      } else {
+        setPromoError(data.error || 'Code invalide');
+      }
+    } catch {
+      setPromoError('Erreur de vérification');
+    } finally {
+      setPromoLoading(false);
+    }
+  };
+
   const handleSubscribe = async () => {
     if (!user) {
       router.push(`${ROUTES.LOGIN}?redirect=/premium`);
@@ -74,11 +107,13 @@ function PremiumContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: config.premiumPrice,
+          amount: finalPrice,
+          originalAmount: config.premiumPrice,
           description: 'Abonnement Premium mensuel',
           type: 'SUBSCRIPTION',
           productId: 'premium_subscription',
           paymentMethod,
+          ...(promoData ? { promoCodeId: promoData.promoCodeId, promoCode: promoData.code } : {}),
         }),
       });
 
@@ -253,6 +288,40 @@ function PremiumContent() {
                 <Check className="h-4 w-4 text-primary ml-auto" />
               )}
             </button>
+          </div>
+
+          <div className="space-y-2 mb-4">
+            <p className="text-sm font-medium text-text-secondary">Code promo</p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={promoCode}
+                onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setDiscount(0); setPromoData(null); setPromoError(''); }}
+                placeholder="EX: PROMO10"
+                className="flex-1 rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <Button variant="outline" size="sm" onClick={validatePromo} isLoading={promoLoading}>
+                <Gift className="h-4 w-4" />
+              </Button>
+            </div>
+            {promoError && <p className="text-xs text-error">{promoError}</p>}
+            {discount > 0 && (
+              <p className="text-xs text-success flex items-center gap-1">
+                <Check className="h-3 w-3" />
+                Réduction de {discount.toLocaleString()} XOF appliquée
+              </p>
+            )}
+          </div>
+
+          <div className="mb-4 text-center">
+            {discount > 0 ? (
+              <>
+                <p className="text-sm text-text-muted line-through">{config.premiumPrice.toLocaleString()} {config.premiumCurrency}</p>
+                <p className="text-2xl font-bold text-primary">{finalPrice.toLocaleString()} <span className="text-sm text-text-secondary">{config.premiumCurrency}</span></p>
+              </>
+            ) : (
+              <p className="text-sm text-text-muted">{config.premiumPrice.toLocaleString()} {config.premiumCurrency} par mois</p>
+            )}
           </div>
 
           <Button
