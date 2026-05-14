@@ -21,6 +21,7 @@ function PremiumContent() {
     premiumPrice: PREMIUM_PRICE,
     premiumCurrency: PREMIUM_CURRENCY,
   });
+  const [activeProvider, setActiveProvider] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('MOBILE_MONEY');
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -40,6 +41,9 @@ function PremiumContent() {
           premiumPrice: data.premiumPrice ?? 5000,
           premiumCurrency: data.premiumCurrency ?? 'XOF',
         });
+        const providers: any[] = data.paymentProviders || [];
+        const active = providers.find((p: any) => p.isActive);
+        if (active) setActiveProvider(active.provider);
       })
       .catch(() => {});
   }, []);
@@ -362,7 +366,7 @@ function PremiumContent() {
       </div>
 
       <div className="text-center text-sm text-text-muted">
-        <p>Paiement sécurisé via CinetPay</p>
+        <p>Paiement sécurisé via {activeProvider === 'MONEROO' ? 'Moneroo' : activeProvider === 'STRIPE' ? 'Stripe' : 'CinetPay'}</p>
         <p className="mt-1">Annulation possible à tout moment</p>
       </div>
     </div>
