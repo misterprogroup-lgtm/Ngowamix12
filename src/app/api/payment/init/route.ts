@@ -206,10 +206,6 @@ export async function POST(request: Request) {
       const [firstName, ...rest] = (userDb?.firstName || user.email).split(' ');
       const lastName = userDb?.lastName || rest.join(' ') || '';
 
-      const monerooMethods = paymentMethod === 'CARD'
-        ? ['card_xof']
-        : ['wave_ci', 'wave_sn', 'orange_ci', 'orange_sn', 'orange_bf', 'orange_ml', 'mtn_ci', 'mtn_bj', 'moov_ci', 'moov_bf', 'moov_bj', 'moov_ml', 'moov_tg', 'freemoney_sn', 'e_money_sn', 'mobi_cash_bf', 'mobi_cash_ml', 'togocel', 'airtel_ne'];
-
       const paymentData = await monerooInit({
         amount,
         currency: 'XOF',
@@ -221,7 +217,6 @@ export async function POST(request: Request) {
         },
         metadata: { transaction_id: transaction.id },
         return_url: returnUrl,
-        methods: monerooMethods,
       });
 
       if (paymentData.data?.checkout_url) {
