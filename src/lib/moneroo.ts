@@ -92,7 +92,7 @@ export async function isMonerooActive(): Promise<boolean> {
     where: { provider: 'MONEROO' },
     select: { isActive: true, apiKey: true },
   });
-  if (!config) return false;
+  if (!config) return !!process.env.MONEROO_API_KEY;
   return config.isActive && !!config.apiKey;
 }
 
