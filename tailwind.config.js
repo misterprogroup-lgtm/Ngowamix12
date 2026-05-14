@@ -19,6 +19,7 @@ module.exports = {
         primary: 'hsl(var(--primary))',
         'primary-hover': 'hsl(var(--primary-hover))',
         'primary-glow': 'var(--primary-glow)',
+        'primary-config': 'var(--config-primary)',
         accent: 'hsl(var(--accent))',
         'accent-hover': 'hsl(var(--accent-hover))',
         success: 'hsl(var(--success))',

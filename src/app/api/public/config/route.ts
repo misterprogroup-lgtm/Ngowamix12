@@ -12,6 +12,11 @@ export async function GET() {
       premiumPrice: siteConfig?.premiumPrice ?? 5000,
       premiumCurrency: siteConfig?.premiumCurrency ?? 'XOF',
       downloadQuota: siteConfig?.downloadQuota ?? 30,
+      primaryColor: siteConfig?.primaryColor ?? '#f97316',
+      fontFamily: siteConfig?.fontFamily ?? 'Inter',
+      logoUrl: siteConfig?.logoUrl ?? null,
+      faviconUrl: siteConfig?.faviconUrl ?? null,
+      customCss: siteConfig?.customCss ?? null,
       paymentProviders,
     });
   } catch {
@@ -19,6 +24,11 @@ export async function GET() {
       premiumPrice: 5000,
       premiumCurrency: 'XOF',
       downloadQuota: 30,
+      primaryColor: '#f97316',
+      fontFamily: 'Inter',
+      logoUrl: null,
+      faviconUrl: null,
+      customCss: null,
       paymentProviders: [],
     });
   }

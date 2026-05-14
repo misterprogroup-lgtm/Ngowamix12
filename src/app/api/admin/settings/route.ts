@@ -41,6 +41,11 @@ export async function PUT(request: Request) {
           premiumPrice: parseInt(data.premiumPrice, 10) || 5000,
           premiumCurrency: data.premiumCurrency,
           downloadQuota: parseInt(data.downloadQuota, 10) || 30,
+          primaryColor: data.primaryColor || '#f97316',
+          logoUrl: data.logoUrl || null,
+          faviconUrl: data.faviconUrl || null,
+          fontFamily: data.fontFamily || 'Inter',
+          customCss: data.customCss || null,
         },
         create: {
           id: 'default',
@@ -50,6 +55,11 @@ export async function PUT(request: Request) {
           premiumPrice: parseInt(data.premiumPrice, 10) || 5000,
           premiumCurrency: data.premiumCurrency,
           downloadQuota: parseInt(data.downloadQuota, 10) || 30,
+          primaryColor: data.primaryColor || '#f97316',
+          logoUrl: data.logoUrl || null,
+          faviconUrl: data.faviconUrl || null,
+          fontFamily: data.fontFamily || 'Inter',
+          customCss: data.customCss || null,
         },
       });
       return NextResponse.json({ success: true });

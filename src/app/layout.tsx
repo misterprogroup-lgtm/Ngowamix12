@@ -91,6 +91,31 @@ export default function RootLayout({
             `,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                fetch('/api/public/config').then(r=>r.json()).then(cfg => {
+                  var root = document.documentElement;
+                  if (cfg.primaryColor) root.style.setProperty('--config-primary', cfg.primaryColor);
+                  if (cfg.fontFamily && cfg.fontFamily !== 'Inter') {
+                    var fontLink = document.createElement('link');
+                    fontLink.rel = 'stylesheet';
+                    fontLink.href = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(cfg.fontFamily.replace(/ /g, '+')) + ':wght@300;400;500;600;700;800&display=swap';
+                    document.head.appendChild(fontLink);
+                    root.style.setProperty('--font-config', cfg.fontFamily);
+                    root.style.fontFamily = cfg.fontFamily + ', sans-serif';
+                  }
+                  if (cfg.customCss) {
+                    var style = document.createElement('style');
+                    style.textContent = cfg.customCss;
+                    document.head.appendChild(style);
+                  }
+                }).catch(function(){});
+              })();
+            `,
+          }}
+        />
           <ThemeProvider>
             <ToastProvider>
               <AuthProvider>

@@ -450,6 +450,11 @@ model SiteConfig {
   premiumPrice          Int           @default(5000)
   premiumCurrency       String        @default("XOF")
   downloadQuota         Int           @default(30)
+  primaryColor          String        @default("#f97316")
+  logoUrl               String?
+  faviconUrl            String?
+  fontFamily            String        @default("Inter")
+  customCss             String?
   updatedAt             DateTime      @updatedAt
 }
 

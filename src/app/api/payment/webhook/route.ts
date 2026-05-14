@@ -165,7 +165,7 @@ export async function POST(request: Request) {
         where: { provider: 'MONEROO' },
         select: { apiKey: true },
       });
-      const secret = config?.apiKey || process.env.MONEROO_WEBHOOK_SECRET || '';
+      const secret = config?.apiKey || process.env.MONEROO_WEBHOOK_SECRET || process.env.MONEROO_API_KEY || '';
 
       const rawPayload = await request.text();
       const expectedSig = crypto

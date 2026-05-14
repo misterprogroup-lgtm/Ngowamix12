@@ -19,6 +19,7 @@
     --success: 152 65% 41%;
     --warning: 28 100% 50%;
     --error: 0 72% 56%;
+    --config-primary: #f97316;
   }
 
   .dark {
@@ -66,7 +67,21 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-border;
+    @apply bg-text-muted;
+  }
+
+  .btn-primary-config {
+    background-color: var(--config-primary);
+    border-color: var(--config-primary);
+  }
+  .btn-primary-config:hover {
+    filter: brightness(0.9);
+  }
+  .text-primary-config {
+    color: var(--config-primary);
+  }
+  .border-primary-config {
+    border-color: var(--config-primary);
   }
 
   input[type="range"] {

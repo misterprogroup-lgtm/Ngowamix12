@@ -21,6 +21,9 @@ export default function AdminSettingsPage() {
     premiumPrice: '5000',
     premiumCurrency: 'XOF',
     downloadQuota: '30',
+    primaryColor: '#f97316',
+    fontFamily: 'Inter',
+    customCss: '',
   });
 
   const [providers, setProviders] = useState<any[]>([]);
@@ -37,6 +40,9 @@ export default function AdminSettingsPage() {
             premiumPrice: data.siteConfig.premiumPrice?.toString() || '5000',
             premiumCurrency: data.siteConfig.premiumCurrency || 'XOF',
             downloadQuota: data.siteConfig.downloadQuota?.toString() || '30',
+            primaryColor: data.siteConfig.primaryColor || '#f97316',
+            fontFamily: data.siteConfig.fontFamily || 'Inter',
+            customCss: data.siteConfig.customCss || '',
           });
         }
         setProviders(data.paymentProviders || []);
@@ -308,9 +314,60 @@ export default function AdminSettingsPage() {
         )}
 
         {activeTab === 'appearance' && (
-          <div className="text-center py-12">
-            <Palette className="h-12 w-12 text-text-muted mx-auto mb-3 opacity-50" />
-            <p className="text-text-secondary">Personnalisation visuelle disponible en V2</p>
+          <div className="space-y-6">
+            <p className="text-sm text-text-secondary">
+              Personnalisez l&apos;apparence de votre site.
+            </p>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Couleur principale</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  value={settings.primaryColor}
+                  onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
+                  className="h-10 w-16 rounded border border-border cursor-pointer bg-transparent"
+                />
+                <input
+                  type="text"
+                  value={settings.primaryColor}
+                  onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
+                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm w-32 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="#f97316"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Police</label>
+              <select
+                value={settings.fontFamily}
+                onChange={(e) => setSettings({ ...settings, fontFamily: e.target.value })}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm"
+              >
+                <option value="Inter">Inter</option>
+                <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+                <option value="Poppins">Poppins</option>
+                <option value="Roboto">Roboto</option>
+                <option value="Montserrat">Montserrat</option>
+                <option value="system-ui">System UI</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">CSS personnalisé</label>
+              <textarea
+                value={settings.customCss}
+                onChange={(e) => setSettings({ ...settings, customCss: e.target.value })}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm font-mono h-32 focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="/* Ajoutez votre CSS ici */"
+              />
+            </div>
+
+            <Button variant="primary" size="lg" onClick={handleSaveGeneral} isLoading={saving}>
+              <Save className="h-4 w-4 mr-2" />
+              Enregistrer l&apos;apparence
+            </Button>
           </div>
         )}
       </div>
