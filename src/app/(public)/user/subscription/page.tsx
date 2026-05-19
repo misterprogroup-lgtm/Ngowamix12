@@ -42,7 +42,7 @@ export default function SubscriptionPage() {
           description: 'Abonnement Premium mensuel',
           type: 'SUBSCRIPTION',
           productId: 'premium_subscription',
-          paymentMethod: 'MOBILE_MONEY',
+          paymentMethod: 'DJAMO',
         }),
       });
 

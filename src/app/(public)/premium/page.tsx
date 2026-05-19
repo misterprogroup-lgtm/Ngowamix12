@@ -2,13 +2,13 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Crown, Check, AlertCircle, Loader2, Smartphone, CreditCard, Gift } from 'lucide-react';
+import { Crown, Check, AlertCircle, Loader2, Smartphone, CreditCard, Gift, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ROUTES, PREMIUM_PRICE, PREMIUM_CURRENCY } from '@/lib/constants';
 import { useAuthStore } from '@/store/auth-store';
 
-type PaymentMethod = 'MOBILE_MONEY' | 'CARD';
+type PaymentMethod = 'MOBILE_MONEY' | 'CARD' | 'DJAMO';
 
 function PremiumContent() {
   const searchParams = useSearchParams();
@@ -22,7 +22,7 @@ function PremiumContent() {
     premiumCurrency: PREMIUM_CURRENCY,
   });
   const [activeProvider, setActiveProvider] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('MOBILE_MONEY');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('DJAMO');
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [promoData, setPromoData] = useState<{ promoCodeId: string; code: string } | null>(null);
@@ -316,6 +316,24 @@ function PremiumContent() {
                 <Check className="h-4 w-4 text-primary ml-auto" />
               )}
             </button>
+            <button
+              type="button"
+              onClick={() => setPaymentMethod('DJAMO')}
+              className={`w-full flex items-center gap-3 rounded-lg border p-3 text-left transition-colors ${
+                paymentMethod === 'DJAMO'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-text-muted'
+              }`}
+            >
+              <Wallet className={`h-5 w-5 ${paymentMethod === 'DJAMO' ? 'text-primary' : 'text-text-muted'}`} />
+              <div>
+                <p className="text-sm font-medium">Djamo</p>
+                <p className="text-xs text-text-muted">Paiement par lien sécurisé</p>
+              </div>
+              {paymentMethod === 'DJAMO' && (
+                <Check className="h-4 w-4 text-primary ml-auto" />
+              )}
+            </button>
           </div>
 
           <div className="space-y-2 mb-4">
@@ -366,7 +384,7 @@ function PremiumContent() {
       </div>
 
       <div className="text-center text-sm text-text-muted">
-        <p>Paiement sécurisé via {activeProvider === 'MONEROO' ? 'Moneroo' : activeProvider === 'STRIPE' ? 'Stripe' : 'CinetPay'}</p>
+        <p>Paiement sécurisé via {activeProvider === 'MONEROO' ? 'Moneroo' : activeProvider === 'STRIPE' ? 'Stripe' : activeProvider === 'DJAMO' ? 'Djamo' : 'CinetPay'}</p>
         <p className="mt-1">Annulation possible à tout moment</p>
       </div>
     </div>

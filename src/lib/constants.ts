@@ -3,6 +3,7 @@ export const PREMIUM_CURRENCY = process.env.PREMIUM_CURRENCY || 'XOF';
 export const FREE_DOWNLOAD_QUOTA = 10;
 export const PREMIUM_DOWNLOAD_QUOTA = parseInt(process.env.PREMIUM_DOWNLOAD_QUOTA || '30', 10);
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Ngowamix';
+export const DJAMO_PAYMENT_URL = process.env.DJAMO_PAYMENT_URL || '';
 
 export const GENRES = [
   'Afrobeats',

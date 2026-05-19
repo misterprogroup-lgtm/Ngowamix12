@@ -76,7 +76,7 @@ export function AlbumActions({ album, tracks, isPurchased }: AlbumActionsProps) 
           description: `Achat de l'album : ${album.title}`,
           type: 'ALBUM_PURCHASE',
           productId: album.id,
-          paymentMethod: 'MOBILE_MONEY',
+          paymentMethod: 'DJAMO',
         }),
       });
 

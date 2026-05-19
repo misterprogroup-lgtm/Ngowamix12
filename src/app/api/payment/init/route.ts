@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { initPayment as cinetpayInit, generateTransactionId as cinetpayTid, isCinetpayActive } from '@/lib/cinetpay';
 import { initPayment as monerooInit, generateTransactionId as monerooTid, isMonerooActive } from '@/lib/moneroo';
 import { createCheckoutSession, isStripeActive } from '@/lib/stripe';
+import { DJAMO_PAYMENT_URL } from '@/lib/constants';
 import { z } from 'zod';
 
 const paymentSchema = z.object({
@@ -12,12 +13,16 @@ const paymentSchema = z.object({
   description: z.string(),
   type: z.enum(['SUBSCRIPTION', 'ALBUM_PURCHASE', 'TICKET_PURCHASE']),
   productId: z.string(),
-  paymentMethod: z.enum(['MOBILE_MONEY', 'CARD', 'STRIPE']).default('MOBILE_MONEY'),
-  provider: z.enum(['CINETPAY', 'MONEROO', 'STRIPE']).optional(),
+  paymentMethod: z.enum(['MOBILE_MONEY', 'CARD', 'STRIPE', 'DJAMO']).default('DJAMO'),
+  provider: z.enum(['CINETPAY', 'MONEROO', 'STRIPE', 'DJAMO']).optional(),
   recipientEmail: z.string().email().optional(),
   promoCodeId: z.string().optional(),
   promoCode: z.string().optional(),
 });
+
+function isDjamoActive() {
+  return DJAMO_PAYMENT_URL.startsWith('https://');
+}
 
 function generateTransactionId(prefix: string): string {
   const timestamp = Date.now().toString(36);
@@ -50,12 +55,17 @@ export async function POST(request: Request) {
     let selectedProvider = provider || '';
 
     if (!selectedProvider) {
+      const djamoActive = isDjamoActive();
       const stripeActive = await isStripeActive();
       const monerooActive = await isMonerooActive();
       const cinetpayActive = await isCinetpayActive();
 
       if (paymentMethod === 'CARD' && stripeActive) {
         selectedProvider = 'STRIPE';
+      } else if (paymentMethod === 'DJAMO' && djamoActive) {
+        selectedProvider = 'DJAMO';
+      } else if (djamoActive) {
+        selectedProvider = 'DJAMO';
       } else if (monerooActive) {
         selectedProvider = 'MONEROO';
       } else if (cinetpayActive) {
@@ -65,6 +75,13 @@ export async function POST(request: Request) {
       } else {
         return NextResponse.json(
           { error: 'Aucun moyen de paiement disponible' },
+          { status: 503 }
+        );
+      }
+    } else if (selectedProvider === 'DJAMO') {
+      if (!isDjamoActive()) {
+        return NextResponse.json(
+          { error: 'Djamo est temporairement indisponible' },
           { status: 503 }
         );
       }
@@ -144,11 +161,12 @@ export async function POST(request: Request) {
       }
     }
 
-    const tId = generateTransactionId(selectedProvider === 'STRIPE' ? 'STR' : selectedProvider === 'MONEROO' ? 'MON' : 'AFS');
+    const tId = generateTransactionId(selectedProvider === 'STRIPE' ? 'STR' : selectedProvider === 'MONEROO' ? 'MON' : selectedProvider === 'DJAMO' ? 'DJM' : 'AFS');
 
+    const isDjamo = selectedProvider === 'DJAMO';
     const meta = type === 'TICKET_PURCHASE' && recipientEmail
-      ? JSON.stringify({ recipientEmail })
-      : null;
+      ? JSON.stringify({ recipientEmail, ...(isDjamo ? { actualProvider: 'DJAMO' } : {}) })
+      : isDjamo ? JSON.stringify({ actualProvider: 'DJAMO' }) : null;
 
     const transaction = await db.transaction.create({
       data: {
@@ -157,8 +175,8 @@ export async function POST(request: Request) {
         amount,
         currency: 'XOF',
         status: 'PENDING',
-        paymentMethod: selectedProvider === 'STRIPE' ? 'CARD' : (paymentMethod as never),
-        paymentProvider: selectedProvider as never,
+        paymentMethod: selectedProvider === 'STRIPE' ? 'CARD' : (isDjamo ? 'MOBILE_MONEY' : paymentMethod as never),
+        paymentProvider: isDjamo ? 'CINETPAY' : (selectedProvider as never),
         providerTransactionId: tId,
         productId,
         metadata: meta,
@@ -230,6 +248,15 @@ export async function POST(request: Request) {
       } else {
         throw new Error(paymentData.message || 'Réponse Moneroo invalide');
       }
+    } else if (selectedProvider === 'DJAMO') {
+      const params = new URLSearchParams({
+        amount: amount.toString(),
+        reference: transaction.id,
+        customer_email: user.email,
+        customer_name: userDb?.firstName || user.email,
+        return_url: returnUrl,
+      });
+      paymentUrl = `${DJAMO_PAYMENT_URL}?${params.toString()}`;
     } else if (selectedProvider === 'STRIPE') {
       const result = await createCheckoutSession({
         amount,

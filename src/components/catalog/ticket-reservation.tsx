@@ -57,7 +57,7 @@ export function TicketReservation({ concert }: TicketReservationProps) {
           description: `${quantity > 1 ? `${quantity}x ` : ''}Billet ${ticketType === 'VIP' ? 'VIP' : 'Standard'} - ${concert.title}`,
           type: 'TICKET_PURCHASE',
           productId,
-          paymentMethod: 'MOBILE_MONEY',
+          paymentMethod: 'DJAMO',
           recipientEmail: email,
         }),
       });

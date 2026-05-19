@@ -17,7 +17,9 @@ export async function GET() {
       logoUrl: siteConfig?.logoUrl ?? null,
       faviconUrl: siteConfig?.faviconUrl ?? null,
       customCss: siteConfig?.customCss ?? null,
-      paymentProviders,
+      paymentProviders: paymentProviders.length > 0
+        ? paymentProviders
+        : [{ provider: 'DJAMO', isActive: true, merchantName: 'Djamo' }],
     });
   } catch {
     return NextResponse.json({
@@ -29,7 +31,7 @@ export async function GET() {
       logoUrl: null,
       faviconUrl: null,
       customCss: null,
-      paymentProviders: [],
+      paymentProviders: [{ provider: 'DJAMO', isActive: true, merchantName: 'Djamo' }],
     });
   }
 }
