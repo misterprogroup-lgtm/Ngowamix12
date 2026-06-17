@@ -1,0 +1,675 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+enum UserRole {
+  LISTENER
+  ARTIST
+  LABEL
+  ADMIN
+}
+
+enum CollaboratorRole {
+  EDITOR
+  VIEWER
+}
+
+enum AlbumStatus {
+  DRAFT
+  SUBMITTED
+  VALIDATED
+  PUBLISHED
+  REJECTED
+  ARCHIVED
+}
+
+enum ReleaseType {
+  ALBUM
+  SINGLE
+  EP
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  PENDING
+}
+
+enum TransactionStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum TransactionType {
+  SUBSCRIPTION
+  ALBUM_PURCHASE
+  TICKET_PURCHASE
+  TIP
+}
+
+enum PaymentMethod {
+  MOBILE_MONEY
+  CARD
+}
+
+enum PaymentProvider {
+  CINETPAY
+  STRIPE
+  MONEROO
+  PAWAPAY
+}
+
+enum DownloadType {
+  PREMIUM_QUOTA
+  PURCHASE
+}
+
+model User {
+  id                    String        @id @default(uuid())
+  email                 String        @unique
+  password              String
+  firstName             String?
+  lastName              String?
+  displayName           String?
+  avatar                String?
+  phone                 String?
+  phoneVerified         Boolean       @default(false)
+  phoneVerificationCode String?
+  phoneVerificationExpiresAt DateTime?
+  emailVerified         Boolean       @default(false)
+  emailVerificationCode String?
+  emailVerificationExpiresAt DateTime?
+  labelName             String?
+  role                  UserRole      @default(LISTENER)
+  isPremium             Boolean       @default(false)
+  premiumExpiresAt      DateTime?
+  downloadQuota         Int           @default(10)
+  downloadsUsedThisMonth Int          @default(0)
+  quotaResetAt          DateTime      @default(now())
+  resetToken            String?       @unique
+  resetTokenExpiry      DateTime?
+  termsAccepted         Boolean       @default(false)
+  termsAcceptedAt       DateTime?
+  referredBy            String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  subscriptions         Subscription[]
+  transactions          Transaction[]
+  purchases             Purchase[]
+  downloads             Download[]
+  favorites             Favorite[]
+  artist                Artist?
+  label                 Label?
+  reviews               Review[]
+  listenHistory         ListenHistory[]
+  notifications         Notification[]
+  pushSubscriptions     PushSubscription[]
+  referralCode          ReferralCode?
+  promoCodeUses         UsedPromoCode[]
+  podcasts              Podcast[]
+  playlists             Playlist[]
+  collaboratedPlaylists PlaylistCollaborator[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Label {
+  id                    String        @id @default(uuid())
+  name                  String
+  slug                  String        @unique
+  userId                String        @unique
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artists               Artist[]
+
+  @@index([slug])
+}
+
+model Artist {
+  id                    String        @id @default(uuid())
+  userId                String        @unique
+  name                  String        @unique
+  slug                  String        @unique
+  bio                   String?
+  avatar                String?
+  coverImage            String?
+  country               String?
+  genres                String
+  socialLinks           String?
+  isVerified            Boolean       @default(false)
+  verificationStatus    VerificationStatus @default(NONE)
+  verificationRequestedAt DateTime?
+  balance               Int           @default(0)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  labelId               String?
+  label                 Label?        @relation(fields: [labelId], references: [id])
+  albums                Album[]
+  concerts              Concert[]
+  commissions           Commission[]
+  favorites             Favorite[]
+
+  @@index([slug])
+  @@index([name])
+}
+
+model Album {
+  id                    String        @id @default(uuid())
+  artistId              String
+  title                 String
+  slug                  String
+  type                  ReleaseType   @default(ALBUM)
+  coverImage            String?
+  description           String?
+  genre                 String?
+  country               String?
+  price                 Int       @default(0)
+  releaseDate           DateTime?
+  status                AlbumStatus   @default(DRAFT)
+  isPremiumOnly         Boolean       @default(false)
+  totalTracks           Int           @default(0)
+  duration              Int           @default(0)
+  playCount             Int           @default(0)
+  purchaseCount         Int           @default(0)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  artist                Artist        @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  tracks                Track[]
+  purchases             Purchase[]
+  favorites             Favorite[]
+  reviews               Review[]
+
+  @@unique([artistId, slug])
+  @@index([status])
+  @@index([genre])
+  @@index([country])
+}
+
+model Track {
+  id                    String        @id @default(uuid())
+  albumId               String
+  title                 String
+  slug                  String
+  trackNumber           Int
+  duration              Int
+  audioFile             String
+  fileSize              Int?
+  isExplicit            Boolean       @default(false)
+  isPremiumOnly         Boolean       @default(false)
+  playCount             Int           @default(0)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  album                 Album         @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  favorites             Favorite[]
+  listenHistory         ListenHistory[]
+  playlistTracks        PlaylistTrack[]
+
+  @@unique([albumId, slug])
+  @@index([albumId])
+}
+
+model Subscription {
+  id                    String        @id @default(uuid())
+  userId                String
+  amount                Int
+  currency              String        @default("XOF")
+  startDate             DateTime
+  endDate               DateTime
+  status                SubscriptionStatus @default(PENDING)
+  transactionId         String?
+  autoRenew             Boolean       @default(true)
+  createdAt             DateTime      @default(now())
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Transaction {
+  id                    String        @id @default(uuid())
+  userId                String
+  type                  TransactionType
+  amount                Int
+  currency              String        @default("XOF")
+  status                TransactionStatus @default(PENDING)
+  paymentMethod         PaymentMethod
+  paymentProvider       PaymentProvider
+  providerTransactionId String?
+  productId             String
+  metadata              String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purchases             Purchase[]
+  promoCodeUse          UsedPromoCode?
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model Purchase {
+  id                    String        @id @default(uuid())
+  userId                String
+  albumId               String
+  transactionId         String
+  amount                Int
+  currency              String        @default("XOF")
+  purchasedAt           DateTime      @default(now())
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  album                 Album         @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  transaction           Transaction   @relation(fields: [transactionId], references: [id])
+
+  @@unique([userId, albumId])
+  @@index([userId])
+  @@index([albumId])
+}
+
+model Download {
+  id                    String        @id @default(uuid())
+  userId                String
+  albumId               String?
+  trackId               String?
+  downloadType          DownloadType
+  downloadedAt          DateTime      @default(now())
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([downloadedAt])
+}
+
+model Favorite {
+  id                    String        @id @default(uuid())
+  userId                String
+  trackId               String?
+  albumId               String?
+  artistId              String?
+  createdAt             DateTime      @default(now())
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track                 Track?        @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  album                 Album?        @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  artist                Artist?       @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([artistId])
+}
+
+model Playlist {
+  id          String         @id @default(uuid())
+  name        String
+  description String?
+  coverImage  String?
+  isPublic    Boolean        @default(false)
+  userId      String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tracks        PlaylistTrack[]
+  collaborators PlaylistCollaborator[]
+
+  @@index([userId])
+}
+
+model PlaylistCollaborator {
+  id         String            @id @default(uuid())
+  playlistId String
+  userId     String
+  role       CollaboratorRole  @default(EDITOR)
+  createdAt  DateTime          @default(now())
+
+  playlist   Playlist          @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([playlistId, userId])
+  @@index([playlistId])
+  @@index([userId])
+}
+
+model PlaylistTrack {
+  id         String   @id @default(uuid())
+  playlistId String
+  trackId    String
+  addedAt    DateTime @default(now())
+  sortOrder  Int      @default(0)
+
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  track    Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@unique([playlistId, trackId])
+  @@index([playlistId])
+  @@index([trackId])
+}
+
+model Concert {
+  id                    String        @id @default(uuid())
+  artistId              String
+  title                 String
+  slug                  String
+  venue                 String
+  city                  String
+  country               String
+  date                  DateTime
+  time                  String
+  description           String?
+  poster                String?
+  totalTickets          Int           @default(0)
+  availableTickets      Int           @default(0)
+  vipTickets            Int           @default(0)
+  vipAvailableTickets   Int           @default(0)
+  vvipTickets           Int           @default(0)
+  vvipAvailableTickets  Int           @default(0)
+  price                 Int
+  vipPrice              Int?
+  vvipPrice             Int?
+  isActive              Boolean       @default(true)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  artist                Artist        @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  tickets               Ticket[]
+
+  @@unique([slug])
+  @@index([date])
+  @@index([isActive])
+  @@index([city])
+}
+
+model Ticket {
+  id                    String        @id @default(uuid())
+  concertId             String
+  userId                String
+  type                  TicketType    @default(STANDARD)
+  price                 Int
+  qrCode                String        @unique
+  status                TicketStatus  @default(AVAILABLE)
+  recipientEmail        String?
+  purchasedAt           DateTime      @default(now())
+
+  concert               Concert       @relation(fields: [concertId], references: [id], onDelete: Cascade)
+
+  @@index([concertId])
+  @@index([userId])
+  @@index([qrCode])
+}
+
+enum TicketType {
+  STANDARD
+  VIP
+  VVIP
+}
+
+enum TicketStatus {
+  AVAILABLE
+  PURCHASED
+  USED
+  CANCELLED
+}
+
+enum VerificationStatus {
+  NONE
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum NotificationType {
+  ALBUM_SUBMISSION
+  CONCERT_CREATION
+  SYSTEM
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+}
+
+model Notification {
+  id                    String           @id @default(uuid())
+  userId                String?
+  type                  NotificationType @default(ALBUM_SUBMISSION)
+  title                 String
+  message               String
+  status                NotificationStatus @default(UNREAD)
+  referenceId           String?
+  referenceType         String?
+  createdAt             DateTime         @default(now())
+
+  user                  User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Review {
+  id                    String        @id @default(uuid())
+  albumId               String
+  userId                String
+  rating                Int
+  comment               String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  album                 Album         @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, albumId])
+  @@index([albumId])
+  @@index([createdAt])
+}
+
+model ListenHistory {
+  id        String   @id @default(uuid())
+  userId    String
+  trackId   String
+  playedAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([playedAt])
+  @@index([userId, playedAt])
+}
+
+model PushSubscription {
+  id            String   @id @default(uuid())
+  userId        String
+  endpoint      String   @unique
+  p256dh        String
+  auth          String
+  userAgent     String?
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model SiteConfig {
+  id                    String        @id @default("default")
+  appName               String        @default("Ngowamix")
+  siteDescription       String        @default("La plateforme de streaming musical africain")
+  supportEmail          String        @default("support@ngowamix.com")
+  premiumPrice          Int           @default(5000)
+  premiumCurrency       String        @default("XOF")
+  downloadQuota         Int           @default(30)
+  primaryColor          String        @default("#f97316")
+  logoUrl               String?
+  faviconUrl            String?
+  fontFamily            String        @default("Inter")
+  customCss             String?
+  updatedAt             DateTime      @updatedAt
+}
+
+model PaymentProviderConfig {
+  id                    String        @id @default(uuid())
+  provider              String        @unique
+  apiKey                String?
+  siteId                String?
+  isActive              Boolean       @default(false)
+  merchantName          String?
+  description           String?
+  updatedAt             DateTime      @updatedAt
+}
+
+model PromoCode {
+  id                    String        @id @default(uuid())
+  code                  String        @unique
+  discountType          String        @default("PERCENTAGE")
+  discountValue         Int
+  maxUses               Int           @default(0)
+  currentUses           Int           @default(0)
+  minAmount             Int           @default(0)
+  maxAmount             Int?
+  expiresAt             DateTime?
+  isActive              Boolean       @default(true)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  uses                  UsedPromoCode[]
+
+  @@index([code])
+  @@index([isActive])
+}
+
+model ReferralCode {
+  id                    String        @id @default(uuid())
+  code                  String        @unique
+  userId                String        @unique
+  discountPercent       Int           @default(10)
+  maxUses               Int           @default(50)
+  currentUses           Int           @default(0)
+  expiresAt             DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  uses                  UsedPromoCode[]
+
+  @@index([code])
+}
+
+model UsedPromoCode {
+  id                    String        @id @default(uuid())
+  promoCodeId           String?
+  referralCodeId        String?
+  userId                String
+  transactionId         String
+  discountAmount        Int
+  createdAt             DateTime      @default(now())
+
+  promoCode             PromoCode?    @relation(fields: [promoCodeId], references: [id])
+  referralCode          ReferralCode? @relation(fields: [referralCodeId], references: [id])
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transaction           Transaction   @relation(fields: [transactionId], references: [id])
+
+  @@index([userId])
+  @@index([promoCodeId])
+  @@index([referralCodeId])
+  @@unique([transactionId])
+}
+
+model Commission {
+  id                    String        @id @default(uuid())
+  artistId              String
+  referredUserId        String
+  transactionId         String
+  subscriptionAmount    Int
+  commissionPercent     Int           @default(10)
+  commissionAmount      Int
+  status                String        @default("PENDING")
+  createdAt             DateTime      @default(now())
+
+  artist                Artist        @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId])
+  @@index([status])
+}
+
+model Podcast {
+  id                    String        @id @default(uuid())
+  userId                String
+  title                 String
+  slug                  String
+  description           String?
+  coverImage            String?
+  category              String?
+  author                String?
+  isPublished           Boolean       @default(false)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  episodes              Episode[]
+
+  @@unique([userId, slug])
+  @@index([userId])
+  @@index([isPublished])
+}
+
+model Episode {
+  id                    String        @id @default(uuid())
+  podcastId             String
+  title                 String
+  description           String?
+  audioFile             String
+  duration              Int           @default(0)
+  fileSize              Int?
+  episodeNumber         Int
+  isPublished           Boolean       @default(false)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  podcast               Podcast       @relation(fields: [podcastId], references: [id], onDelete: Cascade)
+
+  @@unique([podcastId, episodeNumber])
+  @@index([podcastId])
+}
+
+enum Placement {
+  POPUP
+  BANNER
+  SIDEBAR
+  AUDIO
+}
+
+model Ad {
+  id        String    @id @default(uuid())
+  image     String    @default("")
+  sponsor   String
+  text      String
+  link      String?
+  audioFile String?
+  placement Placement @default(POPUP)
+  isActive  Boolean   @default(true)
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([placement, isActive])
+}
