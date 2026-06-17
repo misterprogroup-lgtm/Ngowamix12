@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { HorizontalScroll } from '@/components/ui/horizontal-scroll';
 
 import { RecentlyPlayed } from '@/components/catalog/recently-played';
+import { RecommendationsWrapper } from '@/components/home/recommendations-wrapper';
 import { AnimatedSection } from '@/components/ui/animated-section';
 import { SinglesCarousel } from '@/components/home/singles-carousel';
 import { GenreExplore } from '@/components/home/genre-explore';
@@ -105,6 +106,13 @@ export default async function HomePage() {
 
       {/* Recently Played */}
       <Suspense fallback={null}><AnimatedSection delay={0.05}><RecentlyPlayed /></AnimatedSection></Suspense>
+
+      {/* Personalized Recommendations */}
+      <AnimatedSection delay={0.07}>
+        <div className="container mx-auto">
+          <RecommendationsWrapper />
+        </div>
+      </AnimatedSection>
 
       {/* Featured Artists */}
       {featuredArtists.length > 0 && (

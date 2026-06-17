@@ -7,13 +7,15 @@ import Link from 'next/link';
 interface HorizontalScrollProps {
   children: ReactNode;
   title?: ReactNode;
+  subtitle?: string;
+  icon?: ReactNode;
   description?: string;
   seeAllHref?: string;
   className?: string;
   withPadding?: boolean;
 }
 
-export function HorizontalScroll({ children, title, description, seeAllHref, className = '', withPadding = true }: HorizontalScrollProps) {
+export function HorizontalScroll({ children, title, subtitle, icon, description, seeAllHref, className = '', withPadding = true }: HorizontalScrollProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -48,7 +50,15 @@ export function HorizontalScroll({ children, title, description, seeAllHref, cla
     <div className={className}>
       {(title || seeAllHref) && (
         <div className="flex items-center justify-between mb-6">
-          {title && <div className="text-2xl font-bold">{title}</div>}
+          {title && (
+            <div>
+              <div className="flex items-center gap-2">
+                {icon && <span>{icon}</span>}
+                <div className="text-2xl font-bold">{title}</div>
+              </div>
+              {subtitle && <p className="text-sm text-text-muted mt-0.5">{subtitle}</p>}
+            </div>
+          )}
           <div className="flex items-center gap-3">
             {(canScrollLeft || canScrollRight) && (
               <div className="hidden md:flex items-center gap-1">

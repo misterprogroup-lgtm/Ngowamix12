@@ -7,6 +7,7 @@ import { ArtistCard } from '@/components/catalog/artist-card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ListenHistoryPlaylist } from '@/components/catalog/listen-history-playlist';
+import { PersonalizedRecommendations } from '@/components/home/personalized-recommendations';
 import { GENRES, COUNTRIES } from '@/lib/constants';
 
 export function ExploreClient() {
@@ -69,6 +70,11 @@ export function ExploreClient() {
 
       {/* Ma playlist */}
       <ListenHistoryPlaylist />
+
+      {/* Recommandations personnalisées */}
+      <div className="mb-8">
+        <PersonalizedRecommendations />
+      </div>
 
       {/* Type selector */}
       <div className="flex gap-2 mb-6">
