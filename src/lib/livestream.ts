@@ -26,7 +26,7 @@ export async function getLivestreamById(id: string) {
   return db.liveStream.findUnique({
     where: { id },
     include: {
-      artist: { select: { id: true, name: true, slug: true, avatar: true, userId: true } },
+      artist: { select: { id: true, name: true, slug: true, avatar: true, userId: true, streamServerUrl: true } },
       _count: { select: { chats: true } },
     },
   });

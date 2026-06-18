@@ -13,6 +13,23 @@ interface ChatMessage {
   user: { id: string; displayName: string | null; avatar: string | null };
 }
 
+function useHls(src: string | null, videoRef: React.RefObject<HTMLVideoElement | null>) {
+  useEffect(() => {
+    if (!src || !videoRef.current) return;
+    let hls: any;
+    import('hls.js').then((Hls) => {
+      if (Hls.default.isSupported()) {
+        hls = new Hls.default();
+        hls.loadSource(src);
+        hls.attachMedia(videoRef.current!);
+      } else if (videoRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
+        videoRef.current.src = src;
+      }
+    });
+    return () => { hls?.destroy(); };
+  }, [src, videoRef]);
+}
+
 export default function WatchLivestreamPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -22,6 +39,7 @@ export default function WatchLivestreamPage() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     fetch(`/api/livestream/${id}`)
@@ -86,6 +104,12 @@ export default function WatchLivestreamPage() {
 
   const embedUrl = stream.streamUrl ? getEmbedUrl(stream.streamUrl) : null;
 
+  const hlsUrl = !embedUrl && stream.artist?.streamServerUrl && stream.streamKey
+    ? `${stream.artist.streamServerUrl.replace(/\/+$/, '')}/hls/${stream.streamKey}.m3u8`
+    : null;
+
+  useHls(hlsUrl, videoRef);
+
   return (
     <div className="container mx-auto py-6 pb-24">
       <Link href="/livestream" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-4">
@@ -102,6 +126,8 @@ export default function WatchLivestreamPage() {
                 allow="autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen
               />
+            ) : hlsUrl ? (
+              <video ref={videoRef} className="h-full w-full" controls autoPlay muted playsInline />
             ) : stream.thumbnail ? (
               <SafeImage src={stream.thumbnail} alt={stream.title} fill className="object-cover" />
             ) : (
