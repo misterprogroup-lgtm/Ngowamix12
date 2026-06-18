@@ -694,26 +694,20 @@ enum LiveStreamStatus {
 }
 
 model LiveStream {
-  id              String          @id @default(uuid())
-  artistId        String
-  title           String
-  description     String?
-  thumbnail       String?
-  streamKey       String          @unique
-  status          LiveStreamStatus @default(SCHEDULED)
-  scheduledAt     DateTime?
-  startedAt       DateTime?
-  endedAt         DateTime?
-  viewerCount     Int             @default(0)
-  maxViewers      Int             @default(100)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  // Mux Live Stream integration
-  muxLiveStreamId String?
-  muxPlaybackId   String?
-  muxStreamKey    String?
-  muxRtmpUrl      String?
+  id          String          @id @default(uuid())
+  artistId    String
+  title       String
+  description String?
+  thumbnail   String?
+  streamKey   String          @unique
+  status      LiveStreamStatus @default(SCHEDULED)
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  endedAt     DateTime?
+  viewerCount Int             @default(0)
+  maxViewers  Int             @default(100)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   artist      Artist          @relation(fields: [artistId], references: [id], onDelete: Cascade)
   chats       LiveStreamChat[]
