@@ -65,7 +65,7 @@ export function HorizontalScroll({ children, title, subtitle, icon, description,
                 {canScrollLeft && (
                   <button
                     onClick={() => scroll('left')}
-                    className="h-9 w-9 rounded-full bg-surface/90 border border-border flex items-center justify-center text-text-primary hover:bg-surface-hover transition-colors"
+                    className="h-9 w-9 rounded-full bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-hover transition-colors"
                     aria-label="Précédent"
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -74,7 +74,7 @@ export function HorizontalScroll({ children, title, subtitle, icon, description,
                 {canScrollRight && (
                   <button
                     onClick={() => scroll('right')}
-                    className="h-9 w-9 rounded-full bg-surface/90 border border-border flex items-center justify-center text-text-primary hover:bg-surface-hover transition-colors"
+                    className="h-9 w-9 rounded-full bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-hover transition-colors"
                     aria-label="Suivant"
                   >
                     <ChevronRight className="h-4 w-4" />
@@ -94,7 +94,7 @@ export function HorizontalScroll({ children, title, subtitle, icon, description,
       <div className="relative">
         <div
           ref={scrollRef}
-          className={`flex gap-5 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory snap-scroll-container ${withPadding ? '-mx-4 px-4' : ''}`}
+          className={`flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory snap-scroll-container ${withPadding ? '-mx-4 px-4' : ''}`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {children}

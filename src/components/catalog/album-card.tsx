@@ -43,7 +43,7 @@ export function AlbumCard({
   return (
     <div className={cn('group', className)}>
       <Link href={`/album/${id}`} className="relative block">
-        <div className="relative aspect-square overflow-hidden rounded-lg bg-surface-hover">
+        <div className="relative aspect-square overflow-hidden rounded-xl bg-surface-hover shadow-md shadow-black/5">
           {coverImage ? (
             <SafeImage
               src={coverImage}
@@ -58,12 +58,9 @@ export function AlbumCard({
               <Music className="h-12 w-12" />
             </div>
           )}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg">
-              <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
-            </div>
-            <div className="absolute top-2 right-2">
-              <ShareButton url={`/album/${id}`} title={title} artistName={artistName} coverImage={coverImage} type="album" />
+          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-xl shadow-black/30 translate-y-2 group-hover:translate-y-0 transition-transform">
+              <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
             </div>
           </div>
           <div className="absolute top-2 left-2 flex gap-1.5">
@@ -73,6 +70,9 @@ export function AlbumCard({
             {isPremiumOnly && (
               <Badge variant="premium">Premium</Badge>
             )}
+          </div>
+          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <ShareButton url={`/album/${id}`} title={title} artistName={artistName} coverImage={coverImage} type="album" />
           </div>
         </div>
       </Link>

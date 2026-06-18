@@ -67,7 +67,7 @@ export function GenreExplore({ onGenreSelect }: GenreExploreProps) {
               className={`snap-start shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selected === genre
                   ? 'bg-primary text-white'
-                  : 'bg-surface hover:bg-surface-hover text-text-secondary border border-border'
+                  : 'bg-surface-hover/50 hover:bg-surface-hover text-text-secondary'
               }`}
             >
               {genre}
@@ -91,7 +91,7 @@ export function GenreExplore({ onGenreSelect }: GenreExploreProps) {
           </div>
         ) : (
           <div className="grid md:grid-cols-[1fr_1fr] gap-6 items-start">
-            <div className="relative aspect-square rounded-2xl overflow-hidden bg-surface-hover">
+            <div className="relative aspect-square rounded-xl overflow-hidden bg-surface-hover">
               {cover ? (
                 <SafeImage src={cover} alt={selected} fill sizes="50vw" className="object-cover" fallback={<div className="flex h-full items-center justify-center text-text-muted"><Music className="h-16 w-16" /></div>} />
               ) : (
@@ -119,7 +119,7 @@ export function GenreExplore({ onGenreSelect }: GenreExploreProps) {
                         play(track, tracks, index);
                       }
                     }}
-                    className="flex items-center gap-3 rounded-lg p-2 hover:bg-surface-hover transition-colors group w-full text-left"
+                    className="flex items-center gap-3 rounded-xl p-2 hover:bg-surface-hover transition-colors group w-full text-left"
                   >
                     <span className="text-sm text-text-muted w-6 text-right shrink-0">
                       {isCurrentTrack && isPlaying ? (

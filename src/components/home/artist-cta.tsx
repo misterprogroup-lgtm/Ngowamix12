@@ -6,13 +6,10 @@ export function ArtistCTA() {
   return (
     <section>
       <div className="container mx-auto px-4">
-        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 via-accent/10 to-surface border border-primary/10">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
-
-          <div className="relative z-10 p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center">
+        <div className="relative rounded-2xl overflow-hidden bg-surface border border-border">
+          <div className="p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center mb-6">
                 <Mic2 className="h-6 w-6 text-white" />
               </div>
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
@@ -79,12 +76,8 @@ export function ArtistCTA() {
             </div>
 
             <div className="hidden md:flex justify-center">
-              <div className="relative">
-                <div className="w-64 h-64 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center">
-                  <div className="w-48 h-48 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                    <Mic2 className="h-16 w-16 text-white/80" />
-                  </div>
-                </div>
+              <div className="w-64 h-64 rounded-full bg-surface-hover flex items-center justify-center">
+                <Mic2 className="h-20 w-20 text-primary/40" />
               </div>
             </div>
           </div>

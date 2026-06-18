@@ -54,8 +54,8 @@
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
   }
 
   ::-webkit-scrollbar-track {
@@ -136,55 +136,11 @@
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
 
-  .glow {
-    box-shadow: 0 0 40px rgba(255, 140, 0, 0.3);
+  .spotify-card {
+    @apply rounded-xl bg-surface hover:bg-surface-hover transition-all duration-200;
   }
 
-  .glass {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .dark .glass {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.08);
-  }
-
-  .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    transition: all 0.3s ease;
-  }
-  .glass-card:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 140, 0, 0.2);
-    box-shadow: 0 8px 32px rgba(255, 140, 0, 0.08);
-  }
-  .dark .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.06);
-  }
-  .dark .glass-card:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 140, 0, 0.2);
-  }
-
-  .glass-card-static {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  .bg-radial-gradient {
-    background: radial-gradient(1200px 600px at 10% -10%, rgba(255,140,0,0.12), transparent),
-                radial-gradient(800px 400px at 90% 10%, rgba(255,200,0,0.08), transparent);
-  }
-
-  .bg-radial-card {
-    background: radial-gradient(600px 300px at 50% 0%, rgba(255,140,0,0.06), transparent);
+  .spotify-card-elevated {
+    @apply rounded-xl bg-surface hover:bg-surface-hover hover:shadow-lg hover:shadow-black/10 transition-all duration-200;
   }
 }

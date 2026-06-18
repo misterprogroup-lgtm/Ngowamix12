@@ -218,7 +218,7 @@ export function AudioPlayer() {
       <audio ref={audioRef} preload="metadata" />
       {(currentTrack || isAdPlaying) && (
         <div className={cn(
-            'fixed left-0 right-0 z-40 border-t border-border bg-surface/95 backdrop-blur transition-all duration-300',
+            'fixed left-0 right-0 z-40 border-t border-border bg-background transition-all duration-300',
             'bottom-16 md:bottom-0',
             isExpanded ? 'h-64 md:h-72' : 'h-16 md:h-20',
             error && 'border-error/30',
@@ -244,7 +244,7 @@ export function AudioPlayer() {
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex items-center gap-3 min-w-0 flex-1 md:flex-none md:w-64"
           >
-            <div className="relative h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-md overflow-hidden bg-surface-hover">
+            <div className="relative h-10 w-10 md:h-14 md:w-14 shrink-0 rounded-lg overflow-hidden bg-surface-hover shadow-md shadow-black/10">
               {isAdPlaying ? (
                 <div className="flex h-full items-center justify-center bg-primary/20">
                   <Megaphone className="h-5 w-5 text-primary" />
