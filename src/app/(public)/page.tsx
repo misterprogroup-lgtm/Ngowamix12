@@ -95,7 +95,7 @@ export default async function HomePage() {
 
       {/* Personalized Recommendations */}
       <AnimatedSection delay={0.07}>
-        <div className="container mx-auto">
+        <div className="container mx-auto px-4">
           <RecommendationsWrapper />
         </div>
       </AnimatedSection>

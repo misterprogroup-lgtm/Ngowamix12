@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Play, Pause, Music, Sparkles, Loader2 } from 'lucide-react';
+import { Play, Pause, Music, Loader2 } from 'lucide-react';
 import { SafeImage } from '@/components/ui/safe-image';
 import { usePlayerStore } from '@/store/player-store';
 import { useAuthStore } from '@/store/auth-store';
@@ -81,7 +81,7 @@ function RecommendedTracks({ tracks }: { tracks: TrackRec[] }) {
   };
 
   return (
-    <HorizontalScroll title="Recommandé pour toi" subtitle="Suggestions personnalisées" icon={<Sparkles className="h-5 w-5 text-primary" />}>
+    <HorizontalScroll title="Recommandé pour toi" subtitle="Suggestions personnalisées">
       {tracks.map((track) => (
         <div key={track.id} className="group w-48 snap-start shrink-0">
           <div className="relative mb-3">
@@ -141,7 +141,7 @@ function RecommendedTracks({ tracks }: { tracks: TrackRec[] }) {
 
 function RecommendedArtists({ artists }: { artists: ArtistRec[] }) {
   return (
-    <HorizontalScroll title="Artistes suggérés" subtitle="Basé sur tes goûts" icon={<Sparkles className="h-5 w-5 text-primary" />}>
+    <HorizontalScroll title="Artistes suggérés" subtitle="Basé sur tes goûts">
       {artists.map((artist) => (
         <Link
           key={artist.id}
