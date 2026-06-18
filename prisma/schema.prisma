@@ -706,6 +706,7 @@ model LiveStream {
   description String?
   thumbnail   String?
   streamKey   String          @unique
+  streamUrl   String?
   status      LiveStreamStatus @default(SCHEDULED)
   scheduledAt DateTime?
   startedAt   DateTime?

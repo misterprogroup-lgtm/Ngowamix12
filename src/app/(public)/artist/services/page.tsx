@@ -197,54 +197,60 @@ export default function ArtistServicesPage() {
 
         {tab === 'streaming' && (
           <div className="space-y-5 p-6 rounded-2xl bg-surface border border-border">
-            <h2 className="font-semibold">Serveur de streaming vidéo</h2>
+            <h2 className="font-semibold">Streaming vidéo</h2>
             <p className="text-sm text-text-secondary -mt-3">
-              Configure ton serveur Owncast pour diffuser de la vidéo en direct depuis OBS.
+              Configure ton serveur de diffusion pour la vidéo en direct.
             </p>
 
-            <div>
-              <label htmlFor="streamServerUrl" className="block text-sm font-medium mb-1.5">
-                URL du serveur Owncast
-              </label>
-              <input
-                id="streamServerUrl"
-                type="url"
-                value={streamServerUrl}
-                onChange={(e) => setStreamServerUrl(e.target.value)}
-                placeholder="https://votre-serveur.com"
-                className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
-            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
-              <div className="flex items-start gap-3">
-                <ExternalLink className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                <div className="text-sm text-text-secondary">
-                  <p className="mb-2">
-                    Tu n&apos;as pas encore de serveur ? <strong>Owncast</strong> est un serveur de streaming gratuit que tu peux installer sur un VPS à partir de 5€/mois.
-                  </p>
-                  <a
-                    href="https://owncast.online/docs/quickstart/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-primary hover:text-primary-hover font-medium"
-                  >
-                    Guide d&apos;installation
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                </div>
-              </div>
+            <div className="p-4 rounded-xl bg-success/5 border border-success/20">
+              <h3 className="font-semibold text-sm mb-2">YouTube Live (gratuit, recommandé)</h3>
+              <p className="text-sm text-text-secondary mb-3">
+                Aucun serveur nécessaire. Tu crées ton live sur YouTube et tu colles le lien dans le formulaire de création de live.
+              </p>
+              <ol className="text-sm text-text-secondary space-y-1 list-decimal list-inside">
+                <li>Va sur <strong>YouTube Studio → Créer → Passer en direct</strong></li>
+                <li>Copie la clé de diffusion</li>
+                <li>OBS : Service = <strong>YouTube - RTMPS</strong>, colle la clé</li>
+                <li>Colle le lien YouTube dans le live créé sur Ngowamix</li>
+              </ol>
+              <a
+                href="https://www.youtube.com/live_dashboard"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary-hover font-medium mt-3"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                Tableau de bord YouTube Live
+              </a>
             </div>
 
             <div className="p-4 rounded-xl bg-surface-hover border border-border">
-              <h3 className="text-sm font-semibold mb-2">Configuration OBS</h3>
-              <div className="space-y-2 text-sm text-text-secondary">
-                <p>1. Ouvre OBS Studio</p>
-                <p>2. Va dans <strong>Paramètres → Diffusion</strong></p>
-                <p>3. Service : <strong>Custom...</strong></p>
-                <p>4. Serveur : <code className="text-primary text-xs bg-primary/10 px-1.5 py-0.5 rounded">{streamServerUrl || 'https://votre-serveur.com'}<span className="text-text-muted">/live</span></code></p>
-                <p>5. Clé de diffusion : utilise la <strong>clé de stream</strong> générée dans la page Live</p>
+              <h3 className="font-semibold text-sm mb-2">Owncast (auto-hébergé)</h3>
+              <p className="text-sm text-text-secondary mb-3">
+                Option avancée : installe Owncast sur un VPS pour un contrôle total.
+              </p>
+              <div>
+                <label htmlFor="streamServerUrl" className="block text-sm font-medium mb-1.5">
+                  URL du serveur
+                </label>
+                <input
+                  id="streamServerUrl"
+                  type="url"
+                  value={streamServerUrl}
+                  onChange={(e) => setStreamServerUrl(e.target.value)}
+                  placeholder="https://votre-serveur.com"
+                  className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                />
               </div>
+              <a
+                href="https://owncast.online/docs/quickstart/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary-hover font-medium mt-3"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                Guide d&apos;installation Owncast
+              </a>
             </div>
           </div>
         )}

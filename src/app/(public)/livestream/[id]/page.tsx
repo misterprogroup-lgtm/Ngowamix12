@@ -70,6 +70,22 @@ export default function WatchLivestreamPage() {
 
   const isLive = stream.status === 'LIVE';
 
+  function getEmbedUrl(url: string): string | null {
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes('youtube.com') || u.hostname.includes('youtu.be')) {
+        const v = u.searchParams.get('v') || u.pathname.split('/').pop();
+        if (v) return `https://www.youtube.com/embed/${v}?autoplay=1`;
+      }
+      if (u.hostname === 'www.youtube-nocookie.com') return url;
+      return url;
+    } catch {
+      return null;
+    }
+  }
+
+  const embedUrl = stream.streamUrl ? getEmbedUrl(stream.streamUrl) : null;
+
   return (
     <div className="container mx-auto py-6 pb-24">
       <Link href="/livestream" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-4">
@@ -79,7 +95,14 @@ export default function WatchLivestreamPage() {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="relative aspect-video rounded-2xl overflow-hidden bg-surface border border-border">
-            {stream.thumbnail ? (
+            {embedUrl ? (
+              <iframe
+                src={embedUrl}
+                className="h-full w-full"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+              />
+            ) : stream.thumbnail ? (
               <SafeImage src={stream.thumbnail} alt={stream.title} fill className="object-cover" />
             ) : (
               <div className="flex h-full items-center justify-center">

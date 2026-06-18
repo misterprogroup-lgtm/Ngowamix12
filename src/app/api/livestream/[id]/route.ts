@@ -27,7 +27,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
 
     const body = await request.json();
-    const { status, title, description, thumbnail } = body;
+    const { status, title, description, thumbnail, streamUrl } = body;
 
     if (status && ['LIVE', 'ENDED', 'SCHEDULED'].includes(status)) {
       await updateLivestreamStatus(id, status);
@@ -35,7 +35,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     const updated = await db.liveStream.update({
       where: { id },
-      data: { title, description, thumbnail },
+      data: { title, description, thumbnail, streamUrl },
     });
 
     return NextResponse.json({ stream: updated });

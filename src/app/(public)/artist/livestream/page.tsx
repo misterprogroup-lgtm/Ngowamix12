@@ -12,6 +12,7 @@ export default function ArtistLivestreamPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [streamUrl, setStreamUrl] = useState('');
   const [creating, setCreating] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -32,12 +33,13 @@ export default function ArtistLivestreamPage() {
       const res = await fetch('/api/livestream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: title.trim(), description: description.trim() || undefined }),
+        body: JSON.stringify({ title: title.trim(), description: description.trim() || undefined, streamUrl: streamUrl.trim() || undefined }),
       });
       if (res.ok) {
         setShowCreate(false);
         setTitle('');
         setDescription('');
+        setStreamUrl('');
         fetchStreams();
       } else {
         const data = await res.json();
@@ -110,6 +112,13 @@ export default function ArtistLivestreamPage() {
             placeholder="Description (optionnelle)..."
             rows={2}
             className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+          />
+          <input
+            type="url"
+            value={streamUrl}
+            onChange={(e) => setStreamUrl(e.target.value)}
+            placeholder="Lien YouTube Live (optionnel) — ex: https://youtube.com/watch?v=..."
+            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <div className="flex gap-2">
             <button
@@ -207,18 +216,46 @@ export default function ArtistLivestreamPage() {
           <Monitor className="h-5 w-5 text-primary" />
           <h3 className="font-semibold">Diffuser en vidéo (gratuit)</h3>
         </div>
-        <p className="text-sm text-text-secondary mb-4">
-          Pour diffuser de la vidéo en direct depuis OBS, installe un serveur RTMP gratuit comme <strong>Owncast</strong> sur un VPS à 5€/mois.
-        </p>
-        <a
-          href="https://owncast.online/docs/quickstart/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-hover font-medium"
-        >
-          <ExternalLink className="h-4 w-4" />
-          Guide d&apos;installation Owncast
-        </a>
+
+        <div className="space-y-4">
+          <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
+            <h4 className="font-semibold text-sm mb-2">YouTube Live (recommandé)</h4>
+            <p className="text-sm text-text-secondary mb-3">
+              100% gratuit. Va sur <strong>YouTube Studio → Créer → Passer en direct</strong>, copie ta clé de diffusion, et configure OBS avec.
+            </p>
+            <ol className="text-sm text-text-secondary space-y-1 list-decimal list-inside mb-3">
+              <li>Ouvre OBS → Paramètres → Diffusion</li>
+              <li>Service : <strong>YouTube - RTMPS</strong></li>
+              <li>Clé de streaming : colle celle de YouTube</li>
+              <li>Colle le lien YouTube du live dans le champ ci-dessus</li>
+            </ol>
+            <a
+              href="https://www.youtube.com/live_dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-hover font-medium"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Ouvrir le tableau de bord YouTube Live
+            </a>
+          </div>
+
+          <div className="p-4 rounded-xl bg-surface-hover border border-border">
+            <h4 className="font-semibold text-sm mb-2">Owncast (auto-hébergé)</h4>
+            <p className="text-sm text-text-secondary mb-2">
+              Installe Owncast sur un VPS (~5$/mois) pour un contrôle total.
+            </p>
+            <a
+              href="https://owncast.online/docs/quickstart/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-hover font-medium"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Guide d&apos;installation Owncast
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
