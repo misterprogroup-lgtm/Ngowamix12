@@ -13,6 +13,7 @@ export default function ArtistLivestreamPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [streamUrl, setStreamUrl] = useState('');
+  const [customKey, setCustomKey] = useState('');
   const [creating, setCreating] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export default function ArtistLivestreamPage() {
       const res = await fetch('/api/livestream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: title.trim(), description: description.trim() || undefined, streamUrl: streamUrl.trim() || undefined }),
+        body: JSON.stringify({ title: title.trim(), description: description.trim() || undefined, streamUrl: streamUrl.trim() || undefined, streamKey: customKey.trim() || undefined }),
       });
       if (res.ok) {
         setShowCreate(false);
@@ -120,6 +121,13 @@ export default function ArtistLivestreamPage() {
             placeholder="Lien YouTube Live (optionnel) — ex: https://youtube.com/watch?v=..."
             className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
           />
+          <input
+            type="text"
+            value={customKey}
+            onChange={(e) => setCustomKey(e.target.value)}
+            placeholder="Clé Owncast (optionnel) — si tu utilises Owncast, entre ici sa clé de stream"
+            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+          />
           <div className="flex gap-2">
             <button
               onClick={handleCreate}
@@ -129,7 +137,7 @@ export default function ArtistLivestreamPage() {
               {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Créer le live'}
             </button>
             <button
-              onClick={() => { setShowCreate(false); setTitle(''); setDescription(''); }}
+              onClick={() => { setShowCreate(false); setTitle(''); setDescription(''); setStreamUrl(''); setCustomKey(''); }}
               className="px-4 py-2.5 text-sm text-text-muted hover:text-text-primary transition-colors"
             >
               Annuler

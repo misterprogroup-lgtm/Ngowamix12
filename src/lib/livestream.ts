@@ -38,6 +38,7 @@ export async function createLivestream(data: {
   description?: string;
   thumbnail?: string;
   streamUrl?: string;
+  streamKey?: string;
   scheduledAt?: string;
 }) {
   return db.liveStream.create({
@@ -47,7 +48,7 @@ export async function createLivestream(data: {
       description: data.description,
       thumbnail: data.thumbnail,
       streamUrl: data.streamUrl,
-      streamKey: generateStreamKey(),
+      streamKey: data.streamKey || generateStreamKey(),
       scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : undefined,
     },
   });

@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     if (!artist) return NextResponse.json({ error: 'Vous devez être un artiste' }, { status: 403 });
 
     const body = await request.json();
-    const { title, description, thumbnail, streamUrl, scheduledAt } = body;
+    const { title, description, thumbnail, streamUrl, streamKey, scheduledAt } = body;
 
     if (!title) return NextResponse.json({ error: 'Le titre est requis' }, { status: 400 });
 
@@ -38,6 +38,7 @@ export async function POST(request: Request) {
       description,
       thumbnail,
       streamUrl,
+      streamKey,
       scheduledAt,
     });
 
