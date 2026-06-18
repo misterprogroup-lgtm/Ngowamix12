@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { Crown, Headphones, Download, ArrowRight } from 'lucide-react';
 import { AlbumCard } from '@/components/catalog/album-card';
-import { ArtistCard } from '@/components/catalog/artist-card';
 import { Button } from '@/components/ui/button';
 import { HorizontalScroll } from '@/components/ui/horizontal-scroll';
 
@@ -40,18 +39,6 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 300;
-
-async function getFeaturedArtists() {
-  try {
-    const res = await fetch(`${process.env.APP_URL || 'http://localhost:3000'}/api/artists?limit=6`, {
-      next: { revalidate: 300 },
-    });
-    const data = await res.json();
-    return data.artists || [];
-  } catch {
-    return [];
-  }
-}
 
 async function getRecentAlbums() {
   try {
@@ -90,7 +77,6 @@ async function getPopularTracks() {
 }
 
 export default async function HomePage() {
-  const featuredArtists = await getFeaturedArtists();
   const recentAlbums = await getRecentAlbums();
   const recentSingles = await getRecentSingles();
   const popularTracks = await getPopularTracks();
@@ -113,28 +99,6 @@ export default async function HomePage() {
           <RecommendationsWrapper />
         </div>
       </AnimatedSection>
-
-      {/* Featured Artists */}
-      {featuredArtists.length > 0 && (
-        <AnimatedSection delay={0.1}>
-          <div className="container mx-auto">
-            <HorizontalScroll title="Artistes à la une" seeAllHref="/explore">
-              {featuredArtists.map((artist: { id: string; name: string; slug: string; avatar: string | null; isVerified: boolean }) => (
-                <div key={artist.id} className="snap-start shrink-0">
-                  <ArtistCard
-                    id={artist.id}
-                    name={artist.name}
-                    slug={artist.slug}
-                    avatar={artist.avatar}
-                    isVerified={artist.isVerified}
-                    showPlayButton
-                  />
-                </div>
-              ))}
-            </HorizontalScroll>
-          </div>
-      </AnimatedSection>
-      )}
 
       {/* Genre Grid */}
       <AnimatedSection delay={0.15}><GenreGrid /></AnimatedSection>
