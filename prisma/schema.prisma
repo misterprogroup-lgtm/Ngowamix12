@@ -160,6 +160,12 @@ model Artist {
   verificationStatus    VerificationStatus @default(NONE)
   verificationRequestedAt DateTime?
   balance               Int           @default(0)
+  payoutMethod          String?
+  payoutPhone           String?
+  payoutAccountName     String?
+  payoutBankName        String?
+  payoutBankAccount     String?
+  streamServerUrl       String?
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 

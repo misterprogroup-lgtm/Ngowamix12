@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { getActiveLivestreams, createLivestream } from '@/lib/livestream';
-import { createMuxLiveStream, encodeMuxData } from '@/lib/mux';
-import { revalidatePath } from 'next/cache';
 
 export async function GET(request: Request) {
   try {
@@ -12,14 +10,8 @@ export async function GET(request: Request) {
     const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 50);
 
     const { streams, total } = await getActiveLivestreams(limit, (page - 1) * limit);
-
-    const streamsWithMux = streams.map((s) => {
-      const muxData = s.streamKey ? tryParseMuxKey(s.streamKey) : null;
-      return { ...s, muxPlaybackId: muxData?.muxPlaybackId || null };
-    });
-
     return NextResponse.json({
-      streams: streamsWithMux,
+      streams,
       pagination: { page, limit, total, pages: Math.ceil(total / limit) },
     });
   } catch {
@@ -40,25 +32,16 @@ export async function POST(request: Request) {
 
     if (!title) return NextResponse.json({ error: 'Le titre est requis' }, { status: 400 });
 
-    const muxData = await createMuxLiveStream(title);
-    const streamKey = muxData ? encodeMuxData(muxData) : undefined;
-
     const stream = await createLivestream({
       artistId: artist.id,
       title,
       description,
       thumbnail,
       scheduledAt,
-      streamKey,
     });
 
-    revalidatePath('/livestream');
-    return NextResponse.json({ stream, mux: muxData }, { status: 201 });
+    return NextResponse.json({ stream }, { status: 201 });
   } catch {
     return NextResponse.json({ error: 'Erreur lors de la création' }, { status: 500 });
   }
-}
-
-function tryParseMuxKey(key: string) {
-  try { return JSON.parse(key); } catch { return null; }
 }

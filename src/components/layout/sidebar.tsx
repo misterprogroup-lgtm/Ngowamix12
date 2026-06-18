@@ -41,6 +41,7 @@ const artistLinks = [
   { href: ROUTES.ARTIST_DASHBOARD, label: 'Dashboard', icon: LayoutDashboard },
   { href: ROUTES.ARTIST_CATALOG, label: 'Catalogue', icon: LayoutDashboard },
   { href: ROUTES.ARTIST_PROFILE, label: 'Profil', icon: User },
+  { href: ROUTES.ARTIST_SERVICES, label: 'Services', icon: Settings },
   { href: ROUTES.ARTIST_REFERRAL, label: 'Parrainage', icon: LayoutDashboard },
 ];
 

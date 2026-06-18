@@ -84,4 +84,5 @@ export const ROUTES = {
   FAMILY_PREMIUM: '/premium/family',
   ARTIST_ROYALTIES: '/artist/royalties',
   ARTIST_PAYOUT: '/artist/payout',
+  ARTIST_SERVICES: '/artist/services',
 } as const;

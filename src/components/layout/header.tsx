@@ -67,6 +67,7 @@ export function Header() {
     { href: ROUTES.ARTIST_PROFILE, label: 'Profil' },
     { href: ROUTES.ARTIST_LIVESTREAM, label: 'Live' },
     { href: ROUTES.ARTIST_ROYALTIES, label: 'Royalties' },
+    { href: ROUTES.ARTIST_SERVICES, label: 'Services' },
     { href: ROUTES.ARTIST_REFERRAL, label: 'Parrainage' },
   ];
 

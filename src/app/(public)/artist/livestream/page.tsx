@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Radio, Loader2, Copy, Check, Trash2, Play, Square, Monitor, Info } from 'lucide-react';
-import { SafeImage } from '@/components/ui/safe-image';
+import { Plus, Radio, Loader2, Copy, Check, Trash2, Play, Square, Monitor, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ArtistLivestreamPage() {
@@ -80,10 +79,6 @@ export default function ArtistLivestreamPage() {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const parseMuxStreamKey = (key: string) => {
-    try { return JSON.parse(key); } catch { return null; }
-  };
-
   return (
     <div className="container mx-auto px-4 py-8 pb-24">
       <div className="flex items-center justify-between mb-8">
@@ -143,103 +138,88 @@ export default function ArtistLivestreamPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {streams.map((stream) => {
-            const muxData = stream.streamKey ? parseMuxStreamKey(stream.streamKey) : null;
-            const hasMux = !!(muxData?.muxStreamKey && muxData?.muxRtmpUrl);
-            return (
-              <div key={stream.id} className="rounded-2xl bg-surface border border-border p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold">{stream.title}</h3>
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        stream.status === 'LIVE' ? 'bg-red-600/20 text-red-500' :
-                        stream.status === 'ENDED' ? 'bg-text-muted/10 text-text-muted' :
-                        'bg-primary/10 text-primary'
-                      }`}>
-                        {stream.status === 'LIVE' ? 'En direct' : stream.status === 'ENDED' ? 'Terminé' : 'Planifié'}
-                      </span>
-                    </div>
-                    {stream.description && <p className="text-sm text-text-secondary line-clamp-1">{stream.description}</p>}
-                    <div className="flex items-center gap-4 mt-2 text-xs text-text-muted">
-                      {stream.viewerCount > 0 && <span>{stream.viewerCount} spectateur{stream.viewerCount !== 1 ? 's' : ''}</span>}
-                      <span>{stream._count.chats} messages</span>
-                      <span>{new Date(stream.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                    </div>
-
-                    {hasMux && (
-                      <div className="mt-4 p-4 rounded-xl bg-background border border-border space-y-3">
-                        <div className="flex items-center gap-2 text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                          <Monitor className="h-3.5 w-3.5" />
-                          Configuration OBS
-                        </div>
-                        <div>
-                          <label className="text-xs text-text-muted block mb-1">URL RTMP (Server)</label>
-                          <div className="flex items-center gap-2">
-                            <code className="flex-1 text-[12px] bg-surface-hover px-3 py-2 rounded-lg font-mono text-text-primary truncate">
-                              {muxData.muxRtmpUrl}
-                            </code>
-                            <button
-                              onClick={() => copyToClipboard('rtmp', muxData.muxRtmpUrl)}
-                              className="p-2 rounded-lg text-text-muted hover:text-primary hover:bg-surface-hover transition-colors shrink-0"
-                              title="Copier l'URL RTMP"
-                            >
-                              {copiedField === 'rtmp' ? <Check className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
-                            </button>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="text-xs text-text-muted block mb-1">Clé de stream (Stream Key)</label>
-                          <div className="flex items-center gap-2">
-                            <code className="flex-1 text-[12px] bg-surface-hover px-3 py-2 rounded-lg font-mono text-text-primary truncate">
-                              {muxData.muxStreamKey}
-                            </code>
-                            <button
-                              onClick={() => copyToClipboard('key', muxData.muxStreamKey)}
-                              className="p-2 rounded-lg text-text-muted hover:text-primary hover:bg-surface-hover transition-colors shrink-0"
-                              title="Copier la clé de stream"
-                            >
-                              {copiedField === 'key' ? <Check className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+          {streams.map((stream) => (
+            <div key={stream.id} className="rounded-2xl bg-surface border border-border p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-semibold">{stream.title}</h3>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                      stream.status === 'LIVE' ? 'bg-red-600/20 text-red-500' :
+                      stream.status === 'ENDED' ? 'bg-text-muted/10 text-text-muted' :
+                      'bg-primary/10 text-primary'
+                    }`}>
+                      {stream.status === 'LIVE' ? 'En direct' : stream.status === 'ENDED' ? 'Terminé' : 'Planifié'}
+                    </span>
+                  </div>
+                  {stream.description && <p className="text-sm text-text-secondary line-clamp-1">{stream.description}</p>}
+                  <div className="flex items-center gap-4 mt-2 text-xs text-text-muted">
+                    {stream.viewerCount > 0 && <span>{stream.viewerCount} spectateur{stream.viewerCount !== 1 ? 's' : ''}</span>}
+                    <span>{stream._count.chats} messages</span>
+                    <span>{new Date(stream.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    {stream.status !== 'ENDED' && (
-                      <button
-                        onClick={() => toggleStatus(stream.id, stream.status === 'LIVE' ? 'ENDED' : 'LIVE')}
-                        disabled={actionLoading === stream.id}
-                        className={`p-2.5 rounded-xl transition-colors ${
-                          stream.status === 'LIVE' ? 'bg-error/10 text-error hover:bg-error/20' : 'bg-success/10 text-success hover:bg-success/20'
-                        }`}
-                        title={stream.status === 'LIVE' ? 'Arrêter le live' : 'Démarrer le live'}
-                      >
-                        {actionLoading === stream.id ? <Loader2 className="h-4 w-4 animate-spin" /> : stream.status === 'LIVE' ? <Square className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                  {stream.streamKey && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <code className="text-[11px] bg-surface-hover px-2 py-1 rounded font-mono text-text-muted truncate max-w-[200px]">{stream.streamKey}</code>
+                      <button onClick={() => copyToClipboard('key', stream.streamKey)} className="text-text-muted hover:text-primary transition-colors" title="Copier la clé">
+                        {copiedField === 'key' ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
                       </button>
-                    )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  {stream.status !== 'ENDED' && (
                     <button
-                      onClick={() => deleteStream(stream.id)}
+                      onClick={() => toggleStatus(stream.id, stream.status === 'LIVE' ? 'ENDED' : 'LIVE')}
                       disabled={actionLoading === stream.id}
-                      className="p-2.5 rounded-xl text-text-muted hover:text-error hover:bg-error/10 transition-colors"
+                      className={`p-2.5 rounded-xl transition-colors ${
+                        stream.status === 'LIVE' ? 'bg-error/10 text-error hover:bg-error/20' : 'bg-success/10 text-success hover:bg-success/20'
+                      }`}
+                      title={stream.status === 'LIVE' ? 'Arrêter le live' : 'Démarrer le live'}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      {actionLoading === stream.id ? <Loader2 className="h-4 w-4 animate-spin" /> : stream.status === 'LIVE' ? <Square className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                     </button>
-                    <Link
-                      href={`/livestream/${stream.id}`}
-                      className="px-4 py-2.5 rounded-xl text-sm font-medium text-primary hover:bg-primary/10 transition-colors"
-                    >
-                      Voir
-                    </Link>
-                  </div>
+                  )}
+                  <button
+                    onClick={() => deleteStream(stream.id)}
+                    disabled={actionLoading === stream.id}
+                    className="p-2.5 rounded-xl text-text-muted hover:text-error hover:bg-error/10 transition-colors"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                  <Link
+                    href={`/livestream/${stream.id}`}
+                    className="px-4 py-2.5 rounded-xl text-sm font-medium text-primary hover:bg-primary/10 transition-colors"
+                  >
+                    Voir
+                  </Link>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
+
+      <div className="mt-8 p-5 rounded-2xl bg-surface border border-border">
+        <div className="flex items-center gap-2 mb-3">
+          <Monitor className="h-5 w-5 text-primary" />
+          <h3 className="font-semibold">Diffuser en vidéo (gratuit)</h3>
+        </div>
+        <p className="text-sm text-text-secondary mb-4">
+          Pour diffuser de la vidéo en direct depuis OBS, installe un serveur RTMP gratuit comme <strong>Owncast</strong> sur un VPS à 5€/mois.
+        </p>
+        <a
+          href="https://owncast.online/docs/quickstart/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary-hover font-medium"
+        >
+          <ExternalLink className="h-4 w-4" />
+          Guide d&apos;installation Owncast
+        </a>
+      </div>
     </div>
   );
 }
