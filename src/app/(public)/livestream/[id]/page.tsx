@@ -2,9 +2,12 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { ArrowLeft, Send, Users, Radio, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { SafeImage } from '@/components/ui/safe-image';
+
+const MuxPlayer = dynamic(() => import('@mux/mux-player-react'), { ssr: false });
 
 interface ChatMessage {
   id: string;
@@ -69,6 +72,7 @@ export default function WatchLivestreamPage() {
   if (!stream) return null;
 
   const isLive = stream.status === 'LIVE';
+  const hasMuxPlayback = !!stream.muxPlaybackId;
 
   return (
     <div className="container mx-auto py-6 pb-24">
@@ -79,7 +83,16 @@ export default function WatchLivestreamPage() {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="relative aspect-video rounded-2xl overflow-hidden bg-surface border border-border">
-            {stream.thumbnail ? (
+            {hasMuxPlayback ? (
+              <MuxPlayer
+                streamType="live"
+                playbackId={stream.muxPlaybackId}
+                accentColor="#FF8C00"
+                className="h-full w-full"
+                autoPlay
+                muted
+              />
+            ) : stream.thumbnail ? (
               <SafeImage src={stream.thumbnail} alt={stream.title} fill className="object-cover" />
             ) : (
               <div className="flex h-full items-center justify-center">
@@ -88,15 +101,18 @@ export default function WatchLivestreamPage() {
                   <p className="text-text-muted text-lg font-medium">
                     {isLive ? 'Live en cours...' : 'Live terminé'}
                   </p>
+                  {!stream.muxPlaybackId && !stream.thumbnail && (
+                    <p className="text-text-muted text-sm mt-2">Configurez MUX_TOKEN_ID et MUX_TOKEN_SECRET dans .env pour activer le streaming vidéo</p>
+                  )}
                 </div>
               </div>
             )}
             {isLive && (
-              <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600 text-white text-xs font-bold animate-pulse">
+              <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600 text-white text-xs font-bold animate-pulse z-10">
                 <span className="h-2 w-2 rounded-full bg-white" />EN DIRECT
               </div>
             )}
-            <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 text-white text-xs">
+            <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 text-white text-xs z-10">
               <Users className="h-3 w-3" />
               {stream.viewerCount} spectateur{stream.viewerCount !== 1 ? 's' : ''}
             </div>
