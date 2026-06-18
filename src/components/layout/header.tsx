@@ -65,6 +65,8 @@ export function Header() {
     { href: ROUTES.ARTIST_DASHBOARD, label: 'Dashboard' },
     { href: ROUTES.ARTIST_CATALOG, label: 'Catalogue' },
     { href: ROUTES.ARTIST_PROFILE, label: 'Profil' },
+    { href: ROUTES.ARTIST_LIVESTREAM, label: 'Live' },
+    { href: ROUTES.ARTIST_ROYALTIES, label: 'Royalties' },
     { href: ROUTES.ARTIST_REFERRAL, label: 'Parrainage' },
   ];
 
@@ -312,6 +314,30 @@ export function Header() {
                 >
                   <Podcast className="h-4 w-4" />
                   Podcasts
+                </Link>
+                <Link
+                  href={ROUTES.LIVESTREAMS}
+                  onClick={() => setShowMobileMenu(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    pathname.startsWith('/livestream') ? 'text-primary bg-primary/5' : 'text-text-secondary hover:text-text-primary hover:bg-surface'
+                  )}
+                >
+                  <span className="relative flex h-4 w-4 items-center justify-center">
+                    <span className="absolute h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                  </span>
+                  En direct
+                </Link>
+                <Link
+                  href={ROUTES.CHAT}
+                  onClick={() => setShowMobileMenu(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    pathname.startsWith('/chat') ? 'text-primary bg-primary/5' : 'text-text-secondary hover:text-text-primary hover:bg-surface'
+                  )}
+                >
+                  <Headphones className="h-4 w-4" />
+                  Chat
                 </Link>
                 <Link
                   href={ROUTES.PREMIUM}

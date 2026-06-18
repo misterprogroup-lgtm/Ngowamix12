@@ -119,6 +119,13 @@ model User {
   podcasts              Podcast[]
   playlists             Playlist[]
   collaboratedPlaylists PlaylistCollaborator[]
+  liveStreamChats       LiveStreamChat[]
+  liveStreamViews       LiveStreamView[]
+  chatMessages          ChatMessage[]
+  chatParticipants      ChatParticipant[]
+  familyOwnedGroups     FamilyGroup[]
+  familyMemberships     FamilyMember[]
+  streamPlays           StreamPlay[]
 
   @@index([email])
   @@index([role])
@@ -163,6 +170,10 @@ model Artist {
   concerts              Concert[]
   commissions           Commission[]
   favorites             Favorite[]
+  liveStreams           LiveStream[]
+  streamPlays           StreamPlay[]
+  payoutRequests        PayoutRequest[]
+  chatRooms             ChatRoom[]
 
   @@index([slug])
   @@index([name])
@@ -194,6 +205,7 @@ model Album {
   purchases             Purchase[]
   favorites             Favorite[]
   reviews               Review[]
+  chatRooms             ChatRoom[]
 
   @@unique([artistId, slug])
   @@index([status])
@@ -220,6 +232,7 @@ model Track {
   favorites             Favorite[]
   listenHistory         ListenHistory[]
   playlistTracks        PlaylistTrack[]
+  streamPlays           StreamPlay[]
 
   @@unique([albumId, slug])
   @@index([albumId])
@@ -672,4 +685,208 @@ model Ad {
   updatedAt DateTime  @updatedAt
 
   @@index([placement, isActive])
+}
+
+enum LiveStreamStatus {
+  LIVE
+  ENDED
+  SCHEDULED
+}
+
+model LiveStream {
+  id          String          @id @default(uuid())
+  artistId    String
+  title       String
+  description String?
+  thumbnail   String?
+  streamKey   String          @unique
+  status      LiveStreamStatus @default(SCHEDULED)
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  endedAt     DateTime?
+  viewerCount Int             @default(0)
+  maxViewers  Int             @default(100)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  artist      Artist          @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  chats       LiveStreamChat[]
+  views       LiveStreamView[]
+
+  @@index([artistId])
+  @@index([status])
+  @@index([streamKey])
+}
+
+model LiveStreamChat {
+  id          String     @id @default(uuid())
+  liveStreamId String
+  userId      String
+  message     String
+  createdAt   DateTime   @default(now())
+
+  liveStream  LiveStream @relation(fields: [liveStreamId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([liveStreamId, createdAt])
+}
+
+model LiveStreamView {
+  id          String     @id @default(uuid())
+  liveStreamId String
+  userId      String
+  joinedAt    DateTime   @default(now())
+  leftAt      DateTime?
+
+  liveStream  LiveStream @relation(fields: [liveStreamId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([liveStreamId, userId])
+  @@index([liveStreamId])
+}
+
+enum ChatRoomType {
+  GLOBAL
+  ARTIST
+  ALBUM
+}
+
+model ChatRoom {
+  id        String       @id @default(uuid())
+  type      ChatRoomType @default(GLOBAL)
+  name      String
+  slug      String       @unique
+  image     String?
+  artistId  String?
+  albumId   String?
+  isActive  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  artist    Artist?      @relation(fields: [artistId], references: [id])
+  album     Album?       @relation(fields: [albumId], references: [id])
+  messages  ChatMessage[]
+  participants ChatParticipant[]
+
+  @@index([type])
+  @@index([slug])
+}
+
+model ChatParticipant {
+  id        String   @id @default(uuid())
+  roomId    String
+  userId    String
+  joinedAt  DateTime @default(now())
+  lastReadAt DateTime @default(now())
+
+  room      ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, userId])
+  @@index([roomId])
+  @@index([userId])
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  roomId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+
+  room      ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, createdAt])
+}
+
+model FamilyGroup {
+  id          String   @id @default(uuid())
+  ownerId     String
+  name        String   @default("Famille")
+  maxMembers  Int      @default(6)
+  price       Int      @default(7500)
+  currency    String   @default("XOF")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  members     FamilyMember[]
+
+  @@index([ownerId])
+}
+
+enum FamilyMemberRole {
+  ADMIN
+  MEMBER
+}
+
+enum FamilyMemberStatus {
+  INVITED
+  ACTIVE
+  REMOVED
+}
+
+model FamilyMember {
+  id          String             @id @default(uuid())
+  groupId     String
+  userId      String
+  role        FamilyMemberRole   @default(MEMBER)
+  status      FamilyMemberStatus @default(INVITED)
+  joinedAt    DateTime?
+  invitedAt   DateTime           @default(now())
+
+  group       FamilyGroup        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+}
+
+model StreamPlay {
+  id        String   @id @default(uuid())
+  trackId   String
+  userId    String?
+  artistId  String
+  amount    Int      @default(1)
+  playedAt  DateTime @default(now())
+
+  track     Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id])
+  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([trackId, playedAt])
+  @@index([artistId, playedAt])
+  @@index([playedAt])
+  @@index([userId, playedAt])
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model PayoutRequest {
+  id          String        @id @default(uuid())
+  artistId    String
+  amount      Int
+  currency    String        @default("XOF")
+  method      String        @default("MOBILE_MONEY")
+  phone       String?
+  accountName String?
+  status      PayoutStatus  @default(PENDING)
+  note        String?
+  processedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  artist      Artist        @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([artistId])
+  @@index([status])
+  @@index([createdAt])
 }

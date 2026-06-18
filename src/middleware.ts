@@ -8,7 +8,7 @@ if (!process.env.JWT_SECRET) {
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
 const protectedRoutes = ['/user', '/admin'];
-const artistProtectedRoutes = ['/artist/dashboard', '/artist/catalog', '/artist/profile', '/artist/referral'];
+const artistProtectedRoutes = ['/artist/dashboard', '/artist/catalog', '/artist/profile', '/artist/referral', '/artist/livestream', '/artist/royalties'];
 const labelProtectedRoutes = ['/label'];
 const authRoutes = ['/login', '/register'];
 

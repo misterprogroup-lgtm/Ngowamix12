@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResendClient(): Resend | null {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return null;
+  return new Resend(key);
+}
 
 const FORWARD_TO = 'ngowamix@gmail.com';
 
@@ -15,6 +19,11 @@ export async function POST(req: NextRequest) {
 
     if (!id || !timestamp || !signature) {
       return NextResponse.json({ error: 'Missing headers' }, { status: 400 });
+    }
+
+    const resend = getResendClient();
+    if (!resend) {
+      return NextResponse.json({ error: 'Email non configuré' }, { status: 501 });
     }
 
     const secret = process.env.RESEND_WEBHOOK_SECRET;

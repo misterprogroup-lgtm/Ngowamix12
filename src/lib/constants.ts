@@ -78,4 +78,10 @@ export const ROUTES = {
   PLAYLISTS: '/playlists',
   PODCASTS: '/podcasts',
   USER_PODCASTS: '/user/podcasts',
+  LIVESTREAMS: '/livestream',
+  ARTIST_LIVESTREAM: '/artist/livestream',
+  CHAT: '/chat',
+  FAMILY_PREMIUM: '/premium/family',
+  ARTIST_ROYALTIES: '/artist/royalties',
+  ARTIST_PAYOUT: '/artist/payout',
 } as const;
