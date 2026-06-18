@@ -1,17 +1,20 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Crown, Headphones, Download, Sparkles, ArrowRight } from 'lucide-react';
+import { Crown, Headphones, Download, ArrowRight } from 'lucide-react';
 import { AlbumCard } from '@/components/catalog/album-card';
 import { Button } from '@/components/ui/button';
 import { HorizontalScroll } from '@/components/ui/horizontal-scroll';
 
+import { RecentlyPlayed } from '@/components/catalog/recently-played';
 import { RecommendationsWrapper } from '@/components/home/recommendations-wrapper';
 import { AnimatedSection } from '@/components/ui/animated-section';
 import { SinglesCarousel } from '@/components/home/singles-carousel';
+import { GenreExplore } from '@/components/home/genre-explore';
 import { GenreGrid } from '@/components/home/genre-grid';
 import { TopCharts } from '@/components/home/top-charts';
 import { ArtistCTA } from '@/components/home/artist-cta';
+import { WeeklyNewReleases } from '@/components/home/weekly-new-releases';
 import { ROUTES, PREMIUM_PRICE, PREMIUM_CURRENCY, APP_NAME } from '@/lib/constants';
 
 export const metadata: Metadata = {
@@ -61,149 +64,173 @@ async function getRecentSingles() {
   }
 }
 
+async function getPopularTracks() {
+  try {
+    const res = await fetch(`${process.env.APP_URL || 'http://localhost:3000'}/api/tracks?limit=10`, {
+      next: { revalidate: 300 },
+    });
+    const data = await res.json();
+    return data.tracks || [];
+  } catch {
+    return [];
+  }
+}
+
 export default async function HomePage() {
   const recentAlbums = await getRecentAlbums();
   const recentSingles = await getRecentSingles();
-  const newReleases = [...recentAlbums, ...recentSingles].slice(0, 8);
+  const popularTracks = await getPopularTracks();
 
   return (
-    <div>
+    <div className="space-y-6 md:space-y-4">
+      {/* Hero Section */}
       <h1 className="sr-only">Ngowamix - Streaming musical africain</h1>
-
-      {/* Hero */}
       <SinglesCarousel />
 
-      {/* Top Charts */}
-      <AnimatedSection delay={0.05}>
-        <div className="container mx-auto px-4 -mt-8 md:-mt-20 relative z-20">
-          <div className="rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.12)]">
-            <TopCharts />
-          </div>
-        </div>
-      </AnimatedSection>
+      {/* Explore Section */}
+      <GenreExplore />
 
-      {/* Genres */}
-      <AnimatedSection delay={0.1}>
-        <div className="mt-8 md:mt-12">
-          <GenreGrid />
-        </div>
-      </AnimatedSection>
+      {/* Recently Played */}
+      <Suspense fallback={null}><AnimatedSection delay={0.05}><RecentlyPlayed /></AnimatedSection></Suspense>
 
-      {/* Recommendations */}
-      <AnimatedSection delay={0.15}>
-        <div className="mt-8 md:mt-12">
+      {/* Personalized Recommendations */}
+      <AnimatedSection delay={0.07}>
+        <div className="container mx-auto">
           <RecommendationsWrapper />
         </div>
       </AnimatedSection>
 
-      {/* New Releases (merged albums + singles) */}
-      {newReleases.length > 0 && (
-        <AnimatedSection delay={0.2}>
-          <div className="container mx-auto px-4 mt-8 md:mt-12">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <Sparkles className="h-6 w-6 text-primary" />
-                <h2 className="text-2xl font-bold">Nouvelles sorties</h2>
-              </div>
-              <Link href="/explore" className="text-sm font-medium text-primary hover:text-primary-hover hidden md:flex items-center gap-1 shrink-0">
-                Voir tout <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="hidden md:grid md:grid-cols-4 gap-5">
-              {newReleases.map((item: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
-                <AlbumCard
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  slug={item.slug}
-                  coverImage={item.coverImage}
-                  artistName={item.artist.name}
-                  artistSlug={item.artist.slug}
-                  price={Number(item.price)}
-                  isPremiumOnly={item.isPremiumOnly}
-                  type={item.type as 'ALBUM' | 'SINGLE' | 'EP'}
-                  isArtistVerified={item.artist.isVerified}
-                />
+      {/* Genre Grid */}
+      <AnimatedSection delay={0.15}><GenreGrid /></AnimatedSection>
+
+      {/* Top Charts */}
+      <AnimatedSection delay={0.2}><TopCharts /></AnimatedSection>
+
+      {/* Recent Albums */}
+      {recentAlbums.length > 0 && (
+        <AnimatedSection delay={0.25} className="bg-surface/50">
+          <div className="container mx-auto">
+            <HorizontalScroll title="Albums récents" seeAllHref="/explore">
+              {recentAlbums.map((album: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
+                <div key={album.id} className="snap-start shrink-0 w-40">
+                  <AlbumCard
+                    id={album.id}
+                    title={album.title}
+                    slug={album.slug}
+                    coverImage={album.coverImage}
+                    artistName={album.artist.name}
+                    artistSlug={album.artist.slug}
+                    price={Number(album.price)}
+                    isPremiumOnly={album.isPremiumOnly}
+                    type={album.type as 'ALBUM' | 'SINGLE' | 'EP'}
+                    isArtistVerified={album.artist.isVerified}
+                  />
+                </div>
               ))}
-            </div>
-            <div className="md:hidden">
-              <HorizontalScroll seeAllHref="/explore">
-                {newReleases.map((item: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
-                  <div key={item.id} className="snap-start shrink-0 w-40">
-                    <AlbumCard
-                      key={item.id}
-                      id={item.id}
-                      title={item.title}
-                      slug={item.slug}
-                      coverImage={item.coverImage}
-                      artistName={item.artist.name}
-                      artistSlug={item.artist.slug}
-                      price={Number(item.price)}
-                      isPremiumOnly={item.isPremiumOnly}
-                      type={item.type as 'ALBUM' | 'SINGLE' | 'EP'}
-                      isArtistVerified={item.artist.isVerified}
-                    />
-                  </div>
-                ))}
-              </HorizontalScroll>
-            </div>
+            </HorizontalScroll>
+          </div>
+      </AnimatedSection>
+      )}
+
+      {/* Recent Singles */}
+      {recentSingles.length > 0 && (
+        <AnimatedSection delay={0.3} className="relative">
+          <div className="container mx-auto relative">
+            <HorizontalScroll
+              title={<div className="flex items-center gap-3"><div className="h-8 w-1 rounded-full bg-gradient-to-b from-primary to-accent" />Singles récents</div>}
+              seeAllHref="/explore"
+            >
+              {recentSingles.map((single: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
+                <div key={single.id} className="snap-start shrink-0 w-40">
+                  <AlbumCard
+                    key={single.id}
+                    id={single.id}
+                    title={single.title}
+                    slug={single.slug}
+                    coverImage={single.coverImage}
+                    artistName={single.artist.name}
+                    artistSlug={single.artist.slug}
+                    price={Number(single.price)}
+                    isPremiumOnly={single.isPremiumOnly}
+                    type={single.type as 'ALBUM' | 'SINGLE' | 'EP'}
+                    isArtistVerified={single.artist.isVerified}
+                  />
+                </div>
+              ))}
+            </HorizontalScroll>
           </div>
         </AnimatedSection>
       )}
 
       {/* Premium Banner */}
-      <AnimatedSection delay={0.25}>
-        <div className="container mx-auto px-4 mt-8 md:mt-12">
-          <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary via-primary/80 to-accent/80 p-8 md:p-12">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl" />
-            <div className="relative z-10 max-w-xl">
-              <div className="flex items-center gap-2 mb-4">
-                <Crown className="h-6 w-6 text-white" />
-                <span className="text-sm font-semibold text-white/80 uppercase tracking-wider">Premium</span>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+      <AnimatedSection delay={0.35}>
+        <div className="container mx-auto">
+          <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-primary/20 to-accent/20 p-8 md:p-12">
+            <div className="max-w-2xl">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
                 Passez au Premium
               </h2>
-              <p className="text-white/80 mb-8 max-w-md">
-                Écoutez sans publicité, téléchargez vos titres préférés et profitez de la meilleure qualité audio.
-              </p>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3 text-white">
-                  <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                    <Headphones className="h-4 w-4" />
-                  </div>
-                  <span>Écoute sans publicité</span>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-2 text-text-secondary">
+                  <Headphones className="h-5 w-5 text-primary shrink-0" />
+                  Écoute sans publicité
                 </li>
-                <li className="flex items-center gap-3 text-white">
-                  <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                    <Download className="h-4 w-4" />
-                  </div>
-                  <span>Téléchargements illimités</span>
+                <li className="flex items-center gap-2 text-text-secondary">
+                  <Download className="h-5 w-5 text-primary shrink-0" />
+                  Téléchargements illimités
                 </li>
-                <li className="flex items-center gap-3 text-white">
-                  <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                    <Crown className="h-4 w-4" />
-                  </div>
-                  <span>Qualité audio supérieure</span>
+                <li className="flex items-center gap-2 text-text-secondary">
+                  <Crown className="h-5 w-5 text-primary shrink-0" />
+                  Qualité audio supérieure
                 </li>
               </ul>
               <Link href="/premium">
-                <Button variant="secondary" size="lg" className="rounded-full bg-white text-primary hover:bg-white/90 shadow-xl">
+                <Button variant="premium" size="lg">
                   S&apos;abonner — {PREMIUM_PRICE} {PREMIUM_CURRENCY}/mois
                 </Button>
               </Link>
             </div>
+            <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-primary/10 to-transparent hidden lg:block" />
           </div>
         </div>
       </AnimatedSection>
 
+      {/* Weekly New Releases */}
+      <AnimatedSection delay={0.4}><WeeklyNewReleases /></AnimatedSection>
+
       {/* Artist CTA */}
-      <AnimatedSection delay={0.3}>
-        <div className="mt-8 md:mt-12">
-          <ArtistCTA />
-        </div>
-      </AnimatedSection>
+      <AnimatedSection delay={0.45}><ArtistCTA /></AnimatedSection>
+
+      {/* Buy Albums Section */}
+      {recentAlbums.length > 0 && (
+        <AnimatedSection delay={0.5} className="bg-surface/50">
+          <div className="container mx-auto">
+            <HorizontalScroll
+              title="Acheter des albums"
+              description="Soutenez directement vos artistes préférés en achetant leurs albums et singles. Après l'achat, téléchargez et écoutez hors ligne autant que vous voulez."
+              seeAllHref="/explore"
+            >
+              {recentAlbums.slice(0, 5).map((album: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
+                <div key={album.id} className="snap-start shrink-0 w-40">
+                  <AlbumCard
+                    key={album.id}
+                    id={album.id}
+                    title={album.title}
+                    slug={album.slug}
+                    coverImage={album.coverImage}
+                    artistName={album.artist.name}
+                    artistSlug={album.artist.slug}
+                    price={Number(album.price)}
+                    isPremiumOnly={album.isPremiumOnly}
+                    type={album.type as 'ALBUM' | 'SINGLE' | 'EP'}
+                    isArtistVerified={album.artist.isVerified}
+                  />
+                </div>
+              ))}
+            </HorizontalScroll>
+          </div>
+        </AnimatedSection>
+      )}
 
       {/* JSON-LD Structured Data */}
       <script
