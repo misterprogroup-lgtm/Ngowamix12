@@ -263,20 +263,6 @@ export async function GET(request: Request) {
       });
     }
 
-    if (transaction.type === 'TICKET_PURCHASE' && depositId) {
-      await fulfillTransaction(transactionId, user.sub);
-      return NextResponse.json({
-        transaction: {
-          id: transaction.id,
-          status: 'PAID',
-          type: transaction.type,
-          amount: transaction.amount,
-          productId: transaction.productId,
-        },
-        message: 'Paiement confirmé',
-      });
-    }
-
     if (pawapayResult && (pawapayResult.status === 'FAILED' || pawapayResult.status === 'IN_RECONCILIATION')) {
       return NextResponse.json({
         transaction: {
@@ -300,16 +286,19 @@ export async function GET(request: Request) {
       });
     }
 
-    if (pawapayResult) {
-      const age = Date.now() - new Date(transaction.createdAt).getTime();
+    const age = Date.now() - new Date(transaction.createdAt).getTime();
+
+    if (!pawapayResult && age > 120000 && transaction.type === 'TICKET_PURCHASE' && depositId) {
+      await fulfillTransaction(transactionId, user.sub);
       return NextResponse.json({
         transaction: {
           id: transaction.id,
-          status: transaction.status,
+          status: 'PAID',
           type: transaction.type,
+          amount: transaction.amount,
+          productId: transaction.productId,
         },
-        processing: age < 120000,
-        message: age < 120000 ? 'Vérification du paiement en cours...' : 'Paiement en attente',
+        message: 'Paiement confirmé',
       });
     }
 
@@ -320,7 +309,7 @@ export async function GET(request: Request) {
         type: transaction.type,
       },
       processing: true,
-      message: 'Vérification du paiement en cours...',
+      message: age < 120000 ? 'Vérification du paiement en cours...' : 'Paiement en attente',
     });
   } catch (error) {
     console.error('Payment check error:', error);
