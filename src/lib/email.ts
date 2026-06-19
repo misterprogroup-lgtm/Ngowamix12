@@ -166,7 +166,7 @@ export async function sendTicketEmail(params: {
           </tr>
           <tr>
             <td style="padding: 6px 0; color: #a0a0b0;">Total payé</td>
-            <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #FF8C00;">${(totalAmount / 100).toLocaleString('fr-FR')} FCFA</td>
+            <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #FF8C00;">${totalAmount.toLocaleString('fr-FR')} FCFA</td>
           </tr>
         </table>
       </div>
