@@ -263,7 +263,19 @@ export async function GET(request: Request) {
       });
     }
 
-    if (pawapayResult && pawapayResult.status === 'PROCESSING') {
+    if (!pawapayResult) {
+      return NextResponse.json({
+        transaction: {
+          id: transaction.id,
+          status: transaction.status,
+          type: transaction.type,
+        },
+        processing: true,
+        message: 'Vérification du paiement en cours...',
+      });
+    }
+
+    if (pawapayResult.status === 'PROCESSING') {
       return NextResponse.json({
         transaction: {
           id: transaction.id,
@@ -275,7 +287,7 @@ export async function GET(request: Request) {
       });
     }
 
-    if (pawapayResult && (pawapayResult.status === 'FAILED' || pawapayResult.status === 'IN_RECONCILIATION')) {
+    if (pawapayResult.status === 'FAILED' || pawapayResult.status === 'IN_RECONCILIATION') {
       return NextResponse.json({
         transaction: {
           id: transaction.id,
@@ -292,6 +304,7 @@ export async function GET(request: Request) {
         status: transaction.status,
         type: transaction.type,
       },
+      processing: true,
       message: 'Paiement en attente',
     });
   } catch (error) {
