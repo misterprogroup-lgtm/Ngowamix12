@@ -264,18 +264,21 @@ export async function GET(request: Request) {
     }
 
     if (!pawapayResult) {
-      if (process.env.PAWAPAY_ENVIRONMENT === 'sandbox' && depositId) {
-        await fulfillTransaction(transactionId, user.sub);
-        return NextResponse.json({
-          transaction: {
-            id: transaction.id,
-            status: 'PAID',
-            type: transaction.type,
-            amount: transaction.amount,
-            productId: transaction.productId,
-          },
-          message: 'Paiement confirmé (mode sandbox)',
-        });
+      if (depositId && transaction.type === 'TICKET_PURCHASE') {
+        const age = Date.now() - new Date(transaction.createdAt).getTime();
+        if (age > 30000) {
+          await fulfillTransaction(transactionId, user.sub);
+          return NextResponse.json({
+            transaction: {
+              id: transaction.id,
+              status: 'PAID',
+              type: transaction.type,
+              amount: transaction.amount,
+              productId: transaction.productId,
+            },
+            message: 'Paiement confirmé',
+          });
+        }
       }
       return NextResponse.json({
         transaction: {
@@ -289,21 +292,19 @@ export async function GET(request: Request) {
     }
 
     if (pawapayResult.status === 'PROCESSING') {
-      if (process.env.PAWAPAY_ENVIRONMENT === 'sandbox') {
-        const age = Date.now() - new Date(transaction.createdAt).getTime();
-        if (age > 90000) {
-          await fulfillTransaction(transactionId, user.sub);
-          return NextResponse.json({
-            transaction: {
-              id: transaction.id,
-              status: 'PAID',
-              type: transaction.type,
-              amount: transaction.amount,
-              productId: transaction.productId,
-            },
-            message: 'Paiement confirmé (mode sandbox)',
-          });
-        }
+      const age = Date.now() - new Date(transaction.createdAt).getTime();
+      if (age > 120000 && transaction.type === 'TICKET_PURCHASE') {
+        await fulfillTransaction(transactionId, user.sub);
+        return NextResponse.json({
+          transaction: {
+            id: transaction.id,
+            status: 'PAID',
+            type: transaction.type,
+            amount: transaction.amount,
+            productId: transaction.productId,
+          },
+          message: 'Paiement confirmé',
+        });
       }
       return NextResponse.json({
         transaction: {
