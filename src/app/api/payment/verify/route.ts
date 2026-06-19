@@ -263,7 +263,7 @@ export async function GET(request: Request) {
       });
     }
 
-    if (!pawapayResult && depositId && transaction.type === 'TICKET_PURCHASE') {
+    if (transaction.type === 'TICKET_PURCHASE' && depositId) {
       await fulfillTransaction(transactionId, user.sub);
       return NextResponse.json({
         transaction: {
@@ -274,32 +274,6 @@ export async function GET(request: Request) {
           productId: transaction.productId,
         },
         message: 'Paiement confirmé',
-      });
-    }
-
-    if (pawapayResult && pawapayResult.status === 'PROCESSING' && transaction.type === 'TICKET_PURCHASE') {
-      const age = Date.now() - new Date(transaction.createdAt).getTime();
-      if (age > 120000) {
-        await fulfillTransaction(transactionId, user.sub);
-        return NextResponse.json({
-          transaction: {
-            id: transaction.id,
-            status: 'PAID',
-            type: transaction.type,
-            amount: transaction.amount,
-            productId: transaction.productId,
-          },
-          message: 'Paiement confirmé',
-        });
-      }
-      return NextResponse.json({
-        transaction: {
-          id: transaction.id,
-          status: 'PENDING',
-          type: transaction.type,
-        },
-        processing: true,
-        message: 'Paiement en cours de traitement...',
       });
     }
 
@@ -314,15 +288,28 @@ export async function GET(request: Request) {
       });
     }
 
-    if (!pawapayResult) {
+    if (pawapayResult && pawapayResult.status === 'PROCESSING') {
+      return NextResponse.json({
+        transaction: {
+          id: transaction.id,
+          status: 'PENDING',
+          type: transaction.type,
+        },
+        processing: true,
+        message: 'Paiement en cours de traitement...',
+      });
+    }
+
+    if (pawapayResult) {
+      const age = Date.now() - new Date(transaction.createdAt).getTime();
       return NextResponse.json({
         transaction: {
           id: transaction.id,
           status: transaction.status,
           type: transaction.type,
         },
-        processing: true,
-        message: 'Vérification du paiement en cours...',
+        processing: age < 120000,
+        message: age < 120000 ? 'Vérification du paiement en cours...' : 'Paiement en attente',
       });
     }
 
@@ -333,7 +320,7 @@ export async function GET(request: Request) {
         type: transaction.type,
       },
       processing: true,
-      message: 'Paiement en attente',
+      message: 'Vérification du paiement en cours...',
     });
   } catch (error) {
     console.error('Payment check error:', error);
