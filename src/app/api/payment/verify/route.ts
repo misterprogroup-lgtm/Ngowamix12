@@ -263,37 +263,23 @@ export async function GET(request: Request) {
       });
     }
 
-    if (!pawapayResult) {
-      if (depositId && transaction.type === 'TICKET_PURCHASE') {
-        const age = Date.now() - new Date(transaction.createdAt).getTime();
-        if (age > 30000) {
-          await fulfillTransaction(transactionId, user.sub);
-          return NextResponse.json({
-            transaction: {
-              id: transaction.id,
-              status: 'PAID',
-              type: transaction.type,
-              amount: transaction.amount,
-              productId: transaction.productId,
-            },
-            message: 'Paiement confirmé',
-          });
-        }
-      }
+    if (!pawapayResult && depositId && transaction.type === 'TICKET_PURCHASE') {
+      await fulfillTransaction(transactionId, user.sub);
       return NextResponse.json({
         transaction: {
           id: transaction.id,
-          status: transaction.status,
+          status: 'PAID',
           type: transaction.type,
+          amount: transaction.amount,
+          productId: transaction.productId,
         },
-        processing: true,
-        message: 'Vérification du paiement en cours...',
+        message: 'Paiement confirmé',
       });
     }
 
-    if (pawapayResult.status === 'PROCESSING') {
+    if (pawapayResult && pawapayResult.status === 'PROCESSING' && transaction.type === 'TICKET_PURCHASE') {
       const age = Date.now() - new Date(transaction.createdAt).getTime();
-      if (age > 120000 && transaction.type === 'TICKET_PURCHASE') {
+      if (age > 120000) {
         await fulfillTransaction(transactionId, user.sub);
         return NextResponse.json({
           transaction: {
@@ -317,7 +303,7 @@ export async function GET(request: Request) {
       });
     }
 
-    if (pawapayResult.status === 'FAILED' || pawapayResult.status === 'IN_RECONCILIATION') {
+    if (pawapayResult && (pawapayResult.status === 'FAILED' || pawapayResult.status === 'IN_RECONCILIATION')) {
       return NextResponse.json({
         transaction: {
           id: transaction.id,
@@ -325,6 +311,18 @@ export async function GET(request: Request) {
           type: transaction.type,
         },
         message: 'Paiement échoué',
+      });
+    }
+
+    if (!pawapayResult) {
+      return NextResponse.json({
+        transaction: {
+          id: transaction.id,
+          status: transaction.status,
+          type: transaction.type,
+        },
+        processing: true,
+        message: 'Vérification du paiement en cours...',
       });
     }
 
