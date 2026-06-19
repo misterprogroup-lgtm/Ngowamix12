@@ -264,6 +264,19 @@ export async function GET(request: Request) {
     }
 
     if (!pawapayResult) {
+      if (process.env.PAWAPAY_ENVIRONMENT === 'sandbox' && depositId) {
+        await fulfillTransaction(transactionId, user.sub);
+        return NextResponse.json({
+          transaction: {
+            id: transaction.id,
+            status: 'PAID',
+            type: transaction.type,
+            amount: transaction.amount,
+            productId: transaction.productId,
+          },
+          message: 'Paiement confirmé (mode sandbox)',
+        });
+      }
       return NextResponse.json({
         transaction: {
           id: transaction.id,
@@ -276,6 +289,22 @@ export async function GET(request: Request) {
     }
 
     if (pawapayResult.status === 'PROCESSING') {
+      if (process.env.PAWAPAY_ENVIRONMENT === 'sandbox') {
+        const age = Date.now() - new Date(transaction.createdAt).getTime();
+        if (age > 90000) {
+          await fulfillTransaction(transactionId, user.sub);
+          return NextResponse.json({
+            transaction: {
+              id: transaction.id,
+              status: 'PAID',
+              type: transaction.type,
+              amount: transaction.amount,
+              productId: transaction.productId,
+            },
+            message: 'Paiement confirmé (mode sandbox)',
+          });
+        }
+      }
       return NextResponse.json({
         transaction: {
           id: transaction.id,
