@@ -5,9 +5,11 @@ const PAWAPAY_SANDBOX_API = 'https://api.sandbox.pawapay.io';
 const PAWAPAY_PRODUCTION_API = 'https://api.pawapay.io';
 
 function getBaseUrl(): string {
-  return process.env.PAWAPAY_ENVIRONMENT === 'production'
-    ? PAWAPAY_PRODUCTION_API
-    : PAWAPAY_SANDBOX_API;
+  const env = process.env.PAWAPAY_ENVIRONMENT || process.env.VERCEL_ENV;
+  if (env === 'production' || (process.env.PAWAPAY_API_KEY && env !== 'sandbox')) {
+    return PAWAPAY_PRODUCTION_API;
+  }
+  return PAWAPAY_SANDBOX_API;
 }
 
 async function getConfig() {
