@@ -100,8 +100,11 @@ export async function checkDepositStatus(depositId: string): Promise<PawaPayDepo
     throw new Error(`PawaPay API error (${response.status}): ${errorBody}`);
   }
 
-  const data = await response.json();
-  return data as PawaPayDepositStatusResponse;
+  const wrapper = await response.json();
+  if (wrapper.status === 'FOUND' && wrapper.data) {
+    return wrapper.data as PawaPayDepositStatusResponse;
+  }
+  throw new Error(`PawaPay deposit not found: ${depositId}`);
 }
 
 export async function isPawaPayActive(): Promise<boolean> {
