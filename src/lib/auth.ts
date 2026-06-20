@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import { db } from './db';
-import { UserRole } from '@prisma/client';
+import { UserRole } from '@/generated/prisma/client';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is required');
@@ -29,6 +29,17 @@ export async function verifyPassword(
   return bcrypt.compare(password, hashedPassword);
 }
 
+export async function hashToken(token: string): Promise<string> {
+  return bcrypt.hash(token, 8);
+}
+
+export async function verifyTokenHash(
+  plain: string,
+  hash: string
+): Promise<boolean> {
+  return bcrypt.compare(plain, hash);
+}
+
 export async function createToken(payload: JWTPayload): Promise<string> {
   return new SignJWT(payload as never)
     .setProtectedHeader({ alg: 'HS256' })
@@ -51,7 +62,7 @@ export async function setSessionCookie(token: string): Promise<void> {
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60,
     path: '/',
   });

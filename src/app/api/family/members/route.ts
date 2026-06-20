@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const { action, groupId, email, memberId } = body;
 
     if (action === 'invite') {
-      const group = await db.familyGroup.findUnique({ where: { ownerId: user.sub } });
+      const group = await db.familyGroup.findFirst({ where: { ownerId: user.sub } });
       if (!group) return NextResponse.json({ error: 'Aucun groupe familial' }, { status: 400 });
       const member = await inviteMember(group.id, email);
       return NextResponse.json({ member });
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     }
 
     if (action === 'remove') {
-      const group = await db.familyGroup.findUnique({ where: { ownerId: user.sub } });
+      const group = await db.familyGroup.findFirst({ where: { ownerId: user.sub } });
       if (!group) return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
       await removeMember(group.id, memberId);
       return NextResponse.json({ success: true });

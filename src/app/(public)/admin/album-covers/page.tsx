@@ -88,8 +88,8 @@ export default function AlbumCoversPage() {
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="animate-pulse space-y-3">
               <div className="aspect-square bg-surface-hover rounded-xl" />
-              <div className="h-4 bg-surface-hover rounded w-3/4" />
-              <div className="h-3 bg-surface-hover rounded w-1/2" />
+              <div className="h-4 bg-surface-hover rounded-sm w-3/4" />
+              <div className="h-3 bg-surface-hover rounded-sm w-1/2" />
             </div>
           ))}
         </div>

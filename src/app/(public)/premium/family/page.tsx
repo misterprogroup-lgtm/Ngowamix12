@@ -81,7 +81,7 @@ export default function FamilyPremiumPage() {
   return (
     <div className="container mx-auto py-8 pb-24 max-w-2xl">
       <div className="flex items-center gap-3 mb-8">
-        <div className="h-8 w-1 rounded-full bg-gradient-to-b from-primary to-accent" />
+        <div className="h-8 w-1 rounded-full bg-linear-to-b from-primary to-accent" />
         <h1 className="text-2xl font-bold">Abonnement Famille</h1>
       </div>
 
@@ -136,7 +136,7 @@ export default function FamilyPremiumPage() {
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
                 placeholder="Email du membre..."
-                className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
                 onKeyDown={(e) => { if (e.key === 'Enter') handleInvite(); }}
               />
               <button
@@ -171,7 +171,7 @@ export default function FamilyPremiumPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{member.user.displayName || member.user.email}</span>
                         {member.role === 'ADMIN' && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium">Admin</span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-primary/10 text-primary font-medium">Admin</span>
                         )}
                       </div>
                       <p className="text-xs text-text-muted">
@@ -181,7 +181,7 @@ export default function FamilyPremiumPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     {member.user.isPremium && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-success/10 text-success font-medium">{member.status === 'ACTIVE' ? 'Premium' : ''}</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-success/10 text-success font-medium">{member.status === 'ACTIVE' ? 'Premium' : ''}</span>
                     )}
                     {member.status === 'INVITED' ? (
                       <span className="flex items-center gap-1 text-xs text-text-muted">

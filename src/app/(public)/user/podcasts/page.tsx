@@ -38,7 +38,7 @@ export default function UserPodcastsPage() {
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-1 rounded-full bg-gradient-to-b from-primary to-accent" />
+          <div className="h-8 w-1 rounded-full bg-linear-to-b from-primary to-accent" />
           <h1 className="text-2xl font-bold">Mes podcasts</h1>
         </div>
         <Link href="/user/podcasts/new">

@@ -16,10 +16,11 @@ interface ChatMessage {
 function useHls(src: string | null, videoRef: React.RefObject<HTMLVideoElement | null>) {
   useEffect(() => {
     if (!src || !videoRef.current) return;
-    let hls: any;
+    let hls: { loadSource: (src: string) => void; attachMedia: (el: HTMLVideoElement) => void; destroy: () => void } | undefined;
     import('hls.js').then((Hls) => {
       if (Hls.default.isSupported()) {
-        hls = new Hls.default();
+        const instance = new Hls.default();
+        hls = { loadSource: (s) => instance.loadSource(s), attachMedia: (el) => instance.attachMedia(el), destroy: () => instance.destroy() };
         hls.loadSource(src);
         hls.attachMedia(videoRef.current!);
       } else if (videoRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
@@ -30,10 +31,23 @@ function useHls(src: string | null, videoRef: React.RefObject<HTMLVideoElement |
   }, [src, videoRef]);
 }
 
+interface LiveStreamData {
+  id: string;
+  title: string;
+  status: string;
+  viewerCount: number;
+  streamUrl: string | null;
+  thumbnail: string | null;
+  description: string | null;
+  streamKey: string | null;
+  artist: { id: string; name: string; slug: string; avatar: string | null; streamServerUrl?: string | null };
+  _count: { chats: number };
+}
+
 export default function WatchLivestreamPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const [stream, setStream] = useState<any>(null);
+  const [stream, setStream] = useState<LiveStreamData | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -193,7 +207,7 @@ export default function WatchLivestreamPage() {
                   </div>
                   <div className="min-w-0">
                     <span className="text-xs font-semibold text-primary">{msg.user.displayName || 'Anonyme'}</span>
-                    <p className="text-sm text-text-primary break-words">{msg.message}</p>
+                    <p className="text-sm text-text-primary wrap-break-word">{msg.message}</p>
                   </div>
                 </div>
               ))
@@ -209,7 +223,7 @@ export default function WatchLivestreamPage() {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Écris un message..."
-              className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
             />
             <button
               type="submit"

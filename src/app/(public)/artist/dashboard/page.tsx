@@ -69,7 +69,7 @@ export default function ArtistDashboard() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-8">
-          <div className="h-10 w-64 bg-surface-hover rounded" />
+          <div className="h-10 w-64 bg-surface-hover rounded-sm" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="h-28 bg-surface-hover rounded-xl" />

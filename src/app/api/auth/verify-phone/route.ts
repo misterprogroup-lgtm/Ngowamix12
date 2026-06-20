@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { requireAuth } from '@/lib/auth';
+import { requireAuth, verifyTokenHash } from '@/lib/auth';
 import { z } from 'zod';
 
 const verifySchema = z.object({
@@ -59,7 +59,8 @@ export async function POST(request: Request) {
       );
     }
 
-    if (userData.phoneVerificationCode !== code) {
+    const codeValid = await verifyTokenHash(code, userData.phoneVerificationCode);
+    if (!codeValid) {
       return NextResponse.json(
         { error: 'Code incorrect' },
         { status: 400 }

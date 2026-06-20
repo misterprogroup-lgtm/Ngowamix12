@@ -30,7 +30,7 @@ export async function GET() {
       where: { referralCodeId: referral.id },
     });
 
-    let commissions: any[] = [];
+    let commissions: Array<{ commissionAmount: number }> = [];
     let totalCommissions = 0;
     if (user.role === 'ARTIST' || user.role === 'LABEL' || user.role === 'ADMIN') {
       const artist = await db.artist.findUnique({ where: { userId: user.sub } });

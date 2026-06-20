@@ -25,3 +25,10 @@ vi.mock('@/lib/pawapay', () => ({
   generateDepositId: vi.fn(() => 'test-deposit-id'),
   isPawaPayActive: vi.fn(),
 }));
+
+vi.mock('@/lib/email', () => ({
+  sendTicketEmail: vi.fn(() => Promise.resolve()),
+  sendEmail: vi.fn(() => Promise.resolve()),
+  sendPurchaseConfirmation: vi.fn(() => Promise.resolve()),
+  sendSubscriptionConfirmation: vi.fn(() => Promise.resolve()),
+}));

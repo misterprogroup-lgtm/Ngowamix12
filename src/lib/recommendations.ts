@@ -83,14 +83,15 @@ export async function getArtistRecommendations(
   userId: string | null,
   limit = 10
 ): Promise<{ id: string; name: string; slug: string; avatar: string | null; genres: string; score: number; reason: string }[]> {
-  if (!userId) return getPopularArtists(limit);
+  if (!userId) return (await getPopularArtists(limit)).map((a) => ({ ...a, score: 0.5, reason: 'Populaire' }));
 
   const [topGenres, favoriteArtistIds] = await Promise.all([
     getUserTopGenres(userId),
     getUserFavoriteArtistIds(userId),
   ]);
 
-  const recommendations: any[] = [];
+  type ArtistRec = { id: string; name: string; slug: string; avatar: string | null; genres: string; score: number; reason: string };
+  const recommendations: ArtistRec[] = [];
   const usedIds = new Set(favoriteArtistIds);
 
   if (topGenres.length > 0) {
@@ -99,6 +100,7 @@ export async function getArtistRecommendations(
         genres: { in: topGenres },
         id: { notIn: favoriteArtistIds },
         isVerified: true,
+        user: { role: { not: 'ADMIN' } },
       },
       take: limit,
       select: { id: true, name: true, slug: true, avatar: true, genres: true },
@@ -198,7 +200,10 @@ async function getTracksByGenres(
 ): Promise<TrackRecommendation[]> {
   const tracks = await db.track.findMany({
     where: {
-      album: { genre: { in: genres } },
+      album: {
+        genre: { in: genres },
+        artist: { user: { role: { not: 'ADMIN' } } },
+      },
       id: { notIn: excludeTrackIds },
     },
     include: {
@@ -320,6 +325,9 @@ async function getTracksByArtists(
 
 async function getPopularTracks(limit: number): Promise<TrackRecommendation[]> {
   const tracks = await db.track.findMany({
+    where: {
+      album: { artist: { user: { role: { not: 'ADMIN' } } } },
+    },
     include: {
       album: {
         select: { id: true, title: true, coverImage: true, genre: true, artist: { select: { id: true, name: true, slug: true } } },
@@ -342,11 +350,11 @@ async function getPopularTracks(limit: number): Promise<TrackRecommendation[]> {
   }));
 }
 
-async function getPopularArtists(limit: number): Promise<any[]> {
-  const artists = await db.artist.findMany({
+async function getPopularArtists(limit: number): Promise<Array<{ id: string; name: string; slug: string; avatar: string | null; genres: string }>> {
+  return db.artist.findMany({
+    where: { user: { role: { not: 'ADMIN' } } },
     select: { id: true, name: true, slug: true, avatar: true, genres: true },
     orderBy: { albums: { _count: 'desc' } },
     take: limit,
   });
-  return artists;
 }

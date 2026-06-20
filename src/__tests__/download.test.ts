@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
 
-const LISTENER_USER = { sub: 'user-1', email: 'listener@test.com', role: 'LISTENER', isPremium: false };
-const PREMIUM_USER = { sub: 'user-2', email: 'premium@test.com', role: 'LISTENER', isPremium: true };
-const ADMIN_USER = { sub: 'user-3', email: 'admin@test.com', role: 'ADMIN', isPremium: false };
+const LISTENER_USER = { sub: 'user-1', email: 'listener@test.com', role: 'LISTENER' as const, isPremium: false };
+const PREMIUM_USER = { sub: 'user-2', email: 'premium@test.com', role: 'LISTENER' as const, isPremium: true };
+const ADMIN_USER = { sub: 'user-3', email: 'admin@test.com', role: 'ADMIN' as const, isPremium: false };
 
 function mockFindUser(overrides: Record<string, unknown> = {}) {
   vi.mocked(db.user.findUnique).mockResolvedValue({

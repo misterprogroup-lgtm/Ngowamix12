@@ -12,7 +12,10 @@ const ALLOWED_DOMAINS = [
 function isAllowedUrl(url: string): boolean {
   try {
     const parsed = new URL(url);
-    return parsed.protocol === 'https:' && ALLOWED_DOMAINS.some((d) => parsed.hostname === d || parsed.hostname.endsWith('.' + d));
+    return parsed.protocol === 'https:' && ALLOWED_DOMAINS.some((d) => {
+      if (parsed.hostname === d) return true;
+      return parsed.hostname.endsWith('.' + d) && parsed.hostname.split('.' + d).length === 2;
+    });
   } catch {
     return false;
   }

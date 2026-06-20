@@ -2,6 +2,7 @@ import { utapi } from './uploadthing';
 import { isS3Configured, uploadToS3, isVercelBlobConfigured, uploadToVercelBlob } from './storage';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 interface UploadResult {
   url: string;
@@ -15,11 +16,17 @@ const MIME_TYPES: Record<string, string> = {
   posters: 'image/webp',
 };
 
+function sanitizeFilename(original: string): string {
+  const ext = path.extname(original).replace(/[^a-zA-Z0-9.]/g, '');
+  return `${crypto.randomUUID()}${ext}`;
+}
+
 export async function uploadFile(
   buffer: Buffer,
   filename: string,
   folder: 'covers' | 'avatars' | 'audio' | 'posters',
 ): Promise<UploadResult> {
+  filename = sanitizeFilename(filename);
   if (isVercelBlobConfigured()) {
     try {
       return await uploadToVercelBlob(buffer, `${folder}/${filename}`);

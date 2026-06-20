@@ -1,5 +1,19 @@
 const ipRequests = new Map<string, { count: number; resetAt: number }>();
 
+const CLEANUP_INTERVAL = 60_000;
+let lastCleanup = Date.now();
+
+function cleanup(): void {
+  const now = Date.now();
+  if (now - lastCleanup < CLEANUP_INTERVAL) return;
+  lastCleanup = now;
+  for (const [key, record] of ipRequests) {
+    if (now > record.resetAt) {
+      ipRequests.delete(key);
+    }
+  }
+}
+
 export interface RateLimitConfig {
   maxRequests: number;
   windowMs: number;
@@ -9,6 +23,7 @@ export function checkRateLimit(
   ip: string,
   config: RateLimitConfig = { maxRequests: 5, windowMs: 60000 }
 ): { allowed: boolean; remaining: number; resetAt: number } {
+  cleanup();
   const now = Date.now();
   const record = ipRequests.get(ip);
 

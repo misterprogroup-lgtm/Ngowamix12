@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Crown, Music, ShoppingBag, Heart, Clock, Settings } from 'lucide-react';
+import { Crown, Music, ShoppingBag, Heart, Clock, Settings, Repeat2, MessageSquare, Download, Rocket } from 'lucide-react';
 import { getCurrentUser } from '@/lib/auth';
 import { ROUTES, PREMIUM_PRICE, PREMIUM_CURRENCY } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
@@ -36,7 +36,7 @@ export default async function UserDashboard() {
       {/* Status */}
       <div className="mb-8">
         {user.isPremium || user.role === 'ADMIN' ? (
-          <div className="rounded-xl bg-gradient-to-r from-primary/20 to-accent/20 p-6 border border-primary/20">
+          <div className="rounded-xl bg-linear-to-r from-primary/20 to-accent/20 p-6 border border-primary/20">
             <div className="flex items-center gap-3 mb-2">
               <Crown className="h-6 w-6 text-accent" />
               <h2 className="text-xl font-bold">Compte Premium actif</h2>
@@ -94,7 +94,32 @@ export default async function UserDashboard() {
         </Link>
       </div>
 
-      {/* Recent Activity Placeholder */}
+      {/* Social Features */}
+      <h2 className="text-lg font-semibold mb-3">Social</h2>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <Link href={ROUTES.FEED} className="rounded-xl border border-border p-4 hover:border-primary/30 transition-colors group">
+          <Repeat2 className="h-6 w-6 text-accent mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="font-medium">Fil d&apos;actus</h3>
+          <p className="text-sm text-text-muted">Activité des artistes suivis</p>
+        </Link>
+        <Link href={ROUTES.MESSAGES} className="rounded-xl border border-border p-4 hover:border-primary/30 transition-colors group">
+          <MessageSquare className="h-6 w-6 text-primary mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="font-medium">Messages</h3>
+          <p className="text-sm text-text-muted">Discutez avec les artistes</p>
+        </Link>
+        <Link href={ROUTES.OFFLINE} className="rounded-xl border border-border p-4 hover:border-primary/30 transition-colors group">
+          <Download className="h-6 w-6 text-success mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="font-medium">Mode hors-ligne</h3>
+          <p className="text-sm text-text-muted">Titres téléchargés</p>
+        </Link>
+        <Link href={ROUTES.PROMOTE} className="rounded-xl border border-border p-4 hover:border-primary/30 transition-colors group">
+          <Rocket className="h-6 w-6 text-warning mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="font-medium">Promouvoir</h3>
+          <p className="text-sm text-text-muted">Mettez en avant votre musique</p>
+        </Link>
+      </div>
+
+      {/* Recent Activity */}
       <div className="rounded-xl border border-border p-6">
         <h2 className="text-lg font-semibold mb-4">Activité récente</h2>
         <div className="text-center py-8 text-text-muted">

@@ -1,10 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
 enum UserRole {
@@ -54,6 +54,7 @@ enum TransactionType {
   ALBUM_PURCHASE
   TICKET_PURCHASE
   TIP
+  PROMOTION
 }
 
 enum PaymentMethod {
@@ -126,6 +127,12 @@ model User {
   familyOwnedGroups     FamilyGroup[]
   familyMemberships     FamilyMember[]
   streamPlays           StreamPlay[]
+  reposts               Repost[]
+  activities            Activity[]
+  conversationsAsUser1  Conversation[] @relation("ConversationUser1")
+  conversationsAsUser2  Conversation[] @relation("ConversationUser2")
+  directMessages        DirectMessage[]
+  ads                   Ad[]
 
   @@index([email])
   @@index([role])
@@ -180,6 +187,7 @@ model Artist {
   streamPlays           StreamPlay[]
   payoutRequests        PayoutRequest[]
   chatRooms             ChatRoom[]
+  activities            Activity[]
 
   @@index([slug])
   @@index([name])
@@ -212,6 +220,8 @@ model Album {
   favorites             Favorite[]
   reviews               Review[]
   chatRooms             ChatRoom[]
+  activities            Activity[]
+  reposts               Repost[]
 
   @@unique([artistId, slug])
   @@index([status])
@@ -239,6 +249,8 @@ model Track {
   listenHistory         ListenHistory[]
   playlistTracks        PlaylistTrack[]
   streamPlays           StreamPlay[]
+  activities            Activity[]
+  reposts               Repost[]
 
   @@unique([albumId, slug])
   @@index([albumId])
@@ -459,6 +471,11 @@ enum NotificationType {
   ALBUM_SUBMISSION
   CONCERT_CREATION
   SYSTEM
+  NEW_FOLLOWER
+  NEW_REPOST
+  NEW_TRACK_FROM_ARTIST
+  NEW_ALBUM_FROM_ARTIST
+  DIRECT_MESSAGE
 }
 
 enum NotificationStatus {
@@ -677,20 +694,38 @@ enum Placement {
   AUDIO
 }
 
+enum AdStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
 model Ad {
-  id        String    @id @default(uuid())
-  image     String    @default("")
-  sponsor   String
-  text      String
-  link      String?
-  audioFile String?
-  placement Placement @default(POPUP)
-  isActive  Boolean   @default(true)
-  sortOrder Int       @default(0)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         String    @id @default(uuid())
+  image      String    @default("")
+  sponsor    String
+  text       String
+  link       String?
+  audioFile  String?
+  placement  Placement @default(POPUP)
+  userId     String?
+  targetType String?
+  targetId   String?
+  startDate  DateTime?
+  endDate    DateTime?
+  status     AdStatus  @default(PENDING)
+  isActive   Boolean   @default(true)
+  sortOrder  Int       @default(0)
+  transactionId String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([placement, isActive])
+  @@index([userId])
+  @@index([status])
 }
 
 enum LiveStreamStatus {
@@ -896,4 +931,81 @@ model PayoutRequest {
   @@index([artistId])
   @@index([status])
   @@index([createdAt])
+}
+
+enum ActivityType {
+  REPOST_TRACK
+  REPOST_ALBUM
+  NEW_TRACK
+  NEW_ALBUM
+  FOLLOW_ARTIST
+  FAVORITE_TRACK
+  FAVORITE_ALBUM
+}
+
+model Activity {
+  id        String       @id @default(uuid())
+  userId    String
+  type      ActivityType
+  trackId   String?
+  albumId   String?
+  artistId  String?
+  createdAt DateTime     @default(now())
+
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track     Track?       @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  album     Album?       @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  artist    Artist?      @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
+}
+
+model Repost {
+  id        String   @id @default(uuid())
+  userId    String
+  trackId   String?
+  albumId   String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  track     Track?   @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  album     Album?   @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, trackId])
+  @@unique([userId, albumId])
+  @@index([userId])
+  @@index([trackId])
+  @@index([albumId])
+  @@index([createdAt])
+}
+
+model Conversation {
+  id        String   @id @default(uuid())
+  user1Id   String
+  user2Id   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user1     User              @relation("ConversationUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User              @relation("ConversationUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  messages  DirectMessage[]
+
+  @@unique([user1Id, user2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+  @@index([updatedAt])
+}
+
+model DirectMessage {
+  id             String       @id @default(uuid())
+  conversationId String
+  senderId       String
+  content        String
+  createdAt      DateTime     @default(now())
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
 }

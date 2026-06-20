@@ -5,9 +5,22 @@ import { useRouter } from 'next/navigation';
 import { Plus, Radio, Loader2, Copy, Check, Trash2, Play, Square, Monitor, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
+interface LiveStream {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  viewerCount: number;
+  streamKey: string;
+  streamUrl: string | null;
+  scheduledAt: string | null;
+  createdAt: string;
+  _count: { chats: number };
+}
+
 export default function ArtistLivestreamPage() {
   const router = useRouter();
-  const [streams, setStreams] = useState<any[]>([]);
+  const [streams, setStreams] = useState<LiveStream[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [title, setTitle] = useState('');
@@ -105,28 +118,28 @@ export default function ArtistLivestreamPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Titre du live..."
-            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
           />
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Description (optionnelle)..."
             rows={2}
-            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary resize-none"
           />
           <input
             type="url"
             value={streamUrl}
             onChange={(e) => setStreamUrl(e.target.value)}
             placeholder="Lien YouTube Live (optionnel) — ex: https://youtube.com/watch?v=..."
-            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
           />
           <input
             type="text"
             value={customKey}
             onChange={(e) => setCustomKey(e.target.value)}
             placeholder="Clé Owncast (optionnel) — si tu utilises Owncast, entre ici sa clé de stream"
-            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
           />
           <div className="flex gap-2">
             <button
@@ -178,7 +191,7 @@ export default function ArtistLivestreamPage() {
 
                   {stream.streamKey && (
                     <div className="mt-3 flex items-center gap-2">
-                      <code className="text-[11px] bg-surface-hover px-2 py-1 rounded font-mono text-text-muted truncate max-w-[200px]">{stream.streamKey}</code>
+                      <code className="text-[11px] bg-surface-hover px-2 py-1 rounded-sm font-mono text-text-muted truncate max-w-[200px]">{stream.streamKey}</code>
                       <button onClick={() => copyToClipboard('key', stream.streamKey)} className="text-text-muted hover:text-primary transition-colors" title="Copier la clé">
                         {copiedField === 'key' ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
                       </button>

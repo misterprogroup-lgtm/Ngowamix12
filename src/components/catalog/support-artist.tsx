@@ -88,7 +88,7 @@ export function SupportArtist({ artistId, artistName }: SupportArtistProps) {
               placeholder="Montant en F CFA"
               value={customAmount}
               onChange={(e) => { setCustomAmount(e.target.value); setAmount(0); }}
-              className="w-full p-3 rounded-lg border border-border bg-surface text-text-primary outline-none focus:border-primary transition-colors"
+              className="w-full p-3 rounded-lg border border-border bg-surface text-text-primary outline-hidden focus:border-primary transition-colors"
             />
           </div>
 

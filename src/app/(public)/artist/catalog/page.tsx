@@ -233,10 +233,10 @@ export default function ArtistCatalog() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-6">
-          <div className="h-10 w-48 bg-surface-hover rounded" />
+          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-24 bg-surface-hover rounded" />
+              <div key={i} className="h-24 bg-surface-hover rounded-sm" />
             ))}
           </div>
         </div>
@@ -521,7 +521,7 @@ export default function ArtistCatalog() {
                 type="checkbox"
                 checked={formData.isPremiumOnly}
                 onChange={(e) => setFormData({ ...formData, isPremiumOnly: e.target.checked })}
-                className="rounded border-border bg-surface"
+                className="rounded-sm border-border bg-surface"
               />
               <span className="text-sm text-text-secondary">Réservé aux abonnés Premium</span>
             </label>

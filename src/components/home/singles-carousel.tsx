@@ -44,7 +44,7 @@ export function SinglesCarousel() {
             sizes="100vw"
             priority={index === 0}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-background/20 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background/60 via-background/20 to-transparent" />
         </div>
       ))}
 

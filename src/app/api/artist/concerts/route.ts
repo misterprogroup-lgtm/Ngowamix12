@@ -6,12 +6,6 @@ import { uploadFile } from '@/lib/upload';
 import { isS3Url, isUploadThingUrl } from '@/lib/upload';
 import { deleteFromS3, deleteFromVercelBlob, isVercelBlobUrl } from '@/lib/storage';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function POST(request: Request) {
   try {
     const user = await requireRole(['ARTIST', 'LABEL', 'ADMIN']);

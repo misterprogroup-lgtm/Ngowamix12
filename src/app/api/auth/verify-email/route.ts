@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, verifyTokenHash } from '@/lib/auth';
 import { z } from 'zod';
 
 const verifySchema = z.object({
@@ -66,7 +66,8 @@ export async function POST(request: Request) {
       );
     }
 
-    if (dbUser.emailVerificationCode !== code) {
+    const codeValid = await verifyTokenHash(code, dbUser.emailVerificationCode);
+    if (!codeValid) {
       return NextResponse.json(
         { error: 'Code incorrect' },
         { status: 400 }

@@ -9,9 +9,33 @@ import { Badge } from '@/components/ui/badge';
 import { formatNumber, formatPrice, formatDate } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
+interface DashboardStats {
+  totalUsers: number;
+  premiumUsers: number;
+  totalAlbums: number;
+  totalTransactions: number;
+  revenue: number;
+  pendingAlbums: number;
+  pendingVerifications?: number;
+}
+
+interface DashboardNotification {
+  id: string;
+  title: string;
+  message: string;
+  status: string;
+  createdAt: string;
+}
+
+interface DashboardData {
+  stats: DashboardStats;
+  recentUsers: Array<{ id: string; email: string; role: string; isPremium: boolean }>;
+  recentTransactions: Array<{ id: string; amount: number; status: string; user: { email: string } }>;
+}
+
 export default function AdminDashboard() {
-  const [data, setData] = useState<any>(null);
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [notifications, setNotifications] = useState<DashboardNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -47,7 +71,7 @@ export default function AdminDashboard() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-8">
-          <div className="h-10 w-48 bg-surface-hover rounded" />
+          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="h-28 bg-surface-hover rounded-xl" />
@@ -142,7 +166,7 @@ export default function AdminDashboard() {
           <p className="text-text-muted text-sm">Aucune notification</p>
         ) : (
           <div className="space-y-3">
-            {notifications.slice(0, 5).map((notification: any) => (
+            {notifications.slice(0, 5).map((notification: DashboardNotification) => (
               <div
                 key={notification.id}
                 className={cn(
@@ -182,7 +206,7 @@ export default function AdminDashboard() {
             <p className="text-text-muted text-sm">Aucun utilisateur</p>
           ) : (
             <div className="space-y-3">
-              {data.recentUsers.map((user: any) => (
+              {data.recentUsers.map((user: { id: string; email: string; role: string; isPremium: boolean }) => (
                 <div key={user.id} className="flex items-center justify-between text-sm">
                   <span className="truncate">{user.email}</span>
                   <div className="flex items-center gap-2">
@@ -202,7 +226,7 @@ export default function AdminDashboard() {
             <p className="text-text-muted text-sm">Aucune transaction</p>
           ) : (
             <div className="space-y-3">
-              {data.recentTransactions.map((tx: any) => (
+              {data.recentTransactions.map((tx: { id: string; amount: number; status: string; user: { email: string } }) => (
                 <div key={tx.id} className="flex items-center justify-between text-sm">
                   <span className="truncate">{tx.user.email}</span>
                   <div className="flex items-center gap-2">

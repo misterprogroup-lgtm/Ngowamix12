@@ -98,8 +98,8 @@ export default function AdminPromoCodesPage() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-4 max-w-2xl">
-          <div className="h-10 w-48 bg-surface-hover rounded" />
-          <div className="h-12 bg-surface-hover rounded" />
+          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
+          <div className="h-12 bg-surface-hover rounded-sm" />
         </div>
       </div>
     );
@@ -169,7 +169,7 @@ export default function AdminPromoCodesPage() {
             </div>
             <div className="flex items-center gap-2">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={code.isActive} onChange={() => handleToggle(code)} className="rounded border-border" />
+                <input type="checkbox" checked={code.isActive} onChange={() => handleToggle(code)} className="rounded-sm border-border" />
                 <span className="text-sm">{code.isActive ? 'Actif' : 'Inactif'}</span>
               </label>
               <button onClick={() => handleDelete(code.id)} className="p-2 text-error hover:bg-error/10 rounded-lg">

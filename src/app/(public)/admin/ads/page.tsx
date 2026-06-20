@@ -128,8 +128,8 @@ export default function AdminAdsPage() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-4 max-w-2xl">
-          <div className="h-10 w-48 bg-surface-hover rounded" />
-          <div className="h-12 bg-surface-hover rounded" />
+          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
+          <div className="h-12 bg-surface-hover rounded-sm" />
         </div>
       </div>
     );
@@ -209,7 +209,7 @@ export default function AdminAdsPage() {
             </div>
             <div className="flex items-end pb-2.5">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="rounded border-border" />
+                <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="rounded-sm border-border" />
                 <span className="text-sm">Active</span>
               </label>
             </div>
@@ -241,7 +241,7 @@ export default function AdminAdsPage() {
             </div>
             <div className="flex items-center gap-2">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={ad.isActive} onChange={() => handleToggle(ad)} className="rounded border-border" />
+                <input type="checkbox" checked={ad.isActive} onChange={() => handleToggle(ad)} className="rounded-sm border-border" />
                 <span className="text-sm">{ad.isActive ? 'Actif' : 'Inactif'}</span>
               </label>
               <button onClick={() => handleEdit(ad)} className="p-2 text-text-muted hover:text-primary rounded-lg">

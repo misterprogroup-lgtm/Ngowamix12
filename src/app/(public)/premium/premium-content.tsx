@@ -342,7 +342,7 @@ function PremiumContent() {
                 value={promoCode}
                 onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setDiscount(0); setPromoData(null); setPromoError(''); }}
                 placeholder="EX: PROMO10"
-                className="flex-1 rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="flex-1 rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary"
               />
               <Button variant="outline" size="sm" onClick={validatePromo} isLoading={promoLoading}>
                 <Gift className="h-4 w-4" />

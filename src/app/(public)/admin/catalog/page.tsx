@@ -16,8 +16,18 @@ const statusTabs = [
   { id: 'DRAFT', label: 'Brouillons' },
 ];
 
+interface AdminAlbum {
+  id: string;
+  title: string;
+  price: number;
+  status: string;
+  createdAt: string;
+  artist: { name: string };
+  _count: { tracks: number };
+}
+
 export default function AdminCatalogPage() {
-  const [albums, setAlbums] = useState<any[]>([]);
+  const [albums, setAlbums] = useState<AdminAlbum[]>([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('ALL');
   
@@ -91,7 +101,7 @@ export default function AdminCatalogPage() {
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-20 bg-surface-hover rounded animate-pulse" />
+            <div key={i} className="h-20 bg-surface-hover rounded-sm animate-pulse" />
           ))}
         </div>
       ) : albums.length === 0 ? (

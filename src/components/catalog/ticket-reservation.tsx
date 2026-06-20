@@ -198,7 +198,7 @@ export function TicketReservation({ concert }: TicketReservationProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="votre@email.com"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
             />
           </div>
         </>

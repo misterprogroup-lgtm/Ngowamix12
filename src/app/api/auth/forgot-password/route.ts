@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     );
 
     if (!sent) {
-      console.error('Email sending failed for', user.email);
+      console.error('Email sending failed');
     }
 
     return NextResponse.json({
@@ -59,9 +59,8 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Forgot password error:', error);
-    const msg = error instanceof Error ? error.message : 'Erreur inconnue';
     return NextResponse.json(
-      { error: msg },
+      { error: 'Erreur lors de la réinitialisation du mot de passe' },
       { status: 500 }
     );
   }

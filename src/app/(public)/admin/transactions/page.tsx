@@ -15,8 +15,18 @@ const statusTabs = [
   { id: 'REFUNDED', label: 'Remboursées' },
 ];
 
+interface AdminTransaction {
+  id: string;
+  amount: number;
+  status: string;
+  type: string;
+  paymentMethod: string;
+  createdAt: string;
+  user: { email: string };
+}
+
 export default function AdminTransactionsPage() {
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<AdminTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('ALL');
   const [page, setPage] = useState(1);
@@ -66,7 +76,7 @@ export default function AdminTransactionsPage() {
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-16 bg-surface-hover rounded animate-pulse" />
+            <div key={i} className="h-16 bg-surface-hover rounded-sm animate-pulse" />
           ))}
         </div>
       ) : (

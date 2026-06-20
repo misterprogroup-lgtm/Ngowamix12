@@ -27,16 +27,17 @@ export async function POST(req: NextRequest) {
     }
 
     const secret = process.env.RESEND_WEBHOOK_SECRET;
-    if (secret) {
-      try {
-        resend.webhooks.verify({
-          payload,
-          headers: { id, timestamp, signature },
-          webhookSecret: secret,
-        });
-      } catch {
-        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
-      }
+    if (!secret) {
+      return NextResponse.json({ error: 'Email webhook non configuré' }, { status: 501 });
+    }
+    try {
+      resend.webhooks.verify({
+        payload,
+        headers: { id, timestamp, signature },
+        webhookSecret: secret,
+      });
+    } catch {
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
 
     const event = JSON.parse(payload);

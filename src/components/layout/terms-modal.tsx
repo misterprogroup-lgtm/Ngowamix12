@@ -79,8 +79,8 @@ export function TermsAcceptanceModal() {
   if (isLoading || !showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-xs" />
       <div className="relative w-full max-w-lg rounded-xl border border-border bg-surface shadow-2xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
               <div className="flex items-center gap-3 mb-4">
@@ -158,7 +158,7 @@ export function TermsAcceptanceModal() {
                       type="checkbox"
                       checked={accepted}
                       onChange={(e) => setAccepted(e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary"
+                      className="mt-1 h-4 w-4 rounded-sm border-border bg-background text-primary focus:ring-primary"
                     />
                     <span className="text-sm text-text-secondary">
                       J'ai lu et j'accepte les{' '}

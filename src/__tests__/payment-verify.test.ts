@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { checkDepositStatus as pawapayStatus } from '@/lib/pawapay';
 
-const TEST_USER = { sub: 'user-1', email: 'test@test.com', role: 'LISTENER', isPremium: false };
+const TEST_USER = { sub: 'user-1', email: 'test@test.com', role: 'LISTENER' as const, isPremium: false };
 
 function mockDb(overrides: Record<string, unknown> = {}) {
   Object.assign(db, {
@@ -18,7 +18,7 @@ function mockDb(overrides: Record<string, unknown> = {}) {
     subscription: { create: vi.fn() },
     purchase: { create: vi.fn() },
     album: { findUnique: vi.fn(), update: vi.fn() },
-    ticket: { create: vi.fn() },
+    ticket: { create: vi.fn(), findMany: vi.fn() },
     concert: { findUnique: vi.fn(), update: vi.fn() },
     artist: { update: vi.fn() },
     $transaction: vi.fn((cb: Function) => cb(db)),
@@ -40,7 +40,7 @@ describe('Payment Verify', () => {
   });
 
   describe('fulfillTransaction — SUBSCRIPTION', () => {
-    const baseTransaction = {
+    const baseTransaction: Record<string, unknown> = {
       id: 'tx-1',
       userId: 'user-1',
       type: 'SUBSCRIPTION',
@@ -50,10 +50,15 @@ describe('Payment Verify', () => {
       providerTransactionId: 'dep-1',
       metadata: null,
       user: { id: 'user-1', email: 'test@test.com' },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      currency: 'XOF',
+      paymentMethod: 'PAWAPAY',
+      paymentProvider: 'PAWAPAY',
     };
 
     it('creates subscription and sets user as premium', async () => {
-      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction);
+      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction as any);
       vi.mocked(pawapayStatus).mockResolvedValue({
         depositId: 'dep-1',
         status: 'COMPLETED',
@@ -88,7 +93,7 @@ describe('Payment Verify', () => {
     });
 
     it('returns 200 with processing:true when PawaPay returns PROCESSING', async () => {
-      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction);
+      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction as any);
       vi.mocked(pawapayStatus).mockResolvedValue({
         depositId: 'dep-1',
         status: 'PROCESSING',
@@ -103,7 +108,7 @@ describe('Payment Verify', () => {
     });
 
     it('returns PAID when PawaPay returns COMPLETED', async () => {
-      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction);
+      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction as any);
       vi.mocked(pawapayStatus).mockResolvedValue({
         depositId: 'dep-1',
         status: 'COMPLETED',
@@ -118,7 +123,7 @@ describe('Payment Verify', () => {
     });
 
     it('returns FAILED when PawaPay returns FAILED', async () => {
-      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction);
+      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction as any);
       vi.mocked(pawapayStatus).mockResolvedValue({
         depositId: 'dep-1',
         status: 'FAILED',
@@ -135,7 +140,7 @@ describe('Payment Verify', () => {
       vi.mocked(db.transaction.findUnique).mockResolvedValue({
         ...baseTransaction,
         status: 'PAID',
-      });
+      } as any);
 
       const res = await callVerify('tx-1');
       const data = await res.json();
@@ -147,7 +152,7 @@ describe('Payment Verify', () => {
   });
 
   describe('fulfillTransaction — ALBUM_PURCHASE', () => {
-    const baseTransaction = {
+    const baseTransaction: Record<string, unknown> = {
       id: 'tx-2',
       userId: 'user-1',
       type: 'ALBUM_PURCHASE',
@@ -157,11 +162,16 @@ describe('Payment Verify', () => {
       providerTransactionId: 'dep-2',
       metadata: null,
       user: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      currency: 'XOF',
+      paymentMethod: 'PAWAPAY',
+      paymentProvider: 'PAWAPAY',
     };
 
     it('creates purchase and increments artist balance', async () => {
-      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction);
-      vi.mocked(db.album.findUnique).mockResolvedValue({ artistId: 'artist-1' } as any);
+      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction as any);
+      vi.mocked(db.album.findUnique).mockResolvedValue({ id: 'album-1', artistId: 'artist-1' } as any);
       vi.mocked(db.$transaction).mockImplementation(async (cb: Function) => {
         await cb(db);
       });
@@ -196,7 +206,7 @@ describe('Payment Verify', () => {
   });
 
   describe('fulfillTransaction — TICKET_PURCHASE', () => {
-    const baseTransaction = {
+    const baseTransaction: Record<string, unknown> = {
       id: 'tx-3',
       userId: 'user-1',
       type: 'TICKET_PURCHASE',
@@ -206,11 +216,18 @@ describe('Payment Verify', () => {
       providerTransactionId: 'dep-3',
       metadata: JSON.stringify({ recipientEmail: 'buyer@test.com' }),
       user: { id: 'user-1', email: 'test@test.com' },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      currency: 'XOF',
+      paymentMethod: 'PAWAPAY',
+      paymentProvider: 'PAWAPAY',
     };
 
     it('creates tickets and decrements concert availability', async () => {
-      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction);
-      vi.mocked(db.concert.findUnique).mockResolvedValue({ artistId: 'artist-1' } as any);
+      vi.mocked(db.transaction.findUnique).mockResolvedValue(baseTransaction as any);
+      const mockConcert = { id: 'concert-1', artistId: 'artist-1', title: 'Concert', venue: 'Venue', city: 'City', date: new Date(), time: '20:00' };
+      vi.mocked(db.concert.findUnique).mockResolvedValue(mockConcert as any);
+      vi.mocked(db.ticket.findMany).mockResolvedValue([{ qrCode: 'qr-1' }, { qrCode: 'qr-2' }] as any);
       vi.mocked(db.$transaction).mockImplementation(async (cb: Function) => {
         await cb(db);
       });
@@ -265,6 +282,9 @@ describe('Payment Verify', () => {
         id: 'tx-other',
         userId: 'other-user',
       } as any);
+      vi.mocked(db.$transaction).mockImplementation(async (cb: Function) => {
+        await cb(db);
+      });
       const res = await callVerify('tx-other');
       expect(res.status).toBe(404);
     });

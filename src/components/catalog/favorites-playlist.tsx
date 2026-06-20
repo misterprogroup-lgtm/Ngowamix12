@@ -19,7 +19,7 @@ export function FavoritesPlaylist() {
     fetch('/api/user/favorites')
       .then((res) => res.json())
       .then((data) => {
-        const favTracks = (data.tracks || []).map((f: any) => f.track).filter(Boolean);
+        const favTracks = (data.tracks || []).map((f: { track: Track }) => f.track).filter(Boolean);
         setTracks(favTracks);
         setFavoriteIds(new Set(favTracks.map((t: Track) => t.id)));
         setLoading(false);
@@ -128,6 +128,6 @@ export function FavoritesPlaylist() {
   );
 }
 
-function cn(...inputs: any[]) {
+function cn(...inputs: unknown[]) {
   return inputs.filter(Boolean).join(' ');
 }

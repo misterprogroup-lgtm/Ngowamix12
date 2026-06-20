@@ -73,7 +73,7 @@ export function Header() {
 
   return (
     <>
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center gap-4">
           <Link href={ROUTES.HOME} className="flex items-center gap-2 shrink-0">
@@ -226,7 +226,7 @@ export function Header() {
       {/* Fixed hamburger top-left on mobile */}
       <button
         onClick={() => setShowMobileMenu(true)}
-        className="md:hidden fixed top-3 right-3 z-[55] p-2.5 text-text-secondary hover:text-text-primary transition-colors"
+        className="md:hidden fixed top-3 right-3 z-55 p-2.5 text-text-secondary hover:text-text-primary transition-colors"
         aria-label="Menu"
       >
         <Menu className="h-5 w-5" />
@@ -234,7 +234,7 @@ export function Header() {
 
       {/* Mobile menu overlay */}
       {showMobileMenu && (
-        <div className="md:hidden fixed inset-0 z-[60]">
+        <div className="md:hidden fixed inset-0 z-60">
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowMobileMenu(false)} />
           <div className="absolute right-0 top-0 bottom-0 w-72 bg-background border-l border-border shadow-xl flex flex-col animate-slideRight">
             <div className="flex items-center justify-between px-4 h-16 border-b border-border">

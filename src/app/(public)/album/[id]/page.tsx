@@ -13,6 +13,7 @@ import { ShareButtons } from '@/components/catalog/share-buttons';
 import { formatDuration, formatPrice } from '@/lib/utils';
 import { getCurrentUser } from '@/lib/auth';
 import { PREMIUM_PRICE } from '@/lib/constants';
+import type { Track } from '@/types';
 
 interface AlbumPageProps {
   params: Promise<{ id: string }>;
@@ -87,7 +88,7 @@ async function checkPurchase(albumId: string) {
 
     if (!res.ok) return false;
     const data = await res.json();
-    return data.purchases?.some((p: any) => p.albumId === albumId) || false;
+    return data.purchases?.some((p: { albumId: string }) => p.albumId === albumId) || false;
   } catch {
     return false;
   }
@@ -103,7 +104,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
 
   const tracks = await getAlbumTracks(id);
   const isPurchased = await checkPurchase(id);
-  const totalDuration = tracks.reduce((sum: number, track: any) => sum + track.duration, 0);
+  const totalDuration = tracks.reduce((sum: number, track: Track) => sum + track.duration, 0);
 
   return (
     <div className="container mx-auto py-8 pb-24">

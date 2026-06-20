@@ -1,6 +1,119 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/forms';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-background: hsl(var(--background));
+  --color-surface: hsl(var(--surface));
+  --color-surface-hover: hsl(var(--surface-hover));
+  --color-border: hsl(var(--border));
+  --color-text-primary: hsl(var(--text-primary));
+  --color-text-secondary: hsl(var(--text-secondary));
+  --color-text-muted: hsl(var(--text-muted));
+  --color-primary: hsl(var(--primary));
+  --color-primary-hover: hsl(var(--primary-hover));
+  --color-primary-glow: var(--primary-glow);
+  --color-primary-config: var(--config-primary);
+  --color-accent: hsl(var(--accent));
+  --color-accent-hover: hsl(var(--accent-hover));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-error: hsl(var(--error));
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  --background-image-premium-gradient: linear-gradient(
+    135deg,
+    #ff8c00,
+    #ffc300
+  );
+
+  --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-slideUp: slideUp 0.3s ease-out;
+  --animate-slideDown: slideDown 0.35s ease-out;
+  --animate-slideRight: slideRight 0.3s ease-out;
+  --animate-fadeIn: fadeIn 0.2s ease-out;
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  @keyframes slideUp {
+    0% {
+      transform: translateY(100%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  @keyframes slideDown {
+    0% {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes slideRight {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility container {
+  @apply max-w-7xl mx-auto;
+}
+
+@utility gradient-text {
+  @apply bg-linear-to-r from-primary to-accent bg-clip-text text-transparent;
+}
+
+@utility spotify-card {
+  @apply rounded-xl bg-surface hover:bg-surface-hover transition-all duration-200;
+}
+
+@utility spotify-card-elevated {
+  @apply rounded-xl bg-surface hover:bg-surface-hover hover:shadow-lg hover:shadow-black/10 transition-all duration-200;
+}
 
 @layer base {
   :root {
@@ -124,23 +237,5 @@
     background: #FF8C00;
     cursor: pointer;
     border: none;
-  }
-}
-
-@layer components {
-  .container {
-    @apply max-w-7xl mx-auto;
-  }
-
-  .gradient-text {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
-  }
-
-  .spotify-card {
-    @apply rounded-xl bg-surface hover:bg-surface-hover transition-all duration-200;
-  }
-
-  .spotify-card-elevated {
-    @apply rounded-xl bg-surface hover:bg-surface-hover hover:shadow-lg hover:shadow-black/10 transition-all duration-200;
   }
 }

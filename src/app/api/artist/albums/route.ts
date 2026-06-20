@@ -5,12 +5,6 @@ import { uploadFile } from '@/lib/upload';
 import { slugify } from '@/lib/utils';
 import { sendPushToAllListeners } from '@/lib/push';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function POST(request: Request) {
   try {
     const user = await requireRole(['ARTIST', 'LABEL', 'ADMIN']);

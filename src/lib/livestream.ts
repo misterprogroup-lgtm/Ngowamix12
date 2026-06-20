@@ -55,10 +55,14 @@ export async function createLivestream(data: {
 }
 
 export async function updateLivestreamStatus(id: string, status: 'LIVE' | 'ENDED' | 'SCHEDULED') {
-  const updateData: Record<string, unknown> = { status };
-  if (status === 'LIVE') updateData.startedAt = new Date();
-  if (status === 'ENDED') updateData.endedAt = new Date();
-  return db.liveStream.update({ where: { id }, data: updateData as any });
+  return db.liveStream.update({
+    where: { id },
+    data: {
+      status,
+      ...(status === 'LIVE' ? { startedAt: new Date() } : {}),
+      ...(status === 'ENDED' ? { endedAt: new Date() } : {}),
+    },
+  });
 }
 
 export async function incrementViewerCount(id: string) {

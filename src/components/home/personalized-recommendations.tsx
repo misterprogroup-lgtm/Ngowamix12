@@ -12,13 +12,20 @@ import { formatDuration } from '@/lib/utils';
 interface TrackRec {
   id: string;
   title: string;
+  slug: string;
   duration: number;
+  trackNumber: number;
+  audioFile: string;
+  isExplicit: boolean;
+  isPremiumOnly: boolean;
+  playCount: number;
   reason: string;
+  createdAt?: string;
   album: {
     id: string;
     title: string;
     coverImage: string | null;
-    artist: { id: string; name: string; slug: string };
+    artist: { id: string; name: string; slug: string; avatar: string | null; isVerified?: boolean };
   };
 }
 
@@ -76,7 +83,7 @@ function RecommendedTracks({ tracks }: { tracks: TrackRec[] }) {
     if (isTrackPlaying(track.id)) {
       pause();
     } else {
-      play(track as any, tracks as any, tracks.indexOf(track));
+      play(track, tracks, tracks.indexOf(track));
     }
   };
 

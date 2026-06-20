@@ -9,12 +9,6 @@ import path from 'path';
 import { execFile } from 'child_process';
 import ffprobe from 'ffprobe-static';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 function getAudioDuration(filePath: string): Promise<number> {
   return new Promise((resolve) => {
     execFile(ffprobe.path, [

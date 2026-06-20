@@ -45,9 +45,9 @@ export async function GET(request: Request) {
       );
 
       if (sent) {
-        console.log(`[PREMIUM_EXPIRY] Email envoyé à ${user.email} (${daysLeft} jours restants)`);
+        console.log(`[PREMIUM_EXPIRY] Email envoyé (${daysLeft} jours restants)`);
       } else {
-        console.error(`[PREMIUM_EXPIRY] Échec envoi email à ${user.email}`);
+        console.error(`[PREMIUM_EXPIRY] Échec envoi email`);
       }
     }
 
@@ -80,21 +80,15 @@ export async function GET(request: Request) {
       });
 
       if (sent) {
-        console.log(`[PREMIUM_EXPIRED] Email envoyé et abonnement désactivé pour ${user.email}`);
+        console.log(`[PREMIUM_EXPIRED] Email envoyé et abonnement désactivé`);
       } else {
-        console.error(`[PREMIUM_EXPIRED] Abonnement désactivé pour ${user.email} mais échec envoi email`);
+        console.error(`[PREMIUM_EXPIRED] Abonnement désactivé mais échec envoi email`);
       }
     }
 
     return NextResponse.json({
       notified: expiringSoonUsers.length,
       expired: alreadyExpired.length,
-      users: expiringSoonUsers.map((u) => ({
-        email: u.email,
-        daysLeft: u.premiumExpiresAt
-          ? Math.ceil((u.premiumExpiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-          : 0,
-      })),
     });
   } catch (error) {
     console.error('Cron error:', error);

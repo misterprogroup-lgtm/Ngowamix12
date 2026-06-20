@@ -90,8 +90,8 @@ export function StatsCounter() {
                 key={key}
                 className="relative overflow-hidden rounded-xl border border-border bg-surface p-6 text-center group hover:border-primary/30 transition-colors"
               >
-                <div className={`absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full bg-gradient-to-br ${color} opacity-5 group-hover:opacity-10 transition-opacity`} />
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center mx-auto mb-3`}>
+                <div className={`absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full bg-linear-to-br ${color} opacity-5 group-hover:opacity-10 transition-opacity`} />
+                <div className={`w-10 h-10 rounded-lg bg-linear-to-br ${color} flex items-center justify-center mx-auto mb-3`}>
                   <Icon className="h-5 w-5 text-white" />
                 </div>
                 <p className="text-3xl font-bold text-text-primary mb-1">

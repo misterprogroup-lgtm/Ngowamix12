@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { TrackRow } from './track-row';
+import type { Track } from '@/types';
 
 interface TrackListProps {
-  tracks: any[];
+  tracks: Track[];
 }
 
 export function TrackList({ tracks }: TrackListProps) {
@@ -30,7 +31,7 @@ export function TrackList({ tracks }: TrackListProps) {
 
   return (
     <div className="space-y-1">
-      {tracks.map((track: any, index: number) => (
+      {tracks.map((track: Track, index: number) => (
         <TrackRow
           key={track.id}
           track={track}

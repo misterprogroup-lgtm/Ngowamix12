@@ -11,7 +11,7 @@ function isIOS(): boolean {
 
 function isStandalone(): boolean {
   return window.matchMedia('(display-mode: standalone)').matches ||
-    !!(navigator as any).standalone;
+    !!navigator.standalone;
 }
 
 function getBrowserInfo() {

@@ -8,7 +8,14 @@ import { cn } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants';
 import { MobileSearchOverlay } from '@/components/layout/mobile-search-overlay';
 
-const links = [
+interface NavLink {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  isSearch?: true;
+}
+
+const links: NavLink[] = [
   { href: ROUTES.HOME, label: 'Accueil', icon: Home },
   { href: '/search', label: 'Rechercher', icon: Search, isSearch: true },
   { href: ROUTES.EXPLORE, label: 'Explorer', icon: Compass },
@@ -23,12 +30,12 @@ export function MobileBottomNav() {
     <>
       <MobileSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
       <nav
-        className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden"
+        className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60 md:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="flex items-center justify-around h-16">
           {links.map((link) => {
-            if ((link as any).isSearch) {
+            if (link.isSearch) {
               return (
                 <button
                   key={link.href}

@@ -114,7 +114,7 @@ export default function ChatPage() {
   return (
     <div className="container mx-auto py-6 pb-24">
       <div className="flex items-center gap-3 mb-6">
-        <div className="h-8 w-1 rounded-full bg-gradient-to-b from-primary to-accent" />
+        <div className="h-8 w-1 rounded-full bg-linear-to-b from-primary to-accent" />
         <h1 className="text-2xl font-bold">Chat communautaire</h1>
       </div>
 
@@ -199,10 +199,10 @@ export default function ChatPage() {
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-primary">{msg.user.displayName || 'Anonyme'}</span>
-                          {msg.user.role === 'ARTIST' && <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent/10 text-accent font-medium">Artiste</span>}
-                          {msg.user.role === 'ADMIN' && <span className="text-[10px] px-1.5 py-0.5 rounded bg-error/10 text-error font-medium">Admin</span>}
+                          {msg.user.role === 'ARTIST' && <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-accent/10 text-accent font-medium">Artiste</span>}
+                          {msg.user.role === 'ADMIN' && <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-error/10 text-error font-medium">Admin</span>}
                         </div>
-                        <p className="text-sm text-text-primary break-words">{msg.content}</p>
+                        <p className="text-sm text-text-primary wrap-break-word">{msg.content}</p>
                       </div>
                     </div>
                   ))
@@ -218,7 +218,7 @@ export default function ChatPage() {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Écris un message..."
-                  className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
                 />
                 <button
                   type="submit"

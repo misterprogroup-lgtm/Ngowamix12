@@ -41,7 +41,7 @@ export default function DownloadsPage() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-6">
-          <div className="h-10 w-48 bg-surface-hover rounded" />
+          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
           <div className="h-32 bg-surface-hover rounded-xl" />
         </div>
       </div>

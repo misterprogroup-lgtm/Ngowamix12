@@ -137,7 +137,7 @@ export default async function HomePage() {
         <AnimatedSection delay={0.3} className="relative">
           <div className="container mx-auto relative">
             <HorizontalScroll
-              title={<div className="flex items-center gap-3"><div className="h-8 w-1 rounded-full bg-gradient-to-b from-primary to-accent" />Singles récents</div>}
+              title={<div className="flex items-center gap-3"><div className="h-8 w-1 rounded-full bg-linear-to-b from-primary to-accent" />Singles récents</div>}
               seeAllHref="/explore"
             >
               {recentSingles.map((single: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
@@ -165,7 +165,7 @@ export default async function HomePage() {
       {/* Premium Banner */}
       <AnimatedSection delay={0.35}>
         <div className="container mx-auto">
-          <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-primary/20 to-accent/20 p-8 md:p-12">
+          <div className="relative rounded-2xl overflow-hidden bg-linear-to-r from-primary/20 to-accent/20 p-8 md:p-12">
             <div className="max-w-2xl">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
                 Passez au Premium
@@ -190,7 +190,7 @@ export default async function HomePage() {
                 </Button>
               </Link>
             </div>
-            <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-primary/10 to-transparent hidden lg:block" />
+            <div className="absolute right-0 top-0 h-full w-1/3 bg-linear-to-l from-primary/10 to-transparent hidden lg:block" />
           </div>
         </div>
       </AnimatedSection>

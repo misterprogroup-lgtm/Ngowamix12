@@ -4,10 +4,32 @@ import { useState, useEffect } from 'react';
 import { Wallet, Music, TrendingUp, Download, Loader2, ArrowUpRight, CreditCard, Smartphone, History } from 'lucide-react';
 import { SafeImage } from '@/components/ui/safe-image';
 
+interface EarningsData {
+  balance: number;
+  streamCount: number;
+  totalStreamEarnings: number;
+  totalPayout?: number;
+}
+
+interface PlayHistory {
+  id: string;
+  amount: number;
+  playedAt: string;
+  track?: { title?: string; album?: { title?: string; coverImage?: string | null } };
+}
+
+interface PayoutRecord {
+  id: string;
+  amount: number;
+  status: string;
+  method: string;
+  createdAt: string;
+}
+
 export default function ArtistRoyaltiesPage() {
-  const [earnings, setEarnings] = useState<any>(null);
-  const [history, setHistory] = useState<any[]>([]);
-  const [payouts, setPayouts] = useState<any[]>([]);
+  const [earnings, setEarnings] = useState<EarningsData | null>(null);
+  const [history, setHistory] = useState<PlayHistory[]>([]);
+  const [payouts, setPayouts] = useState<PayoutRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPayout, setShowPayout] = useState(false);
   const [payoutAmount, setPayoutAmount] = useState('');
@@ -68,7 +90,7 @@ export default function ArtistRoyaltiesPage() {
   return (
     <div className="container mx-auto py-8 pb-24">
       <div className="flex items-center gap-3 mb-8">
-        <div className="h-8 w-1 rounded-full bg-gradient-to-b from-success to-primary" />
+        <div className="h-8 w-1 rounded-full bg-linear-to-b from-success to-primary" />
         <h1 className="text-2xl font-bold">Royalties & Gains</h1>
       </div>
 
@@ -153,7 +175,7 @@ export default function ArtistRoyaltiesPage() {
             </div>
           ) : (
             <div className="divide-y divide-border">
-              {history.map((play: any) => (
+              {history.map((play) => (
                 <div key={play.id} className="flex items-center gap-4 p-4">
                   <div className="h-10 w-10 rounded-lg bg-surface-hover overflow-hidden shrink-0">
                     {play.track?.album?.coverImage ? (
@@ -186,7 +208,7 @@ export default function ArtistRoyaltiesPage() {
             </div>
           ) : (
             <div className="divide-y divide-border">
-              {payouts.map((payout: any) => (
+              {payouts.map((payout) => (
                 <div key={payout.id} className="flex items-center justify-between p-4">
                   <div>
                     <p className="font-semibold">{payout.amount.toLocaleString()} FCFA</p>
@@ -222,7 +244,7 @@ export default function ArtistRoyaltiesPage() {
                   onChange={(e) => setPayoutAmount(e.target.value)}
                   placeholder="5000 minimum"
                   min="5000"
-                  className="w-full px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
                 />
               </div>
               <div>
@@ -253,7 +275,7 @@ export default function ArtistRoyaltiesPage() {
                   value={payoutPhone}
                   onChange={(e) => setPayoutPhone(e.target.value)}
                   placeholder={payoutMethod === 'MOBILE_MONEY' ? '+225 01 02 03 04 05' : 'Numéro de compte'}
-                  className="w-full px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
                 />
               </div>
               <div className="flex gap-2 pt-2">

@@ -85,4 +85,8 @@ export const ROUTES = {
   ARTIST_ROYALTIES: '/artist/royalties',
   ARTIST_PAYOUT: '/artist/payout',
   ARTIST_SERVICES: '/artist/services',
+  FEED: '/feed',
+  MESSAGES: '/messages',
+  OFFLINE: '/offline',
+  PROMOTE: '/user/promote',
 } as const;

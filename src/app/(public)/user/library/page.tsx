@@ -58,9 +58,9 @@ export default function LibraryPage() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-6">
-          <div className="h-10 w-32 bg-surface-hover rounded" />
+          <div className="h-10 w-32 bg-surface-hover rounded-sm" />
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-14 bg-surface-hover rounded" />
+            <div key={i} className="h-14 bg-surface-hover rounded-sm" />
           ))}
         </div>
       </div>

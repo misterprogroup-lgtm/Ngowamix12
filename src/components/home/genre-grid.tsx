@@ -34,7 +34,7 @@ export function GenreGrid() {
                 href={`/explore?genre=${encodeURIComponent(genre)}`}
                 className="snap-start shrink-0 flex flex-col items-center gap-3 p-5 rounded-xl bg-surface hover:bg-surface-hover transition-all group w-[130px]"
               >
-                <div className={`h-12 w-12 rounded-full bg-gradient-to-br ${color} flex items-center justify-center`}>
+                <div className={`h-12 w-12 rounded-full bg-linear-to-br ${color} flex items-center justify-center`}>
                   <Icon className="h-5 w-5" />
                 </div>
                 <span className="text-sm font-medium text-text-primary text-center group-hover:text-primary transition-colors">

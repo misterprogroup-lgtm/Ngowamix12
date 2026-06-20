@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { db } from '@/lib/db';
+import { tryDecrypt } from '@/lib/encrypt';
 
 let client: Stripe | null = null;
 
@@ -16,7 +17,10 @@ export async function isStripeActive(): Promise<boolean> {
     where: { provider: 'STRIPE' },
     select: { isActive: true, apiKey: true },
   });
-  if (config) return config.isActive && !!config.apiKey;
+  if (config) {
+    const dbKey = config.apiKey ? tryDecrypt(config.apiKey) : null;
+    return config.isActive && !!dbKey;
+  }
   return !!process.env.STRIPE_SECRET_KEY;
 }
 

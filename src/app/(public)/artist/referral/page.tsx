@@ -6,9 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/feedback/toast';
 
+interface ReferralData {
+  code: string;
+  usageCount?: number;
+  totalEarnings?: number;
+}
+
 export default function ArtistReferralPage() {
   const { addToast } = useToast();
-  const [referral, setReferral] = useState<any>(null);
+  const [referral, setReferral] = useState<ReferralData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [newCode, setNewCode] = useState('');

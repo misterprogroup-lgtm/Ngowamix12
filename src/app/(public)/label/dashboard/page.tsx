@@ -69,7 +69,7 @@ export default function LabelDashboard() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-6">
-          <div className="h-8 w-64 bg-surface-hover rounded" />
+          <div className="h-8 w-64 bg-surface-hover rounded-sm" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
               <div key={i} className="h-24 bg-surface-hover rounded-xl" />

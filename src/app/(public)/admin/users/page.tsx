@@ -6,8 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 
+interface AdminUser {
+  id: string;
+  email: string;
+  displayName: string | null;
+  role: string;
+  isPremium: boolean;
+  createdAt: string;
+}
+
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState('ALL');
   const [page, setPage] = useState(1);
@@ -72,7 +81,7 @@ export default function AdminUsersPage() {
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-14 bg-surface-hover rounded animate-pulse" />
+            <div key={i} className="h-14 bg-surface-hover rounded-sm animate-pulse" />
           ))}
         </div>
       ) : (

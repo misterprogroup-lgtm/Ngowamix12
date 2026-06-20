@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { PREMIUM_DOWNLOAD_QUOTA } from '@/lib/constants';
+import { tryDecrypt } from '@/lib/encrypt';
 import crypto from 'crypto';
 
 async function fulfillTransaction(transactionId: string) {
@@ -189,14 +190,16 @@ export async function POST(request: Request) {
       const rawBody = await request.clone().text();
       const signature = request.headers.get('x-pawapay-signature') || '';
       const pawapayApiKey = process.env.PAWAPAY_API_KEY || '';
-      if (pawapayApiKey) {
-        const expectedSig = crypto
-          .createHmac('sha256', pawapayApiKey)
-          .update(rawBody)
-          .digest('hex');
-        if (signature !== expectedSig) {
-          return NextResponse.json({ error: 'Signature invalide' }, { status: 401 });
-        }
+      if (!pawapayApiKey) {
+        console.error('[WEBHOOK] PAWAPAY_API_KEY not configured');
+        return NextResponse.json({ error: 'Configuration serveur invalide' }, { status: 500 });
+      }
+      const expectedSig = crypto
+        .createHmac('sha256', pawapayApiKey)
+        .update(rawBody)
+        .digest('hex');
+      if (signature !== expectedSig) {
+        return NextResponse.json({ error: 'Signature invalide' }, { status: 401 });
       }
 
       const depositId = body.depositId as string;
@@ -228,17 +231,19 @@ export async function POST(request: Request) {
         const config = await db.paymentProviderConfig.findUnique({
           where: { provider: 'MONEROO' },
         });
-        const webhookSecret = config?.siteId || process.env.MONEROO_WEBHOOK_SECRET || '';
-        if (webhookSecret) {
-          const signature = request.headers.get('x-moneroo-signature') || '';
-          const rawBody = await request.clone().text();
-          const expectedSig = crypto
-            .createHmac('sha256', webhookSecret)
-            .update(rawBody)
-            .digest('hex');
-          if (signature !== expectedSig) {
-            return NextResponse.json({ error: 'Signature invalide' }, { status: 401 });
-          }
+        const webhookSecret = tryDecrypt(config?.siteId) || process.env.MONEROO_WEBHOOK_SECRET || '';
+        if (!webhookSecret) {
+          console.error('[WEBHOOK] MONEROO_WEBHOOK_SECRET not configured');
+          return NextResponse.json({ error: 'Configuration serveur invalide' }, { status: 500 });
+        }
+        const signature = request.headers.get('x-moneroo-signature') || '';
+        const rawBody = await request.clone().text();
+        const expectedSig = crypto
+          .createHmac('sha256', webhookSecret)
+          .update(rawBody)
+          .digest('hex');
+        if (signature !== expectedSig) {
+          return NextResponse.json({ error: 'Signature invalide' }, { status: 401 });
         }
 
         const txn = await db.transaction.findFirst({

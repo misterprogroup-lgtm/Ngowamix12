@@ -10,12 +10,33 @@ import { ListenHistoryPlaylist } from '@/components/catalog/listen-history-playl
 import { PersonalizedRecommendations } from '@/components/home/personalized-recommendations';
 import { GENRES, COUNTRIES } from '@/lib/constants';
 
+interface ExploreAlbum {
+  id: string;
+  title: string;
+  slug: string;
+  coverImage: string | null;
+  price: number;
+  isPremiumOnly: boolean;
+  type: string;
+  averageRating: number | null;
+  totalReviews: number;
+  artist: { name: string; slug: string; isVerified: boolean };
+}
+
+interface ExploreArtist {
+  id: string;
+  name: string;
+  slug: string;
+  avatar: string | null;
+  isVerified: boolean;
+}
+
 export function ExploreClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [type, setType] = useState(searchParams.get('type') || 'all');
   const [page, setPage] = useState(1);
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<(ExploreAlbum | ExploreArtist)[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ pages: 1, total: 0 });
 
@@ -137,7 +158,7 @@ export function ExploreClient() {
           <select
             value={genre}
             onChange={(e) => updateFilters('genre', e.target.value)}
-            className="h-10 rounded-lg border border-border bg-surface px-3 text-sm text-text-primary focus:border-primary focus:outline-none"
+            className="h-10 rounded-lg border border-border bg-surface px-3 text-sm text-text-primary focus:border-primary focus:outline-hidden"
           >
             <option value="">Tous les genres</option>
             {GENRES.map((g) => (
@@ -150,7 +171,7 @@ export function ExploreClient() {
           <select
             value={country}
             onChange={(e) => updateFilters('country', e.target.value)}
-            className="h-10 rounded-lg border border-border bg-surface px-3 text-sm text-text-primary focus:border-primary focus:outline-none"
+            className="h-10 rounded-lg border border-border bg-surface px-3 text-sm text-text-primary focus:border-primary focus:outline-hidden"
           >
             <option value="">Tous les pays</option>
             {COUNTRIES.map((c) => (
@@ -180,36 +201,42 @@ export function ExploreClient() {
         <>
           {(type === 'all' || type === 'album' || type === 'single' || type === 'ep') ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {items.map((album: any) => (
-                <AlbumCard
-                  key={album.id}
-                  id={album.id}
-                  title={album.title}
-                  slug={album.slug}
-                  coverImage={album.coverImage}
-                  artistName={album.artist.name}
-                  artistSlug={album.artist.slug}
-                  price={Number(album.price)}
-                  isPremiumOnly={album.isPremiumOnly}
-                  type={album.type}
-                  averageRating={album.averageRating}
-                  totalReviews={album.totalReviews}
-                  isArtistVerified={album.artist.isVerified}
-                />
-              ))}
+              {items.map((item) => {
+                const a = item as ExploreAlbum;
+                return (
+                  <AlbumCard
+                    key={a.id}
+                    id={a.id}
+                    title={a.title}
+                    slug={a.slug}
+                    coverImage={a.coverImage}
+                    artistName={a.artist.name}
+                    artistSlug={a.artist.slug}
+                    price={Number(a.price)}
+                    isPremiumOnly={a.isPremiumOnly}
+                    type={a.type as 'ALBUM' | 'SINGLE' | 'EP' | undefined}
+                    averageRating={a.averageRating ?? undefined}
+                    totalReviews={a.totalReviews}
+                    isArtistVerified={a.artist.isVerified}
+                  />
+                );
+              })}
             </div>
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6">
-              {items.map((artist: any) => (
-                <ArtistCard
-                  key={artist.id}
-                  id={artist.id}
-                  name={artist.name}
-                  slug={artist.slug}
-                  avatar={artist.avatar}
-                  isVerified={artist.isVerified}
-                />
-              ))}
+              {items.map((item) => {
+                const artist = item as ExploreArtist;
+                return (
+                  <ArtistCard
+                    key={artist.id}
+                    id={artist.id}
+                    name={artist.name}
+                    slug={artist.slug}
+                    avatar={artist.avatar}
+                    isVerified={artist.isVerified}
+                  />
+                );
+              })}
             </div>
           )}
 

@@ -41,7 +41,7 @@ export function PodcastCard({
               <Music className="h-12 w-12" />
             </div>
           )}
-          <div className="absolute bottom-2 left-2 bg-background/80 backdrop-blur text-xs font-medium px-2 py-1 rounded-md flex items-center gap-1">
+          <div className="absolute bottom-2 left-2 bg-background/80 backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md flex items-center gap-1">
             <Headphones className="h-3 w-3" />
             {episodeCount} épisode{episodeCount > 1 ? 's' : ''}
           </div>

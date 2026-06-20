@@ -70,7 +70,7 @@ export function ConcertCard({
             <Music className="h-12 w-12" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
 
         {soldOut && (
           <div className="absolute top-3 right-3 px-2 py-1 rounded-md bg-red-500/90 text-xs font-bold text-white">

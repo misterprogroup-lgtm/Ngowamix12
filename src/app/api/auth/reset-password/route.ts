@@ -1,9 +1,19 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { hashPassword } from '@/lib/auth';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const { allowed } = checkRateLimit(`reset-password:${ip}`, { maxRequests: 3, windowMs: 60000 });
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives. Réessayez plus tard.' },
+        { status: 429 }
+      );
+    }
+
     const { token, password } = await request.json();
 
     if (!token || !password) {
@@ -13,9 +23,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return NextResponse.json(
-        { error: 'Le mot de passe doit contenir au moins 6 caractères' },
+        { error: 'Le mot de passe doit contenir au moins 8 caractères' },
         { status: 400 }
       );
     }

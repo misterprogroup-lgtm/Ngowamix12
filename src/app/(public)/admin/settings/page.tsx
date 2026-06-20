@@ -27,7 +27,17 @@ export default function AdminSettingsPage() {
     customCss: '',
   });
 
-  const [providers, setProviders] = useState<any[]>([]);
+  interface PaymentProvider {
+    id?: string;
+    provider: string;
+    merchantName: string;
+    description: string;
+    isActive: boolean;
+    apiKey?: string;
+    siteId?: string;
+  }
+
+  const [providers, setProviders] = useState<PaymentProvider[]>([]);
   const [testEmail, setTestEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [testStatus, setTestStatus] = useState<'success' | 'error' | null>(null);
@@ -77,7 +87,7 @@ export default function AdminSettingsPage() {
     }
   };
 
-  const handleSaveProvider = async (provider: any) => {
+  const handleSaveProvider = async (provider: PaymentProvider) => {
     setSaving(true);
     try {
       const res = await fetch('/api/admin/settings', {
@@ -132,9 +142,9 @@ export default function AdminSettingsPage() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-6 max-w-2xl">
-          <div className="h-10 w-48 bg-surface-hover rounded" />
-          <div className="h-12 bg-surface-hover rounded" />
-          <div className="h-12 bg-surface-hover rounded" />
+          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
+          <div className="h-12 bg-surface-hover rounded-sm" />
+          <div className="h-12 bg-surface-hover rounded-sm" />
         </div>
       </div>
     );
@@ -260,14 +270,24 @@ export default function AdminSettingsPage() {
               Configurez vos moyens de paiement. Les clés API sont stockées dans la base de données et utilisées lors des transactions.
             </p>
 
-            {[
-              { provider: 'STRIPE', merchantName: 'Stripe', description: 'Cartes bancaires internationales (Visa, Mastercard)', isActive: false, apiKey: '', siteId: '' },
-              { provider: 'CINETPAY', merchantName: 'CinetPay', description: 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money) et cartes bancaires', isActive: false, apiKey: '', siteId: '' },
-              { provider: 'PAWAPAY', merchantName: 'PawaPay', description: 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money)', isActive: false, apiKey: '', siteId: '' },
-            ].map((defaultProvider) => {
-              const dbProvider = providers.find((p: any) => p.provider === defaultProvider.provider);
-              return dbProvider || defaultProvider;
-            }).map((provider) => (
+            {(providers.length > 0
+              ? ['STRIPE', 'CINETPAY', 'PAWAPAY'].map((providerName) => {
+                  const dbProvider = providers.find((p: PaymentProvider) => p.provider === providerName);
+                  return dbProvider || {
+                    provider: providerName,
+                    merchantName: providerName === 'STRIPE' ? 'Stripe' : providerName === 'CINETPAY' ? 'CinetPay' : 'PawaPay',
+                    description: providerName === 'STRIPE'
+                      ? 'Cartes bancaires internationales (Visa, Mastercard)'
+                      : providerName === 'CINETPAY'
+                      ? 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money) et cartes bancaires'
+                      : 'Mobile Money (Wave, Orange Money, MTN, Moov, Free Money)',
+                    isActive: false,
+                    apiKey: '',
+                    siteId: '',
+                  } as PaymentProvider;
+                })
+              : []
+            ).map((provider) => (
               <div key={provider.id || provider.provider} className="rounded-xl border border-border p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -289,7 +309,7 @@ export default function AdminSettingsPage() {
                         }
                         setProviders(newProviders);
                       }}
-                      className="rounded border-border bg-surface text-primary focus:ring-primary"
+                      className="rounded-sm border-border bg-surface text-primary focus:ring-primary"
                     />
                     <span className="text-sm">Activé</span>
                   </label>
@@ -366,13 +386,13 @@ export default function AdminSettingsPage() {
                   type="color"
                   value={settings.primaryColor}
                   onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
-                  className="h-10 w-16 rounded border border-border cursor-pointer bg-transparent"
+                  className="h-10 w-16 rounded-sm border border-border cursor-pointer bg-transparent"
                 />
                 <input
                   type="text"
                   value={settings.primaryColor}
                   onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm w-32 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm w-32 focus:outline-hidden focus:ring-2 focus:ring-primary"
                   placeholder="#f97316"
                 />
               </div>
@@ -399,7 +419,7 @@ export default function AdminSettingsPage() {
               <textarea
                 value={settings.customCss}
                 onChange={(e) => setSettings({ ...settings, customCss: e.target.value })}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm font-mono h-32 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm font-mono h-32 focus:outline-hidden focus:ring-2 focus:ring-primary"
                 placeholder="/* Ajoutez votre CSS ici */"
               />
             </div>

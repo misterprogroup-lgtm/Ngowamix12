@@ -237,7 +237,7 @@ export function ReviewsSection({ albumId }: ReviewsSectionProps) {
               onChange={(e) => setMyComment(e.target.value)}
               placeholder="Partagez votre avis sur cet album..."
               rows={3}
-              className="w-full rounded-lg border border-border bg-background p-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
+              className="w-full rounded-lg border border-border bg-background p-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
             />
           </div>
 

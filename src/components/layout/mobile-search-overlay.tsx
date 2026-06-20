@@ -8,10 +8,33 @@ import { Search, X, Music, User, Clock } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { formatDuration } from '@/lib/utils';
 
+interface SearchAlbum {
+  id: string;
+  title: string;
+  coverImage: string | null;
+  type: string;
+  artist: { name: string };
+}
+
+interface SearchArtist {
+  id: string;
+  slug: string;
+  name: string;
+  avatar: string | null;
+}
+
+interface SearchTrack {
+  id: string;
+  albumId: string;
+  title: string;
+  duration: number;
+  album?: { title?: string; coverImage: string | null; artist?: { name: string } };
+}
+
 interface SearchResults {
-  albums: any[];
-  artists: any[];
-  tracks: any[];
+  albums: SearchAlbum[];
+  artists: SearchArtist[];
+  tracks: SearchTrack[];
 }
 
 export function MobileSearchOverlay({
@@ -65,17 +88,17 @@ export function MobileSearchOverlay({
         const lowerQuery = query.toLowerCase();
 
         const filteredAlbums = (albumsData.albums || []).filter(
-          (album: any) =>
+          (album: SearchAlbum) =>
             album.title.toLowerCase().includes(lowerQuery) ||
             album.artist.name.toLowerCase().includes(lowerQuery)
         );
 
         const filteredArtists = (artistsData.artists || []).filter(
-          (artist: any) => artist.name.toLowerCase().includes(lowerQuery)
+          (artist: SearchArtist) => artist.name.toLowerCase().includes(lowerQuery)
         );
 
         const filteredTracks = (tracksData.tracks || []).filter(
-          (track: any) =>
+          (track: SearchTrack) =>
             track.title.toLowerCase().includes(lowerQuery) ||
             track.album?.title?.toLowerCase().includes(lowerQuery) ||
             track.album?.artist?.name?.toLowerCase().includes(lowerQuery)
@@ -105,7 +128,7 @@ export function MobileSearchOverlay({
   return (
     <>
       {open && (
-        <div className="fixed inset-0 z-[60] md:hidden animate-fadeIn">
+        <div className="fixed inset-0 z-60 md:hidden animate-fadeIn">
           <div className="absolute inset-0 bg-black/30" onClick={onClose} />
           <div className="absolute top-0 left-0 right-0 p-4 pt-16 pointer-events-none">
             <div className="w-full max-w-lg mx-auto bg-white/10 dark:bg-black/20 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden pointer-events-auto border border-white/20 animate-slideDown">
@@ -118,7 +141,7 @@ export function MobileSearchOverlay({
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Artistes, albums, titres..."
-                    className="w-full h-12 pl-10 pr-12 rounded-xl bg-white/30 dark:bg-black/30 backdrop-blur-md border border-white/30 text-white placeholder:text-white/50 text-sm outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                    className="w-full h-12 pl-10 pr-12 rounded-xl bg-white/30 dark:bg-black/30 backdrop-blur-md border border-white/30 text-white placeholder:text-white/50 text-sm outline-hidden focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
                   />
                 </div>
                 <button
@@ -158,7 +181,7 @@ export function MobileSearchOverlay({
                           Artistes ({results.artists.length})
                         </h3>
                         <div className="space-y-1">
-                          {results.artists.map((artist: any) => (
+                          {results.artists.map((artist: SearchArtist) => (
                             <Link
                               key={artist.id}
                               href={`/artist/${artist.slug}`}
@@ -190,7 +213,7 @@ export function MobileSearchOverlay({
                           Albums ({results.albums.length})
                         </h3>
                         <div className="space-y-1">
-                          {results.albums.map((album: any) => (
+                          {results.albums.map((album: SearchAlbum) => (
                             <Link
                               key={album.id}
                               href={`/album/${album.id}`}
@@ -226,7 +249,7 @@ export function MobileSearchOverlay({
                           Titres ({results.tracks.length})
                         </h3>
                         <div className="space-y-1">
-                          {results.tracks.map((track: any) => (
+                          {results.tracks.map((track: SearchTrack) => (
                             <Link
                               key={track.id}
                               href={`/album/${track.albumId}`}

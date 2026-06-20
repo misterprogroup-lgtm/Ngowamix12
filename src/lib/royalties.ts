@@ -87,8 +87,6 @@ export async function getPayoutHistory(artistId: string) {
 export async function processPayout(payoutId: string, status: 'COMPLETED' | 'FAILED', note?: string) {
   const payout = await db.payoutRequest.findUnique({ where: { id: payoutId } });
   if (!payout) throw new Error('Demande introuvable');
-  const updateData: Record<string, unknown> = { status, note };
-  if (status === 'COMPLETED') updateData.processedAt = new Date();
   if (status === 'FAILED') {
     await db.artist.update({
       where: { id: payout.artistId },
@@ -97,7 +95,11 @@ export async function processPayout(payoutId: string, status: 'COMPLETED' | 'FAI
   }
   return db.payoutRequest.update({
     where: { id: payoutId },
-    data: updateData as any,
+    data: {
+      status,
+      note,
+      ...(status === 'COMPLETED' ? { processedAt: new Date() } : {}),
+    },
   });
 }
 

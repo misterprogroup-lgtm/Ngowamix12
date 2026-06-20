@@ -26,7 +26,8 @@ export async function sendVerificationCode(phone: string, code: string): Promise
     }
 
     default: {
-      console.log(`[SMS] Envoi à ${phone}: ${message}`);
+      const maskedPhone = phone.slice(0, -4).replace(/\d/g, '*') + phone.slice(-4);
+      console.log(`[SMS] Envoi à ${maskedPhone}`);
       return true;
     }
   }

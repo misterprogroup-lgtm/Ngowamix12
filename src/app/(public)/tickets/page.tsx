@@ -35,7 +35,7 @@ export default async function TicketsPage({ searchParams }: TicketsPageProps) {
 
   return (
     <div className="pb-24">
-      <section className="relative py-12 bg-gradient-to-b from-primary/10 to-background">
+      <section className="relative py-12 bg-linear-to-b from-primary/10 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm text-primary mb-4">

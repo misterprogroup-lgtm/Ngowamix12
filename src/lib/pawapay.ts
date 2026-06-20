@@ -1,5 +1,7 @@
 import { db } from '@/lib/db';
 import crypto from 'crypto';
+import { logger } from '@/lib/logger';
+import { tryDecrypt } from '@/lib/encrypt';
 
 const PAWAPAY_SANDBOX_API = 'https://api.sandbox.pawapay.io';
 const PAWAPAY_PRODUCTION_API = 'https://api.pawapay.io';
@@ -58,12 +60,6 @@ export async function initPaymentPage(params: PawaPayPaymentPageRequest): Promis
   );
 
   const bodyStr = JSON.stringify(sanitized);
-  for (let i = 0; i < bodyStr.length; i++) {
-    if (bodyStr.charCodeAt(i) > 127) {
-      console.error(`[PawaPay] NON-ASCII in body at index ${i}: code ${bodyStr.charCodeAt(i)} char ${bodyStr[i]}`);
-    }
-  }
-  console.error('[PawaPay] Body length:', bodyStr.length);
 
   const response = await fetch(`${baseUrl}/v2/paymentpage`, {
     method: 'POST',
@@ -76,8 +72,10 @@ export async function initPaymentPage(params: PawaPayPaymentPageRequest): Promis
   });
 
   if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`PawaPay API error (${response.status}): ${errorBody}`);
+    const errorStatus = response.status;
+    const errorBody = await response.text().catch(() => '');
+    logger.error('PawaPay', `API error ${errorStatus}`, { body: errorBody.slice(0, 200) });
+    throw new Error(`PawaPay API error (${errorStatus})`);
   }
 
   const data = await response.json();
@@ -96,8 +94,10 @@ export async function checkDepositStatus(depositId: string): Promise<PawaPayDepo
   });
 
   if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`PawaPay API error (${response.status}): ${errorBody}`);
+    const errorStatus = response.status;
+    const errorBody = await response.text().catch(() => '');
+    logger.error('PawaPay', `API error ${errorStatus}`, { body: errorBody.slice(0, 200) });
+    throw new Error(`PawaPay API error (${errorStatus})`);
   }
 
   const wrapper = await response.json();
@@ -113,7 +113,8 @@ export async function isPawaPayActive(): Promise<boolean> {
     select: { isActive: true, apiKey: true },
   });
   if (!config) return !!process.env.PAWAPAY_API_KEY;
-  return config.isActive && !!config.apiKey;
+  const dbKey = config.apiKey ? tryDecrypt(config.apiKey) : null;
+  return config.isActive && !!dbKey;
 }
 
 export function generateDepositId(): string {

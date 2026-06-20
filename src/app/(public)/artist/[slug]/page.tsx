@@ -9,6 +9,7 @@ import { SupportArtist } from '@/components/catalog/support-artist';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { FollowButton } from '@/components/catalog/follow-button';
+import { MessageArtistButton } from '@/components/messages/message-artist-button';
 import { formatNumber } from '@/lib/utils';
 import { APP_NAME } from '@/lib/constants';
 import { db } from '@/lib/db';
@@ -159,11 +160,11 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
       />
       <div className="relative h-64 md:h-80 overflow-hidden">
         {artist.coverImage ? (
-          <SafeImage src={artist.coverImage} alt={artist.name} fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 1200px" fallback={<div className="h-full bg-gradient-to-r from-primary/20 to-accent/20" />} />
+          <SafeImage src={artist.coverImage} alt={artist.name} fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 1200px" fallback={<div className="h-full bg-linear-to-r from-primary/20 to-accent/20" />} />
         ) : (
-          <div className="h-full bg-gradient-to-r from-primary/20 to-accent/20" />
+          <div className="h-full bg-linear-to-r from-primary/20 to-accent/20" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 container mx-auto px-4 pb-8">
           <div className="flex items-end gap-6">
             <div className="relative h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden border-4 border-background shrink-0">
@@ -252,6 +253,7 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
 
         <div className="flex flex-wrap items-center gap-3 mb-12">
           <FollowButton artistId={artist.id} initiallyFollowing={isFollowing} followerCount={followerCount} />
+          <MessageArtistButton artistUserId={artist.userId} />
           <SupportArtist artistId={artist.id} artistName={artist.name} />
           {upcomingConcerts > 0 && (
             <Link href={`/tickets?artist=${artist.slug}`}>

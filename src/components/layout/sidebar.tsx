@@ -7,7 +7,7 @@ import { useState } from 'react';
 import {
   Home, Compass, Headphones, Ticket, Crown, User, Shield,
   LayoutDashboard, Settings, LogOut, Scan, Tag, Podcast, Megaphone, Image as ImageIcon,
-  ListMusic, ChevronDown, ChevronRight,
+  ListMusic, ChevronDown, ChevronRight, Repeat2, MessageSquare, Download,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/auth-store';
 import { ROUTES, APP_NAME } from '@/lib/constants';
@@ -21,6 +21,9 @@ const mainLinks = [
   { href: ROUTES.PLAYLISTS, label: 'Playlists', icon: ListMusic },
   { href: ROUTES.TICKETS, label: 'Tickets', icon: Ticket },
   { href: ROUTES.PODCASTS, label: 'Podcasts', icon: Podcast },
+  { href: ROUTES.FEED, label: 'Fil d\'actus', icon: Repeat2 },
+  { href: ROUTES.MESSAGES, label: 'Messages', icon: MessageSquare },
+  { href: ROUTES.OFFLINE, label: 'Hors-ligne', icon: Download },
   { href: ROUTES.PREMIUM, label: 'Premium', icon: Crown },
 ];
 

@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { initPaymentPage as pawapayInit, generateDepositId } from '@/lib/pawapay';
 
-const TEST_USER = { sub: 'user-1', email: 'test@test.com', role: 'LISTENER', isPremium: false };
+const TEST_USER = { sub: 'user-1', email: 'test@test.com', role: 'LISTENER' as const, isPremium: false };
 
 function mockDb() {
   Object.assign(db, {

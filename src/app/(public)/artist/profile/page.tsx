@@ -146,10 +146,10 @@ export default function ArtistProfilePage() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-6">
-          <div className="h-10 w-48 bg-surface-hover rounded" />
+          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
           <div className="space-y-4">
-            <div className="h-12 bg-surface-hover rounded" />
-            <div className="h-32 bg-surface-hover rounded" />
+            <div className="h-12 bg-surface-hover rounded-sm" />
+            <div className="h-32 bg-surface-hover rounded-sm" />
           </div>
         </div>
       </div>

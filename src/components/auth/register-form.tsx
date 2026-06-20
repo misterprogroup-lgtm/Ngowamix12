@@ -211,7 +211,7 @@ export function RegisterForm() {
               value={digit}
               onChange={(e) => handleOtpChange(i, e.target.value)}
               onKeyDown={(e) => handleOtpKeyDown(i, e)}
-              className="h-14 w-11 rounded-lg border border-border bg-surface text-center text-xl font-bold text-text-primary focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="h-14 w-11 rounded-lg border border-border bg-surface text-center text-xl font-bold text-text-primary focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary"
             />
           ))}
         </div>
@@ -355,7 +355,7 @@ export function RegisterForm() {
           type="checkbox"
           checked={acceptTerms}
           onChange={(e) => setAcceptTerms(e.target.checked)}
-          className="mt-1 h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary"
+          className="mt-1 h-4 w-4 rounded-sm border-border bg-background text-primary focus:ring-primary"
         />
         <span className="text-sm text-text-secondary">
           J'accepte les{' '}

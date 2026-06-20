@@ -121,10 +121,10 @@ export default function AlbumTracksPage() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-6">
-          <div className="h-10 w-32 bg-surface-hover rounded" />
+          <div className="h-10 w-32 bg-surface-hover rounded-sm" />
           <div className="h-16 bg-surface-hover rounded-xl" />
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-14 bg-surface-hover rounded" />
+            <div key={i} className="h-14 bg-surface-hover rounded-sm" />
           ))}
         </div>
       </div>
@@ -243,7 +243,7 @@ export default function AlbumTracksPage() {
                 type="checkbox"
                 checked={trackData.isExplicit}
                 onChange={(e) => setTrackData({ ...trackData, isExplicit: e.target.checked })}
-                className="rounded border-border bg-surface"
+                className="rounded-sm border-border bg-surface"
               />
               <span className="text-sm text-text-secondary">Contenu explicite</span>
             </label>
@@ -252,7 +252,7 @@ export default function AlbumTracksPage() {
                 type="checkbox"
                 checked={trackData.isPremiumOnly}
                 onChange={(e) => setTrackData({ ...trackData, isPremiumOnly: e.target.checked })}
-                className="rounded border-border bg-surface"
+                className="rounded-sm border-border bg-surface"
               />
               <span className="text-sm text-text-secondary">Réservé aux abonnés Premium</span>
             </label>

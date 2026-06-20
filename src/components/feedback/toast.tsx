@@ -87,7 +87,7 @@ function ToastContainer({ toasts, onRemove }: { toasts: Toast[]; onRemove: (id: 
           <div
             key={toast.id}
             className={cn(
-              'rounded-lg border p-3 shadow-lg animate-slideUp backdrop-blur',
+              'rounded-lg border p-3 shadow-lg animate-slideUp backdrop-blur-sm',
               variants[toast.type]
             )}
           >

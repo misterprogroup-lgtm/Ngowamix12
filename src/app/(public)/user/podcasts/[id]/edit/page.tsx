@@ -142,7 +142,7 @@ export default function EditPodcastPage({
             type="checkbox"
             checked={isPublished}
             onChange={(e) => setIsPublished(e.target.checked)}
-            className="rounded border-border"
+            className="rounded-sm border-border"
           />
           <span className="text-sm">Publié</span>
         </label>

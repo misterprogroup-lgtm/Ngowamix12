@@ -87,13 +87,13 @@ export default async function ConcertDetailPage({ params }: { params: Promise<{ 
       <section className="relative">
         <div className="relative h-72 md:h-96 overflow-hidden">
           {concert.poster ? (
-            <SafeImage src={concert.poster} alt={concert.title} fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 400px" fallback={<div className="h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center"><Music className="h-24 w-24 text-text-muted" /></div>} />
+            <SafeImage src={concert.poster} alt={concert.title} fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 400px" fallback={<div className="h-full bg-linear-to-br from-primary/20 to-accent/20 flex items-center justify-center"><Music className="h-24 w-24 text-text-muted" /></div>} />
           ) : (
-            <div className="h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+            <div className="h-full bg-linear-to-br from-primary/20 to-accent/20 flex items-center justify-center">
               <Music className="h-24 w-24 text-text-muted" />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-transparent" />
         </div>
 
         <div className="container mx-auto px-4 -mt-32 relative z-10">

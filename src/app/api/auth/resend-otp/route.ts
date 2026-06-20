@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, hashToken } from '@/lib/auth';
 import { sendEmail, generateEmailVerificationEmail } from '@/lib/email';
 
 function generateOTP(): string {
@@ -38,11 +38,12 @@ export async function POST() {
 
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+    const hashedOtp = await hashToken(otp);
 
     await db.user.update({
       where: { id: user.sub },
       data: {
-        emailVerificationCode: otp,
+        emailVerificationCode: hashedOtp,
         emailVerificationExpiresAt: otpExpires,
       },
     });

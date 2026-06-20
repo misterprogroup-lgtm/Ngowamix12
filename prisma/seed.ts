@@ -247,11 +247,13 @@ async function main() {
   console.log('Created test label:', labelUser.artist?.name);
 
   console.log('Seeding complete!');
-  console.log('\nComptes de test:');
-  console.log('  Admin:    admin@ngowamix.com / admin123');
-  console.log('  User:     test@ngowamix.com / test123');
-  console.log('  Artiste:  artist@ngowamix.com / artist123');
-  console.log('  Label:    label@ngowamix.com / label123');
+  if (process.env.NODE_ENV === 'development') {
+    console.log('\nComptes de test:');
+    console.log('  Admin:    admin@ngowamix.com / admin123');
+    console.log('  User:     test@ngowamix.com / test123');
+    console.log('  Artiste:  artist@ngowamix.com / artist123');
+    console.log('  Label:    label@ngowamix.com / label123');
+  }
   process.exit(0);
 }
 

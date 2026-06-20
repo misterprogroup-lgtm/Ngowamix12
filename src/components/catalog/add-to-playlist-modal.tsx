@@ -95,7 +95,7 @@ export function AddToPlaylistModal({ isOpen, onClose, trackId }: AddToPlaylistMo
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Nouvelle playlist..."
-            className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+            className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleCreate();
             }}
@@ -148,7 +148,9 @@ export function AddToPlaylistModal({ isOpen, onClose, trackId }: AddToPlaylistMo
                 <div className="min-w-0 text-left flex-1">
                   <p className="font-medium truncate">{playlist.name}</p>
                   <p className="text-xs text-text-muted">
-                    {'_count' in playlist ? (playlist as any)._count.tracks : playlist.trackCount ?? 0} titre{(playlist as any)._count?.tracks !== 1 ? 's' : ''}
+                    {'_count' in playlist
+                      ? (playlist as typeof playlist & { _count: { tracks: number } })._count.tracks
+                      : playlist.trackCount ?? 0} titre{(playlist as typeof playlist & { _count?: { tracks: number } })._count?.tracks !== 1 ? 's' : ''}
                   </p>
                 </div>
               </button>

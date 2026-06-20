@@ -30,8 +30,9 @@ export async function sendPushToUser(
           },
           JSON.stringify(payload)
         );
-      } catch (err: any) {
-        if (err.statusCode === 410 || err.statusCode === 404) {
+      } catch (err: unknown) {
+        const pushErr = err as { statusCode?: number } | null;
+        if (pushErr?.statusCode === 410 || pushErr?.statusCode === 404) {
           await db.pushSubscription.delete({ where: { id: sub.id } });
         }
       }

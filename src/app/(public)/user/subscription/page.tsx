@@ -63,7 +63,7 @@ export default function SubscriptionPage() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-6">
-          <div className="h-10 w-48 bg-surface-hover rounded" />
+          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
           <div className="h-32 bg-surface-hover rounded-xl" />
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function SubscriptionPage() {
       {userData?.isPremium ? (
         <>
           {/* Premium Active */}
-          <div className="rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 to-accent/10 p-6 mb-8">
+          <div className="rounded-xl border border-primary/30 bg-linear-to-r from-primary/10 to-accent/10 p-6 mb-8">
             <div className="flex items-center gap-3 mb-4">
               <Crown className="h-6 w-6 text-accent" />
               <h2 className="text-xl font-bold">Premium actif</h2>

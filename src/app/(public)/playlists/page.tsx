@@ -6,6 +6,7 @@ import { Plus, ListMusic, Trash2, Loader2, ArrowLeft, Music, Users, User } from 
 import { usePlaylistStore } from '@/store/playlist-store';
 import { useAuthStore } from '@/store/auth-store';
 import { SafeImage } from '@/components/ui/safe-image';
+import type { Playlist } from '@/types';
 
 export default function PlaylistsPage() {
   const { playlists, fetchPlaylists, createPlaylist, deletePlaylist } = usePlaylistStore();
@@ -38,10 +39,10 @@ export default function PlaylistsPage() {
     setDeleting(null);
   }, [deletePlaylist]);
 
-  const isOwner = (playlist: any) => playlist.userId === user?.id;
+  const isOwner = (playlist: Playlist) => playlist.userId === user?.id;
 
-  const ownerPlaylists = playlists.filter((p: any) => isOwner(p));
-  const collabPlaylists = playlists.filter((p: any) => !isOwner(p));
+  const ownerPlaylists = playlists.filter((p) => isOwner(p));
+  const collabPlaylists = playlists.filter((p) => !isOwner(p));
 
   return (
     <div className="container mx-auto py-8 pb-24">
@@ -76,7 +77,7 @@ export default function PlaylistsPage() {
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Nom de la playlist..."
-            className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+            className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
             autoFocus
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleCreate();
@@ -138,7 +139,7 @@ export default function PlaylistsPage() {
                       <div className="min-w-0 flex-1">
                         <h3 className="font-semibold text-text-primary truncate">{playlist.name}</h3>
                         <p className="text-sm text-text-muted">
-                          {'_count' in playlist ? (playlist as any)._count.tracks : playlist.trackCount ?? 0} titre{('_count' in playlist ? (playlist as any)._count.tracks : playlist.trackCount ?? 0) !== 1 ? 's' : ''}
+                          {'_count' in playlist ? (playlist as Playlist & { _count: { tracks: number } })._count.tracks : playlist.trackCount ?? 0} titre{('_count' in playlist ? (playlist as Playlist & { _count: { tracks: number } })._count.tracks : playlist.trackCount ?? 0) !== 1 ? 's' : ''}
                         </p>
                         <div className="flex items-center gap-1 mt-1">
                           <User className="h-3 w-3 text-text-muted" />
@@ -175,7 +176,7 @@ export default function PlaylistsPage() {
                   <div className="min-w-0 flex-1">
                     <h3 className="font-semibold text-text-primary truncate">{playlist.name}</h3>
                     <p className="text-sm text-text-muted">
-                      {'_count' in playlist ? (playlist as any)._count.tracks : playlist.trackCount ?? 0} titre{('_count' in playlist ? (playlist as any)._count.tracks : playlist.trackCount ?? 0) !== 1 ? 's' : ''}
+                      {'_count' in playlist ? (playlist as Playlist & { _count: { tracks: number } })._count.tracks : playlist.trackCount ?? 0} titre{('_count' in playlist ? (playlist as Playlist & { _count: { tracks: number } })._count.tracks : playlist.trackCount ?? 0) !== 1 ? 's' : ''}
                     </p>
                     {playlist.collaborators && playlist.collaborators.length > 0 && (
                       <div className="flex items-center gap-1 mt-1">

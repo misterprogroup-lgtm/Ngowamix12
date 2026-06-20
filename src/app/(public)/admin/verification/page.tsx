@@ -15,8 +15,20 @@ const statusTabs = [
   { id: '', label: 'Tous' },
 ];
 
+interface AdminArtist {
+  id: string;
+  name: string;
+  slug: string;
+  avatar: string | null;
+  isVerified: boolean;
+  verificationStatus: string;
+  verificationRequestedAt: string | null;
+  user?: { email: string; displayName?: string | null };
+  _count?: { albums: number };
+}
+
 export default function AdminVerificationPage() {
-  const [artists, setArtists] = useState<any[]>([]);
+  const [artists, setArtists] = useState<AdminArtist[]>([]);
   const [loading, setLoading] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
   const [status, setStatus] = useState('PENDING');
@@ -98,7 +110,7 @@ export default function AdminVerificationPage() {
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-20 bg-surface-hover rounded animate-pulse" />
+            <div key={i} className="h-20 bg-surface-hover rounded-sm animate-pulse" />
           ))}
         </div>
       ) : artists.length === 0 ? (

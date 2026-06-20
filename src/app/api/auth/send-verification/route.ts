@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { requireAuth } from '@/lib/auth';
+import { requireAuth, hashToken } from '@/lib/auth';
 import { generateVerificationCode, sendVerificationCode } from '@/lib/sms';
 
 export async function POST() {
@@ -21,11 +21,12 @@ export async function POST() {
 
     const code = generateVerificationCode();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    const hashedCode = await hashToken(code);
 
     await db.user.update({
       where: { id: user.sub },
       data: {
-        phoneVerificationCode: code,
+        phoneVerificationCode: hashedCode,
         phoneVerificationExpiresAt: expiresAt,
       },
     });

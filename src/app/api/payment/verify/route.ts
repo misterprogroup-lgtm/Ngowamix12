@@ -286,22 +286,6 @@ export async function GET(request: Request) {
       });
     }
 
-    const age = Date.now() - new Date(transaction.createdAt).getTime();
-
-    if (!pawapayResult && age > 120000 && transaction.type === 'TICKET_PURCHASE' && depositId) {
-      await fulfillTransaction(transactionId, user.sub);
-      return NextResponse.json({
-        transaction: {
-          id: transaction.id,
-          status: 'PAID',
-          type: transaction.type,
-          amount: transaction.amount,
-          productId: transaction.productId,
-        },
-        message: 'Paiement confirmé',
-      });
-    }
-
     return NextResponse.json({
       transaction: {
         id: transaction.id,
@@ -309,7 +293,7 @@ export async function GET(request: Request) {
         type: transaction.type,
       },
       processing: true,
-      message: age < 120000 ? 'Vérification du paiement en cours...' : 'Paiement en attente',
+      message: 'Vérification du paiement en cours...',
     });
   } catch (error) {
     console.error('Payment check error:', error);

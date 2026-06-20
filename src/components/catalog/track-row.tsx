@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { Play, Pause, Heart, Sparkles, Share2, Plus } from 'lucide-react';
+import { Play, Pause, Heart, Sparkles, Share2, Plus, Repeat2 } from 'lucide-react';
 import { usePlayerStore } from '@/store/player-store';
 import { formatDuration, cn } from '@/lib/utils';
 import type { Track } from '@/types';
 import { useState, useEffect } from 'react';
 import { ShareModal } from '@/components/catalog/share-modal';
 import { AddToPlaylistModal } from '@/components/catalog/add-to-playlist-modal';
+import { RepostButton } from '@/components/repost/repost-button';
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -108,13 +109,13 @@ export function TrackRow({
             {track.title}
           </Link>
           {isNewTrack(track) && (
-            <span className="shrink-0 text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+            <span className="shrink-0 text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-sm flex items-center gap-0.5">
               <Sparkles className="h-2.5 w-2.5" />
               Nouveau
             </span>
           )}
           {track.isExplicit && (
-            <span className="shrink-0 text-xs text-text-muted border border-border px-1.5 rounded">
+            <span className="shrink-0 text-xs text-text-muted border border-border px-1.5 rounded-sm">
               E
             </span>
           )}
@@ -140,6 +141,7 @@ export function TrackRow({
             >
               <Plus className="h-4 w-4" />
             </button>
+            <RepostButton trackId={track.id} />
             <span className="text-xs text-text-muted w-10 text-right">
               {formatDuration(track.duration)}
             </span>

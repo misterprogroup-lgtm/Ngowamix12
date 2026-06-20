@@ -83,7 +83,7 @@ export default function PurchasesPage() {
     return (
       <div className="container mx-auto py-8 pb-24">
         <div className="animate-pulse space-y-4">
-          <div className="h-10 w-48 bg-surface-hover rounded" />
+          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="h-24 bg-surface-hover rounded-xl" />
           ))}

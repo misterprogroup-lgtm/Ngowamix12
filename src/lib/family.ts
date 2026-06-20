@@ -5,7 +5,7 @@ const FAMILY_CURRENCY = process.env.FAMILY_CURRENCY || 'XOF';
 const MAX_FAMILY_MEMBERS = parseInt(process.env.MAX_FAMILY_MEMBERS || '6', 10);
 
 export async function getFamilyGroup(ownerId: string) {
-  return db.familyGroup.findUnique({
+  return db.familyGroup.findFirst({
     where: { ownerId },
     include: {
       members: {
@@ -19,7 +19,7 @@ export async function getFamilyGroup(ownerId: string) {
 }
 
 export async function createFamilyGroup(ownerId: string, name = 'Famille') {
-  const existing = await db.familyGroup.findUnique({ where: { ownerId } });
+  const existing = await db.familyGroup.findFirst({ where: { ownerId } });
   if (existing) {
     throw new Error('Vous avez déjà un groupe familial');
   }

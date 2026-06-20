@@ -153,7 +153,7 @@ export default async function TrackPage({ params }: PageProps) {
               {formatNumber(track.playCount)} écoutes
             </span>
             {track.isExplicit && (
-              <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-500 text-xs font-semibold">EXPLICIT</span>
+              <span className="px-2 py-0.5 rounded-sm bg-red-500/10 text-red-500 text-xs font-semibold">EXPLICIT</span>
             )}
           </div>
         </div>

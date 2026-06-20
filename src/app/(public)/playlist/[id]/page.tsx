@@ -10,7 +10,12 @@ import { useAuthStore } from '@/store/auth-store';
 import { formatDuration, cn } from '@/lib/utils';
 import { useToast } from '@/components/feedback/toast';
 import { CollaboratorManager } from '@/components/catalog/collaborator-manager';
-import type { Playlist, Track } from '@/types';
+import type { Playlist, PlaylistTrackSummary, Track } from '@/types';
+
+interface PlaylistDetail extends Playlist {
+  collaborators?: Array<{ id: string; userId: string; role: string; user?: { displayName: string | null; avatar: string | null } }>;
+  user?: { displayName: string | null };
+}
 
 export default function PlaylistDetailPage() {
   const params = useParams();
@@ -26,7 +31,7 @@ export default function PlaylistDetailPage() {
 
   const { currentTrack, isPlaying, play, pause } = usePlayerStore();
   const { user } = useAuthStore();
-  const [playlist, setPlaylist] = useState<any>(null);
+  const [playlist, setPlaylist] = useState<PlaylistDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [removingTrack, setRemovingTrack] = useState<string | null>(null);
   const [showSearch, setShowSearch] = useState(false);
@@ -38,7 +43,7 @@ export default function PlaylistDetailPage() {
   const [existingIds, setExistingIds] = useState<Set<string>>(new Set());
   const [showShareMenu, setShowShareMenu] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { addToast } = useToast();
 
   const loadPlaylist = useCallback(async () => {
@@ -48,7 +53,7 @@ export default function PlaylistDetailPage() {
       if (!res.ok) throw new Error('Not found');
       const data = await res.json();
       setPlaylist(data.playlist);
-      setExistingIds(new Set(data.playlist.tracks.map((pt: any) => pt.trackId)));
+      setExistingIds(new Set(data.playlist.tracks.map((pt: { trackId: string }) => pt.trackId)));
     } catch {
       setPlaylist(null);
     }
@@ -114,7 +119,7 @@ export default function PlaylistDetailPage() {
     if (isTrackPlaying(track.id)) {
       pause();
     } else {
-      const tracks = playlist?.tracks.map((pt: any) => pt.track) ?? [];
+      const tracks = playlist?.tracks.map((pt) => pt.track) ?? [];
       const idx = tracks.findIndex((t: Track) => t.id === track.id);
       play(track, tracks, idx);
     }
@@ -166,9 +171,9 @@ export default function PlaylistDetailPage() {
 
   const isOwner = user?.id === playlist.userId;
   const canEdit = isOwner || playlist.collaborators?.some(
-    (c: any) => c.userId === user?.id && c.role === 'EDITOR'
+    (c) => c.userId === user?.id && c.role === 'EDITOR'
   );
-  const tracks = playlist.tracks.map((pt: any) => pt.track);
+  const tracks = playlist.tracks.map((pt) => pt.track);
 
   return (
     <div className="container mx-auto py-8 pb-24">
@@ -203,16 +208,16 @@ export default function PlaylistDetailPage() {
           {playlist.collaborators && playlist.collaborators.length > 0 && (
             <div className="flex items-center gap-1 mt-2">
               <div className="flex -space-x-2">
-                {playlist.collaborators.slice(0, 5).map((collab: any) => (
+                {playlist.collaborators.slice(0, 5).map((collab) => (
                   <div
                     key={collab.id}
                     className="relative h-6 w-6 rounded-full border-2 border-surface overflow-hidden bg-surface-hover"
                   >
-                    {collab.user.avatar ? (
+                    {collab.user?.avatar ? (
                       <SafeImage src={collab.user.avatar} alt="" fill className="object-cover" sizes="24px" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-[9px] font-medium text-text-muted">
-                        {collab.user.displayName?.[0]?.toUpperCase() || '?'}
+                        {collab.user?.displayName?.[0]?.toUpperCase() || '?'}
                       </div>
                     )}
                   </div>
@@ -260,7 +265,7 @@ export default function PlaylistDetailPage() {
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({ isPublic: newVisibility }),
                         });
-                        setPlaylist((prev: any) => prev ? { ...prev, isPublic: newVisibility } : prev);
+                        setPlaylist((prev) => prev ? { ...prev, isPublic: newVisibility } : prev);
                         addToast({
                           type: 'success',
                           title: newVisibility ? 'Playlist publique' : 'Playlist privée',
@@ -301,7 +306,7 @@ export default function PlaylistDetailPage() {
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({ isPublic: true }),
                         });
-                        setPlaylist((prev: any) => prev ? { ...prev, isPublic: true } : prev);
+                        setPlaylist((prev) => prev ? { ...prev, isPublic: true } : prev);
                       }
                       const shareUrl = `${window.location.origin}/shared/playlist/${id}`;
                       await navigator.clipboard.writeText(shareUrl);
@@ -336,7 +341,7 @@ export default function PlaylistDetailPage() {
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
                   placeholder="Rechercher une musique par titre..."
-                  className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted focus:outline-none"
+                  className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden"
                 />
                 {searching && <Loader2 className="h-4 w-4 animate-spin text-text-muted shrink-0" />}
                 {searchQuery && !searching && (
@@ -347,7 +352,7 @@ export default function PlaylistDetailPage() {
               </div>
               {searchResults.length > 0 && (
                 <div className="max-h-64 overflow-y-auto">
-                  {searchResults.map((track: any) => {
+                  {searchResults.map((track) => {
                     const alreadyIn = existingIds.has(track.id);
                     return (
                       <div
@@ -415,7 +420,7 @@ export default function PlaylistDetailPage() {
             </div>
           ) : tracks.length > 0 && !showSearch ? (
             <div className="space-y-1">
-              {playlist.tracks.map((pt: any, index: number) => (
+              {playlist.tracks.map((pt, index) => (
                 <div
                   key={pt.id}
                   className="group flex items-center gap-4 rounded-lg px-3 py-2 hover:bg-surface-hover transition-colors"

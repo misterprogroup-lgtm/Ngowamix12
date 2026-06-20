@@ -4,12 +4,6 @@ import { requireRole } from '@/lib/auth';
 import { slugify } from '@/lib/utils';
 import { uploadFile } from '@/lib/upload';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function PUT(request: Request) {
   try {
     const user = await requireRole(['ARTIST', 'LABEL', 'ADMIN']);
@@ -80,7 +74,7 @@ export async function PUT(request: Request) {
 
     const slug = name ? slugify(name) : artist.slug;
 
-    const data: Record<string, any> = {};
+    const data: Record<string, unknown> = {};
     if (name !== undefined) data.name = name;
     if (name !== undefined) data.slug = slug;
     if (bio !== undefined) data.bio = bio;

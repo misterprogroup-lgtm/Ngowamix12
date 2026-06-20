@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { hashPassword, createToken, setSessionCookie } from '@/lib/auth';
+import { hashPassword, hashToken, createToken, setSessionCookie } from '@/lib/auth';
 import { slugify } from '@/lib/utils';
 import { sendEmail, generateEmailVerificationEmail } from '@/lib/email';
 import { z } from 'zod';
@@ -73,6 +73,7 @@ export async function POST(request: Request) {
 
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+    const hashedOtp = await hashToken(otp);
 
     const user = await db.user.create({
       data: {
@@ -85,7 +86,7 @@ export async function POST(request: Request) {
         labelName: labelName || null,
         role: role as never,
         emailVerified: false,
-        emailVerificationCode: otp,
+        emailVerificationCode: hashedOtp,
         emailVerificationExpiresAt: otpExpires,
         termsAccepted: true,
         termsAcceptedAt: new Date(),
@@ -143,13 +144,14 @@ export async function POST(request: Request) {
       { user, message: 'Inscription réussie. Veuillez vérifier votre email.' },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Register error:', error);
     let message = 'Erreur lors de l\'inscription';
-    if (error?.message?.includes('connect to the database') || error?.message?.includes('does not exist')) {
+    const err = error as { message?: string; code?: string } | null;
+    if (err?.message?.includes('connect to the database') || err?.message?.includes('does not exist')) {
       message = 'Erreur de connexion à la base de données. Vérifiez que DATABASE_URL est configurée sur Vercel.';
     }
-    if (error?.code === 'P2021') {
+    if (err?.code === 'P2021') {
       message = 'La base de données est vide. Exécutez npx prisma db push pour créer les tables.';
     }
     return NextResponse.json(

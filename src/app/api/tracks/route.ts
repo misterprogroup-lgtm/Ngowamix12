@@ -14,8 +14,13 @@ export async function GET(request: Request) {
     const where: Record<string, unknown> = {};
 
     if (albumId) where.albumId = albumId;
-    if (artistId) where.album = { artistId };
-    if (genre) where.album = { ...(where.album as Record<string, unknown> || {}), genre };
+
+    const albumFilter: Record<string, unknown> = {
+      artist: { user: { role: { not: 'ADMIN' } } },
+    };
+    if (artistId) albumFilter.artistId = artistId;
+    if (genre) albumFilter.genre = genre;
+    if (Object.keys(albumFilter).length > 0) where.album = albumFilter;
     if (search) where.title = { contains: search, mode: 'insensitive' };
 
     const [tracks, total] = await Promise.all([

@@ -75,7 +75,7 @@ export function AdPopup() {
   const ad = ads[currentAd];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70" onClick={handleClose} />
       <div className="relative bg-background rounded-2xl border border-border shadow-2xl max-w-sm w-full overflow-hidden">
         {countdown === 0 && (
@@ -89,7 +89,7 @@ export function AdPopup() {
 
         <div className="relative h-40 bg-surface-hover">
           <img src={ad.image} alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
           <div className="absolute bottom-3 left-4 right-4">
             <p className="text-xs text-primary font-semibold uppercase tracking-wider">
               Sponsorisé · {ad.sponsor}

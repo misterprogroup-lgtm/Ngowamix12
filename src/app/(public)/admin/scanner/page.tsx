@@ -166,7 +166,7 @@ export default function ScannerPage() {
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder="Entrer le code QR manuellement"
-              className="flex-1 rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-1 rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
             />
             <Button type="submit" variant="primary" isLoading={loading}>
               <Search className="h-4 w-4" />

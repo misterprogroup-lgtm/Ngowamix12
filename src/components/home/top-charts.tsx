@@ -237,8 +237,8 @@ export function TopCharts() {
                     href={`/album/${topAlbum.id}`}
                     className="group block"
                   >
-                    <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20 p-8 max-w-sm mx-auto ring-1 ring-primary/10">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/5" />
+                    <div className="relative rounded-2xl overflow-hidden bg-linear-to-br from-primary/20 to-accent/20 p-8 max-w-sm mx-auto ring-1 ring-primary/10">
+                      <div className="absolute inset-0 bg-linear-to-br from-primary/10 to-accent/5" />
                       <div className="relative z-10 flex flex-col items-center">
                         <div className="relative aspect-square w-full max-w-[280px] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-white/20 mb-5">
                           {topAlbum.coverImage ? (

@@ -17,6 +17,18 @@ import {
   getAllOfflineTracks,
 } from '@/lib/offline-storage';
 
+interface AlbumTrackData {
+  id: string;
+  title: string;
+  slug: string;
+  trackNumber: number;
+  duration: number;
+  audioFile: string;
+  isExplicit: boolean;
+  isPremiumOnly: boolean;
+  playCount: number;
+}
+
 interface AlbumActionsProps {
   album: {
     id: string;
@@ -27,7 +39,7 @@ interface AlbumActionsProps {
     coverImage: string | null;
     artist: { id?: string; name: string; slug: string; avatar?: string | null };
   };
-  tracks: any[];
+  tracks: AlbumTrackData[];
   isPurchased: boolean;
 }
 
@@ -45,7 +57,7 @@ export function AlbumActions({ album, tracks, isPurchased }: AlbumActionsProps) 
     isAlbumOffline(album.id).then(setOfflineAlbum);
   }, [album.id]);
 
-  const buildTrack = (t: any): Track => ({
+  const buildTrack = (t: AlbumTrackData): Track => ({
     id: t.id,
     title: t.title,
     slug: t.slug,

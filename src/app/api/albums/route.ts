@@ -10,7 +10,10 @@ export async function GET(request: Request) {
     const country = searchParams.get('country');
     const type = searchParams.get('type');
 
-    const where: Record<string, unknown> = { status: 'PUBLISHED' };
+    const where: Record<string, unknown> = {
+      status: 'PUBLISHED',
+      artist: { user: { role: { not: 'ADMIN' } } },
+    };
 
     if (genre) where.genre = genre;
     if (country) where.country = country;

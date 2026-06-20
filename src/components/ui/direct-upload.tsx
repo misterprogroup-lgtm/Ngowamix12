@@ -27,7 +27,7 @@ export function DirectUpload({
   const [uploadProgress, setUploadProgress] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { startUpload, isUploading } = useUploadThing(endpoint as any, {
+  const { startUpload, isUploading } = useUploadThing(endpoint, {
     onClientUploadComplete: (res) => {
       if (res?.[0]?.url) {
         setUploadedUrl(res[0].url);

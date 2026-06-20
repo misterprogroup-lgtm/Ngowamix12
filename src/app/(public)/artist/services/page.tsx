@@ -4,9 +4,18 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Settings, Wallet, Monitor, Loader2, Check, ExternalLink, Copy } from 'lucide-react';
 
+interface ArtistConfig {
+  payoutMethod: string;
+  payoutPhone: string;
+  payoutAccountName: string;
+  payoutBankName: string;
+  payoutBankAccount: string;
+  streamServerUrl: string;
+}
+
 export default function ArtistServicesPage() {
   const router = useRouter();
-  const [config, setConfig] = useState<any>(null);
+  const [config, setConfig] = useState<ArtistConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -143,7 +152,7 @@ export default function ArtistServicesPage() {
                   value={payoutPhone}
                   onChange={(e) => setPayoutPhone(e.target.value)}
                   placeholder="+225 01 02 03 04 05"
-                  className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
                 />
               </div>
             )}
@@ -160,7 +169,7 @@ export default function ArtistServicesPage() {
                     value={payoutBankName}
                     onChange={(e) => setPayoutBankName(e.target.value)}
                     placeholder="Ex: Société Générale"
-                    className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
                   />
                 </div>
                 <div>
@@ -173,7 +182,7 @@ export default function ArtistServicesPage() {
                     value={payoutBankAccount}
                     onChange={(e) => setPayoutBankAccount(e.target.value)}
                     placeholder="Ex: 12345 67890 12345678901 12"
-                    className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
                   />
                 </div>
               </>
@@ -189,7 +198,7 @@ export default function ArtistServicesPage() {
                 value={payoutAccountName}
                 onChange={(e) => setPayoutAccountName(e.target.value)}
                 placeholder="Nom complet"
-                className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
               />
             </div>
           </div>
@@ -239,7 +248,7 @@ export default function ArtistServicesPage() {
                   value={streamServerUrl}
                   onChange={(e) => setStreamServerUrl(e.target.value)}
                   placeholder="https://votre-serveur.com"
-                  className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-4 py-2.5 rounded-xl bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
                 />
               </div>
               <a

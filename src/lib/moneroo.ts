@@ -1,5 +1,6 @@
 import { db } from '@/lib/db';
 import crypto from 'crypto';
+import { tryDecrypt } from '@/lib/encrypt';
 
 const MONEROO_API = 'https://api.moneroo.io/v1/payments';
 
@@ -8,7 +9,7 @@ async function getConfig() {
     where: { provider: 'MONEROO' },
   });
   return {
-    apiKey: config?.apiKey || process.env.MONEROO_API_KEY || '',
+    apiKey: tryDecrypt(config?.apiKey) || process.env.MONEROO_API_KEY || '',
     isActive: config?.isActive ?? false,
   };
 }
@@ -93,7 +94,8 @@ export async function isMonerooActive(): Promise<boolean> {
     select: { isActive: true, apiKey: true },
   });
   if (!config) return !!process.env.MONEROO_API_KEY;
-  return config.isActive && !!config.apiKey;
+  const dbKey = config.apiKey ? tryDecrypt(config.apiKey) : null;
+  return config.isActive && !!dbKey;
 }
 
 export function generateTransactionId(): string {

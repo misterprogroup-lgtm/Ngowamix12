@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireRole } from '@/lib/auth';
+import { encrypt, tryDecrypt } from '@/lib/encrypt';
 
 export async function GET() {
   try {
@@ -11,7 +12,13 @@ export async function GET() {
       db.paymentProviderConfig.findMany({ orderBy: { provider: 'asc' } }),
     ]);
 
-    return NextResponse.json({ siteConfig, paymentProviders });
+    const maskedProviders = paymentProviders.map((p) => ({
+      ...p,
+      apiKey: p.apiKey ? tryDecrypt(p.apiKey)?.slice(0, 8) + '...' || null : null,
+      siteId: p.siteId ? tryDecrypt(p.siteId)?.slice(0, 8) + '...' || null : null,
+    }));
+
+    return NextResponse.json({ siteConfig, paymentProviders: maskedProviders });
   } catch (error) {
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
@@ -66,19 +73,21 @@ export async function PUT(request: Request) {
     }
 
     if (type === 'payment-provider') {
+      const apiKey = data.apiKey ? encrypt(data.apiKey) : null;
+      const siteId = data.siteId ? encrypt(data.siteId) : null;
       await db.paymentProviderConfig.upsert({
         where: { provider: data.provider },
         update: {
-          apiKey: data.apiKey || null,
-          siteId: data.siteId || null,
+          apiKey,
+          siteId,
           isActive: data.isActive,
           merchantName: data.merchantName,
           description: data.description,
         },
         create: {
           provider: data.provider,
-          apiKey: data.apiKey || null,
-          siteId: data.siteId || null,
+          apiKey,
+          siteId,
           isActive: data.isActive ?? true,
           merchantName: data.merchantName || data.provider,
           description: data.description || '',

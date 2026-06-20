@@ -99,7 +99,7 @@ export function GenreExplore({ onGenreSelect }: GenreExploreProps) {
                   <Music className="h-16 w-16" />
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-4 left-4">
                 <p className="text-lg font-bold text-white">{selected}</p>
                 <p className="text-sm text-white/70">{tracks.length} titres</p>

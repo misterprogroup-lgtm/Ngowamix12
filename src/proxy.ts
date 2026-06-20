@@ -6,14 +6,15 @@ if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is required');
 }
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+const COOKIE_NAME = 'ngowamix_session';
 
 const protectedRoutes = ['/user', '/admin'];
 const artistProtectedRoutes = ['/artist/dashboard', '/artist/catalog', '/artist/profile', '/artist/referral', '/artist/livestream', '/artist/royalties', '/artist/services'];
 const labelProtectedRoutes = ['/label'];
 const authRoutes = ['/login', '/register'];
 
-export async function middleware(request: NextRequest) {
-  const token = request.cookies.get('ngowamix_session')?.value;
+export async function proxy(request: NextRequest) {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
   const pathname = request.nextUrl.pathname;
 
   let userRole: string | null = null;

@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { db } from '@/lib/db';
+import { tryDecrypt } from '@/lib/encrypt';
 
 const CINETPAY_API_URL = 'https://api-checkout.cinetpay.com/v2/payment';
 
@@ -8,8 +9,8 @@ async function getConfig() {
     where: { provider: 'CINETPAY' },
   });
   return {
-    apiKey: config?.apiKey || process.env.CINETPAY_API_KEY || '',
-    siteId: config?.siteId || process.env.CINETPAY_SITE_ID || '',
+    apiKey: tryDecrypt(config?.apiKey) || process.env.CINETPAY_API_KEY || '',
+    siteId: tryDecrypt(config?.siteId) || process.env.CINETPAY_SITE_ID || '',
     isActive: config?.isActive ?? true,
   };
 }
@@ -102,7 +103,9 @@ export async function isCinetpayActive(): Promise<boolean> {
     select: { isActive: true, apiKey: true, siteId: true },
   });
   if (!config) return true;
-  return config.isActive && !!config.apiKey && !!config.siteId;
+  const dbKey = config.apiKey ? tryDecrypt(config.apiKey) : null;
+  const dbSiteId = config.siteId ? tryDecrypt(config.siteId) : null;
+  return config.isActive && !!dbKey && !!dbSiteId;
 }
 
 export function generateTransactionId(): string {

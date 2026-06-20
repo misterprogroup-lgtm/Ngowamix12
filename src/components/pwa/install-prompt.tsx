@@ -20,7 +20,7 @@ export function InstallPrompt() {
 
     const isInStandaloneMode = () =>
       window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone ||
+      window.navigator.standalone ||
       document.referrer.includes('android-app://');
 
     if (isInStandaloneMode()) {
