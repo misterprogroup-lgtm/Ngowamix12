@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Nunito } from 'next/font/google';
 import Script from 'next/script';
 import '@/styles/globals.css';
 import { Header } from '@/components/layout/header';
@@ -20,9 +20,9 @@ import { PageTransition } from '@/components/layout/page-transition';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-const inter = Inter({
+const nunito = Nunito({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-nunito',
   display: 'swap',
 });
 
@@ -84,7 +84,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={`${inter.variable} antialiased`}>
+    <html lang="fr" className={`${nunito.variable} antialiased`}>
       <head>
         <meta name="application-name" content="Ngowamix" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
