@@ -3,6 +3,7 @@ const nextConfig = {
   outputFileTracingRoot: process.cwd(),
   poweredByHeader: false,
   typescript: { ignoreBuildErrors: false },
+  serverExternalPackages: ['@prisma/client', '@prisma/adapter-pg', 'pg'],
 
   images: {
     remotePatterns: [
