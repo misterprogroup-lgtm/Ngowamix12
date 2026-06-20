@@ -1,5 +1,6 @@
-import { ensureSchema } from '@/lib/migrate';
-
 export async function register() {
-  await ensureSchema();
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    const { ensureSchema } = await import('@/lib/migrate');
+    await ensureSchema();
+  }
 }
