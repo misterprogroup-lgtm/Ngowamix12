@@ -25,7 +25,7 @@ export function AdPopup() {
   useEffect(() => {
     fetch('/api/ads?placement=POPUP')
       .then((r) => r.json())
-      .then((data) => setAds(data))
+      .then((data) => { if (Array.isArray(data)) setAds(data); })
       .catch(() => {});
   }, []);
 
@@ -64,6 +64,7 @@ export function AdPopup() {
   };
 
   const handleWatchAd = () => {
+    if (ads.length === 0) return;
     setCountdown(10);
     const nextAd = (currentAd + 1) % ads.length;
     setCurrentAd(nextAd);
@@ -73,6 +74,7 @@ export function AdPopup() {
   if (!show || ads.length === 0) return null;
 
   const ad = ads[currentAd];
+  if (!ad) return null;
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4">

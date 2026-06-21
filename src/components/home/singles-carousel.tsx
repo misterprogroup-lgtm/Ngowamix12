@@ -27,7 +27,7 @@ export function SinglesCarousel() {
   }, [next]);
 
   return (
-    <div className="relative h-56 md:h-96 overflow-hidden">
+    <div className="relative h-56 md:h-96 overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8">
       {SLIDES.map((src, index) => (
         <div
           key={index}

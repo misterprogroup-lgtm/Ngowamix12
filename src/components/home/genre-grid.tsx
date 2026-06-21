@@ -24,7 +24,7 @@ const genres = [
 export function GenreGrid() {
   return (
     <section>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <HorizontalScroll title="Explorer par genre" seeAllHref="/explore">
           {genres.map((genre, index) => {
             const { icon: Icon, color } = genreIcons[index % genreIcons.length];
