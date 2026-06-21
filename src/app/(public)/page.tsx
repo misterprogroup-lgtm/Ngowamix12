@@ -1,16 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Crown, Headphones, Download, ArrowRight } from 'lucide-react';
+import { Crown, Sparkles, TrendingUp, Clock, Music } from 'lucide-react';
 import { AlbumCard } from '@/components/catalog/album-card';
 import { Button } from '@/components/ui/button';
 import { HorizontalScroll } from '@/components/ui/horizontal-scroll';
 
 import { RecentlyPlayed } from '@/components/catalog/recently-played';
 import { RecommendationsWrapper } from '@/components/home/recommendations-wrapper';
-import { AnimatedSection } from '@/components/ui/animated-section';
 import { SinglesCarousel } from '@/components/home/singles-carousel';
-import { GenreExplore } from '@/components/home/genre-explore';
 import { GenreGrid } from '@/components/home/genre-grid';
 import { TopCharts } from '@/components/home/top-charts';
 import { ArtistCTA } from '@/components/home/artist-cta';
@@ -76,163 +74,142 @@ async function getPopularTracks() {
   }
 }
 
+function SectionHeader({ icon: Icon, title, href }: { icon?: React.ComponentType<{ className?: string }>; title: string; href?: string }) {
+  return (
+    <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center gap-2">
+        {Icon && <Icon className="h-5 w-5 text-primary" />}
+        <h2 className="text-xl md:text-2xl font-bold text-text-primary">{title}</h2>
+      </div>
+      {href && (
+        <Link href={href} className="text-sm font-semibold text-text-secondary hover:text-text-primary hover:underline transition-colors">
+          Tout voir
+        </Link>
+      )}
+    </div>
+  );
+}
+
 export default async function HomePage() {
   const recentAlbums = await getRecentAlbums();
   const recentSingles = await getRecentSingles();
   const popularTracks = await getPopularTracks();
 
   return (
-    <div className="space-y-6 md:space-y-4">
-      {/* Hero Section */}
-      <h1 className="sr-only">Ngowamix - Streaming musical africain</h1>
-      <SinglesCarousel />
+    <div className="space-y-10 pb-8">
+      <h1 className="sr-only">{APP_NAME} - Streaming musical africain</h1>
 
-      {/* Explore Section */}
-      <GenreExplore />
+      {/* Hero Carousel */}
+      <Suspense fallback={<div className="h-[300px] md:h-[400px] rounded-xl bg-surface-hover animate-pulse" />}>
+        <SinglesCarousel />
+      </Suspense>
 
-      {/* Recently Played */}
-      <Suspense fallback={null}><AnimatedSection delay={0.05}><RecentlyPlayed /></AnimatedSection></Suspense>
+      {/* Greeting + Quick Picks */}
+      <div>
+        <SectionHeader icon={Clock} title="Récemment écoutés" />
+        <Suspense fallback={null}>
+          <RecentlyPlayed />
+        </Suspense>
+      </div>
 
-      {/* Personalized Recommendations */}
-      <AnimatedSection delay={0.07}>
-        <div className="container mx-auto">
+      {/* Made for You */}
+      <div>
+        <SectionHeader icon={Sparkles} title="Recommandations pour vous" />
+        <Suspense fallback={null}>
           <RecommendationsWrapper />
-        </div>
-      </AnimatedSection>
+        </Suspense>
+      </div>
 
-      {/* Genre Grid */}
-      <AnimatedSection delay={0.15}><GenreGrid /></AnimatedSection>
+      {/* Genres */}
+      <div>
+        <SectionHeader icon={Music} title="Genres" href="/explore" />
+        <GenreGrid />
+      </div>
 
       {/* Top Charts */}
-      <AnimatedSection delay={0.2}><TopCharts /></AnimatedSection>
+      <div>
+        <SectionHeader icon={TrendingUp} title="Top Charts" />
+        <TopCharts />
+      </div>
 
-      {/* Recent Albums */}
+      {/* New Releases - Albums */}
       {recentAlbums.length > 0 && (
-        <AnimatedSection delay={0.25} className="bg-surface/50">
-          <div className="container mx-auto">
-            <HorizontalScroll title="Albums récents" seeAllHref="/explore">
-              {recentAlbums.map((album: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
-                <div key={album.id} className="snap-start shrink-0 w-40">
-                  <AlbumCard
-                    id={album.id}
-                    title={album.title}
-                    slug={album.slug}
-                    coverImage={album.coverImage}
-                    artistName={album.artist.name}
-                    artistSlug={album.artist.slug}
-                    price={Number(album.price)}
-                    isPremiumOnly={album.isPremiumOnly}
-                    type={album.type as 'ALBUM' | 'SINGLE' | 'EP'}
-                    isArtistVerified={album.artist.isVerified}
-                  />
-                </div>
-              ))}
-            </HorizontalScroll>
-          </div>
-      </AnimatedSection>
-      )}
-
-      {/* Recent Singles */}
-      {recentSingles.length > 0 && (
-        <AnimatedSection delay={0.3} className="relative">
-          <div className="container mx-auto relative">
-            <HorizontalScroll
-              title={<div className="flex items-center gap-3"><div className="h-8 w-1 rounded-full bg-linear-to-b from-primary to-accent" />Singles récents</div>}
-              seeAllHref="/explore"
-            >
-              {recentSingles.map((single: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
-                <div key={single.id} className="snap-start shrink-0 w-40">
-                  <AlbumCard
-                    key={single.id}
-                    id={single.id}
-                    title={single.title}
-                    slug={single.slug}
-                    coverImage={single.coverImage}
-                    artistName={single.artist.name}
-                    artistSlug={single.artist.slug}
-                    price={Number(single.price)}
-                    isPremiumOnly={single.isPremiumOnly}
-                    type={single.type as 'ALBUM' | 'SINGLE' | 'EP'}
-                    isArtistVerified={single.artist.isVerified}
-                  />
-                </div>
-              ))}
-            </HorizontalScroll>
-          </div>
-        </AnimatedSection>
-      )}
-
-      {/* Premium Banner */}
-      <AnimatedSection delay={0.35}>
-        <div className="container mx-auto">
-          <div className="relative rounded-2xl overflow-hidden bg-linear-to-r from-primary/20 to-accent/20 p-8 md:p-12">
-            <div className="max-w-2xl">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                Passez au Premium
-              </h2>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-2 text-text-secondary">
-                  <Headphones className="h-5 w-5 text-primary shrink-0" />
-                  Écoute sans publicité
-                </li>
-                <li className="flex items-center gap-2 text-text-secondary">
-                  <Download className="h-5 w-5 text-primary shrink-0" />
-                  Téléchargements illimités
-                </li>
-                <li className="flex items-center gap-2 text-text-secondary">
-                  <Crown className="h-5 w-5 text-primary shrink-0" />
-                  Qualité audio supérieure
-                </li>
-              </ul>
-              <Link href="/premium">
-                <Button variant="premium" size="lg">
-                  S&apos;abonner — {PREMIUM_PRICE} {PREMIUM_CURRENCY}/mois
-                </Button>
-              </Link>
+        <HorizontalScroll
+          title="Nouveautés"
+          seeAllHref="/explore"
+        >
+          {recentAlbums.map((album: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
+            <div key={album.id} className="snap-start shrink-0 w-[180px]">
+              <AlbumCard
+                id={album.id}
+                title={album.title}
+                slug={album.slug}
+                coverImage={album.coverImage}
+                artistName={album.artist.name}
+                artistSlug={album.artist.slug}
+                price={Number(album.price)}
+                isPremiumOnly={album.isPremiumOnly}
+                type={album.type as 'ALBUM' | 'SINGLE' | 'EP'}
+                isArtistVerified={album.artist.isVerified}
+              />
             </div>
-            <div className="absolute right-0 top-0 h-full w-1/3 bg-linear-to-l from-primary/10 to-transparent hidden lg:block" />
-          </div>
-        </div>
-      </AnimatedSection>
+          ))}
+        </HorizontalScroll>
+      )}
+
+      {/* New Singles */}
+      {recentSingles.length > 0 && (
+        <HorizontalScroll
+          title="Singles récents"
+          seeAllHref="/explore"
+        >
+          {recentSingles.map((single: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
+            <div key={single.id} className="snap-start shrink-0 w-[180px]">
+              <AlbumCard
+                key={single.id}
+                id={single.id}
+                title={single.title}
+                slug={single.slug}
+                coverImage={single.coverImage}
+                artistName={single.artist.name}
+                artistSlug={single.artist.slug}
+                price={Number(single.price)}
+                isPremiumOnly={single.isPremiumOnly}
+                type={single.type as 'ALBUM' | 'SINGLE' | 'EP'}
+                isArtistVerified={single.artist.isVerified}
+              />
+            </div>
+          ))}
+        </HorizontalScroll>
+      )}
 
       {/* Weekly New Releases */}
-      <AnimatedSection delay={0.4}><WeeklyNewReleases /></AnimatedSection>
+      <WeeklyNewReleases />
+
+      {/* Premium Upsell - Compact */}
+      <div className="relative rounded-xl overflow-hidden bg-gradient-to-r from-primary/15 via-accent/10 to-primary/5 p-6 md:p-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+              <Crown className="h-5 w-5 text-accent" />
+              Passez au Premium
+            </h3>
+            <p className="text-sm text-text-secondary mt-1">
+              Sans pub, qualité supérieure, téléchargements illimités
+            </p>
+          </div>
+          <Link href="/premium">
+            <Button variant="premium" size="sm">
+              {PREMIUM_PRICE} {PREMIUM_CURRENCY}/mois
+            </Button>
+          </Link>
+        </div>
+      </div>
 
       {/* Artist CTA */}
-      <AnimatedSection delay={0.45}><ArtistCTA /></AnimatedSection>
+      <ArtistCTA />
 
-      {/* Buy Albums Section */}
-      {recentAlbums.length > 0 && (
-        <AnimatedSection delay={0.5} className="bg-surface/50">
-          <div className="container mx-auto">
-            <HorizontalScroll
-              title="Acheter des albums"
-              description="Soutenez directement vos artistes préférés en achetant leurs albums et singles. Après l'achat, téléchargez et écoutez hors ligne autant que vous voulez."
-              seeAllHref="/explore"
-            >
-              {recentAlbums.slice(0, 5).map((album: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
-                <div key={album.id} className="snap-start shrink-0 w-40">
-                  <AlbumCard
-                    key={album.id}
-                    id={album.id}
-                    title={album.title}
-                    slug={album.slug}
-                    coverImage={album.coverImage}
-                    artistName={album.artist.name}
-                    artistSlug={album.artist.slug}
-                    price={Number(album.price)}
-                    isPremiumOnly={album.isPremiumOnly}
-                    type={album.type as 'ALBUM' | 'SINGLE' | 'EP'}
-                    isArtistVerified={album.artist.isVerified}
-                  />
-                </div>
-              ))}
-            </HorizontalScroll>
-          </div>
-        </AnimatedSection>
-      )}
-
-      {/* JSON-LD Structured Data */}
+      {/* JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
