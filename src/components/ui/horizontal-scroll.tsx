@@ -95,7 +95,7 @@ export function HorizontalScroll({ children, title, subtitle, icon, description,
         <div
           ref={scrollRef}
           className={`flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory snap-scroll-container ${withPadding ? '-mx-4 px-4' : ''}`}
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', touchAction: 'pan-x pinch-zoom', overscrollBehaviorX: 'contain' }}
         >
           {children}
         </div>

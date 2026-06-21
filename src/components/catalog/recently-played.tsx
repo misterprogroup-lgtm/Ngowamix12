@@ -48,7 +48,7 @@ export function RecentlyPlayed() {
         </div>
         <div
           className="flex md:flex-col gap-3 overflow-x-auto md:overflow-x-visible pb-2 snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0 md:space-y-1 md:gap-0 snap-scroll-container"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overscrollBehaviorX: 'none', touchAction: 'pan-x pinch-zoom' }}
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', overscrollBehaviorX: 'contain', touchAction: 'pan-x pinch-zoom', WebkitOverflowScrolling: 'touch' }}
         >
           {tracks.map((track) => (
             <button
