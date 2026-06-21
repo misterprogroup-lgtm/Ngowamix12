@@ -2,15 +2,21 @@ import type { Metadata, Viewport } from 'next';
 import { Nunito } from 'next/font/google';
 import Script from 'next/script';
 import '@/styles/globals.css';
-import { PlayerBar } from '@/components/layout/player-bar';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
+import { AudioPlayer } from '@/components/player/audio-player';
 import { InstallPrompt } from '@/components/pwa/install-prompt';
 import { PushNotificationManager } from '@/components/pwa/push-manager';
 import { ToastProvider } from '@/components/feedback/toast';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { TermsAcceptanceModal } from '@/components/layout/terms-modal';
 import { AuthProvider } from '@/components/auth/auth-provider';
+import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav';
 import { MissingAvatarPopup } from '@/components/layout/missing-avatar-popup';
 import { AdPopup } from '@/components/ads/ad-popup';
+import { AdBanner } from '@/components/ads/ad-banner';
+import { AdSidebar } from '@/components/ads/ad-sidebar';
+import { PageTransition } from '@/components/layout/page-transition';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -91,20 +97,30 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://utfs.io" />
         <link rel="dns-prefetch" href="https://uploadthing.com" />
       </head>
-      <body className="min-h-screen bg-background text-text-primary">
+      <body className="min-h-screen flex flex-col bg-background text-text-primary">
               <ThemeProvider>
                 <ToastProvider>
                   <AuthProvider>
-                  <Analytics />
-                  <SpeedInsights />
-                  {children}
-                  <PlayerBar />
-                  <InstallPrompt />
-                  <PushNotificationManager />
-                  <TermsAcceptanceModal />
-                  <MissingAvatarPopup />
-                  <AdPopup />
-                  </AuthProvider>
+                  <Header />
+                  <main className="flex-1 pb-32 md:pb-0 px-4 sm:px-6 lg:px-8">
+                    <PageTransition>
+                      <div className="container mx-auto pt-4">
+                        <AdBanner />
+                      </div>
+                      <Analytics />
+                      <SpeedInsights />
+                      {children}
+                    </PageTransition>
+                  </main>
+              <Footer />
+              <MobileBottomNav />
+              <AudioPlayer />
+              <InstallPrompt />
+              <PushNotificationManager />
+              <TermsAcceptanceModal />
+              <MissingAvatarPopup />
+              <AdPopup />
+              </AuthProvider>
               <Script id="register-sw" strategy="afterInteractive">
             {`
               if ('serviceWorker' in navigator) {
