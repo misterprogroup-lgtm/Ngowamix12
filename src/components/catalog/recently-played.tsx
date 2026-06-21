@@ -39,7 +39,7 @@ export function RecentlyPlayed() {
 
   return (
     <section className="bg-surface/50">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Récemment écoutés</h2>
           <Link href="/user/library" className="text-sm font-medium text-primary hover:text-primary-hover hidden md:flex items-center gap-1 shrink-0">

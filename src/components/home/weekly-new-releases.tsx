@@ -21,7 +21,7 @@ export async function WeeklyNewReleases() {
 
   return (
     <section>
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4">
         <HorizontalScroll title="Nouveautés de la semaine" seeAllHref="/explore">
           {albums.map((album: {
             id: string; title: string; slug: string; coverImage: string | null;

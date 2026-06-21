@@ -18,7 +18,7 @@ export function HomeSkeletons() {
 
       {/* Recently played skeleton */}
       <section className="py-12">
-        <div className="container mx-auto space-y-4">
+        <div className="container mx-auto px-4 space-y-4">
           <Skeleton className="h-8 w-56" />
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 px-3 py-2.5">
@@ -36,7 +36,7 @@ export function HomeSkeletons() {
 
       {/* Genres skeleton */}
       <section className="py-12">
-        <div className="container mx-auto space-y-8">
+        <div className="container mx-auto px-4 space-y-8">
           <Skeleton className="h-8 w-48" />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -48,7 +48,7 @@ export function HomeSkeletons() {
 
       {/* Artists skeleton */}
       <section className="py-12">
-        <div className="container mx-auto space-y-8">
+        <div className="container mx-auto px-4 space-y-8">
           <Skeleton className="h-8 w-48" />
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (

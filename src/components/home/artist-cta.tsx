@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 export function ArtistCTA() {
   return (
     <section>
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4">
         <div className="relative rounded-2xl overflow-hidden bg-surface border border-border">
           <div className="p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center">
             <div>

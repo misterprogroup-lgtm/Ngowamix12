@@ -95,7 +95,7 @@ export default async function HomePage() {
 
       {/* Personalized Recommendations */}
       <AnimatedSection delay={0.07}>
-        <div className="container mx-auto">
+        <div className="container mx-auto px-4">
           <RecommendationsWrapper />
         </div>
       </AnimatedSection>
@@ -109,7 +109,7 @@ export default async function HomePage() {
       {/* Recent Albums */}
       {recentAlbums.length > 0 && (
         <AnimatedSection delay={0.25} className="bg-surface/50">
-          <div className="container mx-auto">
+          <div className="container mx-auto px-4">
             <HorizontalScroll title="Albums récents" seeAllHref="/explore">
               {recentAlbums.map((album: { id: string; title: string; slug: string; coverImage: string | null; price: number; isPremiumOnly: boolean; type: string; artist: { name: string; slug: string; isVerified?: boolean } }) => (
                 <div key={album.id} className="snap-start shrink-0 w-40">
@@ -135,7 +135,7 @@ export default async function HomePage() {
       {/* Recent Singles */}
       {recentSingles.length > 0 && (
         <AnimatedSection delay={0.3} className="relative">
-          <div className="container mx-auto relative">
+          <div className="container mx-auto px-4 relative">
             <HorizontalScroll
               title={<div className="flex items-center gap-3"><div className="h-8 w-1 rounded-full bg-linear-to-b from-primary to-accent" />Singles récents</div>}
               seeAllHref="/explore"
@@ -164,7 +164,7 @@ export default async function HomePage() {
 
       {/* Premium Banner */}
       <AnimatedSection delay={0.35}>
-        <div className="container mx-auto">
+        <div className="container mx-auto px-4">
           <div className="relative rounded-2xl overflow-hidden bg-linear-to-r from-primary/20 to-accent/20 p-8 md:p-12">
             <div className="max-w-2xl">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
@@ -204,7 +204,7 @@ export default async function HomePage() {
       {/* Buy Albums Section */}
       {recentAlbums.length > 0 && (
         <AnimatedSection delay={0.5} className="bg-surface/50">
-          <div className="container mx-auto">
+          <div className="container mx-auto px-4">
             <HorizontalScroll
               title="Acheter des albums"
               description="Soutenez directement vos artistes préférés en achetant leurs albums et singles. Après l'achat, téléchargez et écoutez hors ligne autant que vous voulez."
