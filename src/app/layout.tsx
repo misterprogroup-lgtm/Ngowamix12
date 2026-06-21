@@ -102,7 +102,7 @@ export default function RootLayout({
                 <ToastProvider>
                   <AuthProvider>
                   <Header />
-                  <main className="flex-1 pb-32 md:pb-0 px-4 sm:px-6 lg:px-8">
+                  <main className="flex-1 pb-32 md:pb-0 pl-1 pr-4 sm:px-6 lg:px-8">
                     <PageTransition>
                       <div className="container mx-auto pt-4">
                         <AdBanner />
