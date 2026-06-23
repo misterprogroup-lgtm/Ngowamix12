@@ -3,14 +3,23 @@ import { SafeImage } from '@/components/ui/safe-image';
 import { Play, Music } from 'lucide-react';
 import { Carousel } from '@/components/ui/carousel';
 import { SectionHeader } from '@/components/ui/section-header';
-import { trendingAlbums } from '@/lib/home-data';
 
-export function TrendingAlbums() {
+interface TrendingAlbum {
+  id: string;
+  cover: string | null;
+  artist: string;
+  title: string;
+  slug?: string;
+}
+
+export function TrendingAlbums({ albums }: { albums: TrendingAlbum[] }) {
+  if (!albums.length) return null;
+
   return (
     <section>
-      <SectionHeader title="TRENDING ALBUMS" />
+      <SectionHeader title="ALBUMS TENDANCES" />
       <Carousel gap={20}>
-        {trendingAlbums.map((album) => (
+        {albums.map((album) => (
           <Link
             key={album.id}
             href={`/album/${album.id}`}
@@ -18,7 +27,7 @@ export function TrendingAlbums() {
           >
             <div className="relative aspect-square rounded-[10px] overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-300 group-hover:scale-[1.03] group-hover:border-[#ff990033] group-hover:shadow-lg group-hover:shadow-black/30">
               <SafeImage
-                src={album.cover}
+                src={album.cover || ''}
                 alt={album.title}
                 fill
                 sizes="176px"

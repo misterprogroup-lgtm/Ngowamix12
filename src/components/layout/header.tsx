@@ -88,7 +88,7 @@ export function Header() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#666]" />
               <input
                 type="search"
-                placeholder="Search for artists, songs, albums..."
+                placeholder="Rechercher artistes, titres, albums..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-11 pl-11 pr-4 rounded-full border border-[#ffffff15] bg-[#141414] text-sm text-white placeholder:text-[#666] focus:outline-none focus:border-[#ff9900] focus:ring-1 focus:ring-[#ff9900] transition-colors"
@@ -198,12 +198,12 @@ export function Header() {
               <>
                 <Link href={ROUTES.LOGIN}>
                   <Button variant="ghost" size="sm" className="text-white hover:text-[#ff9900]">
-                    Sign In
+                    Connexion
                   </Button>
                 </Link>
                 <Link href={ROUTES.REGISTER}>
                   <Button variant="primary" size="sm" className="rounded-full">
-                    Sign Up
+                    Inscription
                   </Button>
                 </Link>
               </>
@@ -212,7 +212,7 @@ export function Header() {
             <Link href="/upload">
               <Button variant="ghost" size="sm" className="flex items-center gap-2 text-[#ff9900] hover:text-white hover:bg-[#ff9900] rounded-full border border-[#ff990033] hover:border-[#ff9900] transition-all">
                 <Upload className="h-4 w-4" />
-                UPLOAD
+                UPLOADER
               </Button>
             </Link>
           </div>
@@ -448,14 +448,14 @@ export function Header() {
                     onClick={() => setShowMobileMenu(false)}
                     className="flex items-center justify-center w-full px-4 py-2.5 rounded-lg bg-[#ff9900] text-white text-sm font-medium hover:bg-[#e68a00] transition-colors"
                   >
-                    Sign In
+                    Connexion
                   </Link>
                   <Link
                     href={ROUTES.REGISTER}
                     onClick={() => setShowMobileMenu(false)}
                     className="flex items-center justify-center w-full px-4 py-2.5 rounded-lg border border-[#ffffff15] text-sm font-medium text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
                   >
-                    Sign Up
+                    Inscription
                   </Link>
                 </div>
               )}

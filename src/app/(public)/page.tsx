@@ -45,46 +45,86 @@ export const metadata: Metadata = {
 
 export const revalidate = 300;
 
-async function getRecentAlbums() {
+function apiUrl(path: string) {
+  return `${process.env.APP_URL || 'http://localhost:3000'}${path}`;
+}
+
+async function fetchJson(url: string) {
   try {
-    const res = await fetch(`${process.env.APP_URL || 'http://localhost:3000'}/api/albums?limit=8&type=ALBUM`, {
-      next: { revalidate: 300 },
-    });
-    const data = await res.json();
-    return data.albums || [];
+    const res = await fetch(url, { next: { revalidate: 300 } });
+    return await res.json();
   } catch {
-    return [];
+    return {};
   }
+}
+
+async function getRecentAlbums() {
+  const data = await fetchJson(apiUrl('/api/albums?limit=8&type=ALBUM'));
+  return data.albums || [];
 }
 
 async function getRecentSingles() {
-  try {
-    const res = await fetch(`${process.env.APP_URL || 'http://localhost:3000'}/api/singles?limit=5`, {
-      next: { revalidate: 300 },
-    });
-    const data = await res.json();
-    return data.singles || [];
-  } catch {
-    return [];
-  }
+  const data = await fetchJson(apiUrl('/api/singles?limit=5'));
+  return data.singles || [];
 }
 
 async function getPopularTracks() {
-  try {
-    const res = await fetch(`${process.env.APP_URL || 'http://localhost:3000'}/api/tracks?limit=10`, {
-      next: { revalidate: 300 },
-    });
-    const data = await res.json();
-    return data.tracks || [];
-  } catch {
-    return [];
-  }
+  const data = await fetchJson(apiUrl('/api/tracks?limit=10'));
+  return data.tracks || [];
+}
+
+async function getTrendingAlbums() {
+  const data = await fetchJson(apiUrl('/api/albums?limit=10&type=ALBUM'));
+  return (data.albums || []).map((a: { id: string; coverImage: string | null; artist: { name: string }; title: string }) => ({
+    id: a.id,
+    cover: a.coverImage,
+    artist: a.artist.name,
+    title: a.title,
+  }));
+}
+
+async function getFeaturedArtists() {
+  const data = await fetchJson(apiUrl('/api/artists?limit=4'));
+  return (data.artists || []).map((a: { id: string; avatar: string | null; name: string; totalPlayCount: number }) => ({
+    id: a.id,
+    avatar: a.avatar,
+    name: a.name,
+    followers: a.totalPlayCount >= 1000000
+      ? `${(a.totalPlayCount / 1000000).toFixed(1)}M`
+      : a.totalPlayCount >= 1000
+        ? `${(a.totalPlayCount / 1000).toFixed(1)}K`
+        : String(a.totalPlayCount),
+  }));
+}
+
+async function getRecentTracks() {
+  const data = await fetchJson(apiUrl('/api/tracks?limit=8'));
+  return (data.tracks || []).map((t: { id: string; album: { coverImage: string | null; artist: { name: string } }; title: string }) => ({
+    id: t.id,
+    cover: t.album?.coverImage,
+    artist: t.album?.artist?.name || 'Artiste',
+    title: t.title,
+  }));
 }
 
 export default async function HomePage() {
-  const recentAlbums = await getRecentAlbums();
-  const recentSingles = await getRecentSingles();
-  const popularTracks = await getPopularTracks();
+  const [recentAlbums, recentSingles, popularTracks, trendingAlbums, featuredArtists, recentTracks] = await Promise.all([
+    getRecentAlbums(),
+    getRecentSingles(),
+    getPopularTracks(),
+    getTrendingAlbums(),
+    getFeaturedArtists(),
+    getRecentTracks(),
+  ]);
+
+  const trendingSongItems = popularTracks.map((t: { id: string; title: string; playCount: number; album: { coverImage: string | null; artist: { avatar: string | null; name: string } } }) => ({
+    id: t.id,
+    title: t.title,
+    artist: t.album?.artist?.name || 'Artiste',
+    artistImage: t.album?.artist?.avatar,
+    cover: t.album?.coverImage,
+    plays: t.playCount,
+  }));
 
   return (
     <div className="space-y-8 md:space-y-10">
@@ -96,16 +136,16 @@ export default async function HomePage() {
       <CategoryTabs />
 
       {/* Trending Songs */}
-      <TrendingSongs />
+      <TrendingSongs tracks={trendingSongItems} />
 
       {/* Trending Albums */}
-      <TrendingAlbums />
+      <TrendingAlbums albums={trendingAlbums} />
 
       {/* Accounts For You */}
-      <AccountsForYou />
+      <AccountsForYou accounts={featuredArtists} />
 
       {/* Recently Added */}
-      <RecentlyAdded />
+      <RecentlyAdded songs={recentTracks} />
 
       {/* Explore Section */}
       <GenreExplore />

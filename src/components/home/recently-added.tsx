@@ -2,14 +2,23 @@ import Link from 'next/link';
 import { SafeImage } from '@/components/ui/safe-image';
 import { Play, Music } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/section-header';
-import { recentlyAddedSongs } from '@/lib/home-data';
 
-export function RecentlyAdded() {
+interface RecentlyAddedSong {
+  id: string;
+  cover: string | null;
+  artist: string;
+  title: string;
+  slug?: string;
+}
+
+export function RecentlyAdded({ songs }: { songs: RecentlyAddedSong[] }) {
+  if (!songs.length) return null;
+
   return (
     <section>
-      <SectionHeader title="RECENTLY ADDED" />
+      <SectionHeader title="AJOUTS RÉCENTS" />
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-5">
-        {recentlyAddedSongs.map((song) => (
+        {songs.map((song) => (
           <Link
             key={song.id}
             href={`/track/${song.id}`}
@@ -17,7 +26,7 @@ export function RecentlyAdded() {
           >
             <div className="relative aspect-square rounded-[10px] overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-300 group-hover:border-[#ff990033] group-hover:shadow-md group-hover:shadow-black/20">
               <SafeImage
-                src={song.cover}
+                src={song.cover || ''}
                 alt={song.title}
                 fill
                 sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"

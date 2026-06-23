@@ -8,17 +8,17 @@ import {
 import { cn } from '@/lib/utils';
 
 const browseLinks = [
-  { href: '/', label: 'Discover', icon: Compass },
-  { href: '/explore', label: 'Charts', icon: TrendingUp },
+  { href: '/', label: 'Découvrir', icon: Compass },
+  { href: '/explore', label: 'Classements', icon: TrendingUp },
   { href: '/playlists', label: 'Playlists', icon: ListMusic },
-  { href: '/feed', label: 'Feed', icon: Rss },
-  { href: '/user/library', label: 'My Library', icon: Library },
+  { href: '/feed', label: "Fil d'actu", icon: Rss },
+  { href: '/user/library', label: 'Ma Bibliothèque', icon: Library },
 ];
 
 const originalsLinks = [
-  { href: '/explore', label: 'Platform World', icon: Globe },
+  { href: '/explore', label: 'Plateforme Monde', icon: Globe },
   { href: '/artist/dashboard', label: 'Studios', icon: Mic },
-  { href: '/help', label: 'Artist Guide', icon: BookOpen },
+  { href: '/help', label: 'Guide Artiste', icon: BookOpen },
 ];
 
 export function Sidebar() {
@@ -38,7 +38,7 @@ export function Sidebar() {
       <div className="flex-1 overflow-y-auto py-8 px-5 space-y-10">
         <div className="space-y-1">
           <span className="px-3 text-xs font-bold tracking-[0.15em] text-[#666] uppercase">
-            Browse
+            Parcourir
           </span>
           <div className="mt-3 space-y-1">
             {browseLinks.map((link) => (
@@ -64,7 +64,7 @@ export function Sidebar() {
 
         <div className="space-y-1">
           <span className="px-3 text-xs font-bold tracking-[0.15em] text-[#666] uppercase">
-            Originals
+            Originaux
           </span>
           <div className="mt-3 space-y-1">
             {originalsLinks.map((link) => (
@@ -94,7 +94,7 @@ export function Sidebar() {
             className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[#ff9900] text-white text-base font-bold hover:bg-[#e68a00] transition-all duration-300 shadow-lg shadow-[#ff9900]/20"
           >
             <Upload className="h-5 w-5" />
-            UPLOAD
+            UPLOADER
           </Link>
         </div>
       </div>

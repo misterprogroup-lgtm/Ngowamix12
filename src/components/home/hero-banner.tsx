@@ -9,9 +9,9 @@ export function HeroBanner() {
       <div className="relative grid md:grid-cols-2 gap-8 items-center p-8 md:p-12 lg:p-16">
         <div className="space-y-6">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-black leading-tight text-white">
-            The music platform{' '}
-            <span className="text-[#ff9900]">empowering</span>{' '}
-            artists
+            La plateforme qui{' '}
+            <span className="text-[#ff9900]">libère</span>{' '}
+            les artistes
           </h1>
           <p className="text-base md:text-lg text-[#888] leading-relaxed max-w-md">
             Une plateforme qui aide les artistes à atteindre et engager leurs fans partout dans le monde.
@@ -21,7 +21,7 @@ export function HeroBanner() {
             className="bg-[#ff9900] hover:bg-[#e68a00] text-white rounded-full font-bold px-8 h-14 text-base shadow-lg shadow-[#ff9900]/25 hover:shadow-[#ff9900]/40 transition-all duration-300"
           >
             <Upload className="h-5 w-5" />
-            Upload your music for FREE
+            Uploadez votre musique GRATUITEMENT
           </Button>
         </div>
         <div className="hidden md:flex justify-center items-center">

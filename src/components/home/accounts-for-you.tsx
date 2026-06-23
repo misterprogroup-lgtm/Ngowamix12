@@ -3,14 +3,13 @@
 import { SafeImage } from '@/components/ui/safe-image';
 import { BadgeCheck, User } from 'lucide-react';
 import { SectionHeader } from '@/components/ui/section-header';
-import { accountsForYou } from '@/lib/home-data';
 
-function FollowButton() {
-  return (
-    <button className="mt-3 px-5 py-1.5 rounded-full border border-[#ff9900] bg-transparent text-white text-xs font-semibold transition-all duration-300 hover:bg-[#ff9900] hover:text-white">
-      FOLLOW
-    </button>
-  );
+interface Account {
+  id: string;
+  avatar: string | null;
+  name: string;
+  followers?: string;
+  slug?: string;
 }
 
 function VerifiedBadge() {
@@ -21,12 +20,14 @@ function VerifiedBadge() {
   );
 }
 
-export function AccountsForYou() {
+export function AccountsForYou({ accounts }: { accounts: Account[] }) {
+  if (!accounts.length) return null;
+
   return (
     <section>
-      <SectionHeader title="ACCOUNTS FOR YOU" />
+      <SectionHeader title="COMPTES POUR VOUS" />
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
-        {accountsForYou.map((account) => (
+        {accounts.map((account) => (
           <div
             key={account.id}
             className="flex flex-col items-center text-center group cursor-pointer"
@@ -34,7 +35,7 @@ export function AccountsForYou() {
             <div className="relative mb-3">
               <div className="h-24 w-24 md:h-28 md:w-28 rounded-full bg-[#141414] border-2 border-[#ffffff15] overflow-hidden transition-all duration-300 group-hover:border-[#ff990066] group-hover:shadow-lg group-hover:shadow-[#ff9900]/10">
                 <SafeImage
-                  src={account.avatar}
+                  src={account.avatar || ''}
                   alt={account.name}
                   width={112}
                   height={112}
@@ -51,10 +52,14 @@ export function AccountsForYou() {
             <p className="text-sm font-bold text-white truncate max-w-[120px]">
               {account.name}
             </p>
-            <p className="text-xs text-[#888] mt-0.5">
-              {account.followers} Followers
-            </p>
-            <FollowButton />
+            {account.followers && (
+              <p className="text-xs text-[#888] mt-0.5">
+                {account.followers} Abonnés
+              </p>
+            )}
+            <button className="mt-3 px-5 py-1.5 rounded-full border border-[#ff9900] bg-transparent text-white text-xs font-semibold transition-all duration-300 hover:bg-[#ff9900] hover:text-white">
+              SUIVRE
+            </button>
           </div>
         ))}
       </div>

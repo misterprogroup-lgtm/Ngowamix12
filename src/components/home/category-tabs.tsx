@@ -4,16 +4,16 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const categories = [
-  'All',
-  'Afrosounds',
+  'Tous',
+  'Afro',
   'Hip-Hop/Rap',
-  'Latin',
+  'Latino',
   'Jazz/Blues',
-  'Caribbean',
+  'Caraïbes',
   'Pop',
   'R&B',
   'Gospel',
-  'Electronic',
+  'Électro',
   'Rock',
 ];
 
