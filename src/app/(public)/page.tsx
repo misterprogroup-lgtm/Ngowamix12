@@ -12,6 +12,9 @@ import { AnimatedSection } from '@/components/ui/animated-section';
 import { HeroBanner } from '@/components/home/hero-banner';
 import { CategoryTabs } from '@/components/home/category-tabs';
 import { TrendingSongs } from '@/components/home/trending-songs';
+import { TrendingAlbums } from '@/components/home/trending-albums';
+import { AccountsForYou } from '@/components/home/accounts-for-you';
+import { RecentlyAdded } from '@/components/home/recently-added';
 import { GenreExplore } from '@/components/home/genre-explore';
 import { GenreGrid } from '@/components/home/genre-grid';
 import { TopCharts } from '@/components/home/top-charts';
@@ -94,6 +97,15 @@ export default async function HomePage() {
 
       {/* Trending Songs */}
       <TrendingSongs />
+
+      {/* Trending Albums */}
+      <TrendingAlbums />
+
+      {/* Accounts For You */}
+      <AccountsForYou />
+
+      {/* Recently Added */}
+      <RecentlyAdded />
 
       {/* Explore Section */}
       <GenreExplore />
