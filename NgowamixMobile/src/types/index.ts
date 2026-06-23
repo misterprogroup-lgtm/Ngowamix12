@@ -106,3 +106,61 @@ export interface FamilyMember {
   status: string;
   user: { id: string; displayName: string | null; email: string; avatar: string | null; isPremium: boolean };
 }
+
+export interface DashboardStats {
+  albums: number;
+  tracks: number;
+  totalPlays: number;
+  totalPurchases: number;
+}
+
+export interface RecentAlbum {
+  id: string;
+  title: string;
+  status: string;
+  playCount: number;
+  purchaseCount: number;
+  price: string;
+  createdAt: string;
+}
+
+export interface DashboardData {
+  stats: DashboardStats;
+  recentAlbums: RecentAlbum[];
+  artist: {
+    name: string;
+    slug: string;
+    isVerified: boolean;
+    balance: number;
+  };
+}
+
+export interface ArtistAlbum {
+  id: string;
+  title: string;
+  slug: string;
+  type: string;
+  status: string;
+  price: string;
+  coverImage: string | null;
+  _count: { tracks: number };
+  createdAt: string;
+}
+
+export interface ArtistConcert {
+  id: string;
+  title: string;
+  slug: string;
+  venue: string;
+  city: string;
+  country: string;
+  date: string;
+  time: string;
+  price: number;
+  vipPrice: number | null;
+  vvipPrice: number | null;
+  totalTickets: number;
+  availableTickets: number;
+  poster: string | null;
+  isActive: boolean;
+}

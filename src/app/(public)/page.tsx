@@ -9,7 +9,9 @@ import { HorizontalScroll } from '@/components/ui/horizontal-scroll';
 import { RecentlyPlayed } from '@/components/catalog/recently-played';
 import { RecommendationsWrapper } from '@/components/home/recommendations-wrapper';
 import { AnimatedSection } from '@/components/ui/animated-section';
-import { SinglesCarousel } from '@/components/home/singles-carousel';
+import { HeroBanner } from '@/components/home/hero-banner';
+import { CategoryTabs } from '@/components/home/category-tabs';
+import { TrendingSongs } from '@/components/home/trending-songs';
 import { GenreExplore } from '@/components/home/genre-explore';
 import { GenreGrid } from '@/components/home/genre-grid';
 import { TopCharts } from '@/components/home/top-charts';
@@ -82,10 +84,16 @@ export default async function HomePage() {
   const popularTracks = await getPopularTracks();
 
   return (
-    <div className="space-y-6 md:space-y-4">
+    <div className="space-y-8 md:space-y-10">
       {/* Hero Section */}
       <h1 className="sr-only">Ngowamix - Streaming musical africain</h1>
-      <SinglesCarousel />
+      <HeroBanner />
+
+      {/* Category Tabs */}
+      <CategoryTabs />
+
+      {/* Trending Songs */}
+      <TrendingSongs />
 
       {/* Explore Section */}
       <GenreExplore />

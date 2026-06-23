@@ -55,7 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     api.setToken(null);
-    await AsyncStorage.multiRemove(['ngowamix_session', 'ngowamix_user']);
+    await AsyncStorage.removeItem('ngowamix_session');
+    await AsyncStorage.removeItem('ngowamix_user');
     setUser(null);
   }, []);
 

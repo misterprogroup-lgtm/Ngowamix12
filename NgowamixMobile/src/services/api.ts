@@ -1,3 +1,5 @@
+import { DashboardStats, RecentAlbum, ArtistAlbum, ArtistConcert } from '../types';
+
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api';
 
 interface RequestOptions {
@@ -140,6 +142,35 @@ class ApiService {
 
   async getPodcast(id: string) {
     return this.request<{ podcast: any }>(`/podcasts/${id}`);
+  }
+
+  // Artist
+  async getArtistDashboard() {
+    return this.request<{ stats: DashboardStats; recentAlbums: RecentAlbum[]; artist: any }>('/artist/dashboard');
+  }
+
+  async getArtistAlbums() {
+    return this.request<{ albums: ArtistAlbum[] }>('/artist/albums');
+  }
+
+  async getArtistConcerts() {
+    return this.request<{ concerts: ArtistConcert[] }>('/artist/concerts');
+  }
+
+  async deleteArtistConcert(id: string) {
+    return this.request<{ success: boolean }>(`/artist/concerts?id=${id}`, { method: 'DELETE' });
+  }
+
+  async deleteArtistAlbum(id: string) {
+    return this.request<{ success: boolean }>(`/artist/albums?id=${id}`, { method: 'DELETE' });
+  }
+
+  async createArtistConcert(data: Record<string, string>) {
+    return this.request<{ concert: any }>('/artist/concerts', { method: 'POST', body: data });
+  }
+
+  async updateArtistProfile(data: Record<string, unknown>) {
+    return this.request<{ artist: any }>('/artist/profile', { method: 'PUT', body: data });
   }
 }
 
