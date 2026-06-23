@@ -8,7 +8,7 @@ export default function PublicLayout({
   return (
     <>
       <Sidebar />
-      <div className="md:ml-60">{children}</div>
+      <div className="md:ml-72">{children}</div>
     </>
   );
 }

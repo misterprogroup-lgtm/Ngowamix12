@@ -34,26 +34,26 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="hidden md:flex fixed left-0 top-16 bottom-0 w-60 flex-col border-r border-[#ffffff08] bg-[#0b0b0b] z-40">
-      <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8">
+    <aside className="hidden md:flex fixed left-0 top-16 bottom-0 w-72 flex-col border-r border-[#ffffff08] bg-[#0b0b0b] z-40">
+      <div className="flex-1 overflow-y-auto py-8 px-5 space-y-10">
         <div className="space-y-1">
-          <span className="px-3 text-[0.65rem] font-semibold tracking-[0.15em] text-[#666] uppercase">
+          <span className="px-3 text-xs font-bold tracking-[0.15em] text-[#666] uppercase">
             Browse
           </span>
-          <div className="mt-2 space-y-0.5">
+          <div className="mt-3 space-y-1">
             {browseLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300',
+                  'flex items-center gap-3 px-3 py-3 rounded-lg text-base font-bold transition-all duration-300',
                   isBrowseActive(link.href)
                     ? 'bg-[#222] text-white'
                     : 'text-[#888] hover:text-white hover:bg-[#ffffff08]'
                 )}
               >
                 <link.icon className={cn(
-                  'h-4 w-4 transition-colors duration-300',
+                  'h-5 w-5 transition-colors duration-300',
                   isBrowseActive(link.href) ? 'text-[#ff9900]' : 'text-[#666] group-hover:text-white'
                 )} />
                 {link.label}
@@ -63,23 +63,23 @@ export function Sidebar() {
         </div>
 
         <div className="space-y-1">
-          <span className="px-3 text-[0.65rem] font-semibold tracking-[0.15em] text-[#666] uppercase">
+          <span className="px-3 text-xs font-bold tracking-[0.15em] text-[#666] uppercase">
             Originals
           </span>
-          <div className="mt-2 space-y-0.5">
+          <div className="mt-3 space-y-1">
             {originalsLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-300',
+                  'flex items-center gap-3 px-3 py-3 rounded-lg text-base font-bold transition-all duration-300',
                   isOriginalsActive(link.href)
                     ? 'bg-[#222] text-white'
                     : 'text-[#888] hover:text-white hover:bg-[#ffffff08]'
                 )}
               >
                 <link.icon className={cn(
-                  'h-4 w-4 transition-colors duration-300',
+                  'h-5 w-5 transition-colors duration-300',
                   isOriginalsActive(link.href) ? 'text-[#ff9900]' : 'text-[#666] group-hover:text-white'
                 )} />
                 {link.label}
@@ -88,12 +88,12 @@ export function Sidebar() {
           </div>
         </div>
 
-        <div className="pt-4">
+        <div className="pt-6">
           <Link
             href="/upload"
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#ff9900] text-white text-sm font-bold hover:bg-[#e68a00] transition-all duration-300 shadow-lg shadow-[#ff9900]/20"
+            className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[#ff9900] text-white text-base font-bold hover:bg-[#e68a00] transition-all duration-300 shadow-lg shadow-[#ff9900]/20"
           >
-            <Upload className="h-4 w-4" />
+            <Upload className="h-5 w-5" />
             UPLOAD
           </Link>
         </div>
