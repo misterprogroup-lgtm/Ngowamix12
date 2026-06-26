@@ -91,7 +91,7 @@ export default function SharedPlaylistPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-8 pb-24">
+      <div className="container mx-auto px-4 py-8 pb-24">
         <div className="flex items-center gap-6 mb-8">
           <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-surface-hover">
             <ListMusic className="h-10 w-10 text-primary" />

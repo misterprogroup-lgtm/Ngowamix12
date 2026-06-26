@@ -45,7 +45,7 @@ function TicketSuccessContent() {
 
   if (transactionId) {
     return (
-      <div className="container mx-auto py-16 text-center">
+      <div className="container mx-auto px-4 py-16 text-center">
         {status === 'processing' && (
           <>
             <Loader2 className="h-16 w-16 text-primary mx-auto mb-4 animate-spin" />
@@ -104,7 +104,7 @@ function TicketSuccessContent() {
 
 export default function TicketSuccessPage() {
   return (
-    <Suspense fallback={<div className="container mx-auto py-16"><p>Chargement...</p></div>}>
+    <Suspense fallback={<div className="container mx-auto px-4 py-16"><p>Chargement...</p></div>}>
       <TicketSuccessContent />
     </Suspense>
   );

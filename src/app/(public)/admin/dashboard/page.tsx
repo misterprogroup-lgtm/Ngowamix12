@@ -69,7 +69,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 pb-24">
+      <div className="container mx-auto px-4 py-8 pb-24">
         <div className="animate-pulse space-y-8">
           <div className="h-10 w-48 bg-surface-hover rounded-sm" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -84,14 +84,14 @@ export default function AdminDashboard() {
 
   if (!data) {
     return (
-      <div className="container mx-auto py-8 pb-24">
+      <div className="container mx-auto px-4 py-8 pb-24">
         <p className="text-error">Erreur lors du chargement</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div className="container mx-auto px-4 py-8 pb-24">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Tableau de bord administrateur</h1>
         <div className="flex items-center gap-2">

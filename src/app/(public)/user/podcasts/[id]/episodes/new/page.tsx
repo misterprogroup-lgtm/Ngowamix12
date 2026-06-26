@@ -76,7 +76,7 @@ export default function NewEpisodePage({
   };
 
   return (
-    <div className="container mx-auto py-8 max-w-2xl">
+    <div className="container mx-auto px-4 py-8 max-w-2xl">
       <Link href={`/user/podcasts/${podcastId}/edit`} className="text-sm text-text-secondary hover:text-primary transition-colors mb-6 inline-block">
         ← Retour au podcast
       </Link>

@@ -81,7 +81,7 @@ export default function PurchasesPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 pb-24">
+      <div className="container mx-auto px-4 py-8 pb-24">
         <div className="animate-pulse space-y-4">
           <div className="h-10 w-48 bg-surface-hover rounded-sm" />
           {Array.from({ length: 3 }).map((_, i) => (
@@ -93,7 +93,7 @@ export default function PurchasesPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div className="container mx-auto px-4 py-8 pb-24">
       <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
         <ShoppingBag className="h-6 w-6 text-accent" />
         Mes achats

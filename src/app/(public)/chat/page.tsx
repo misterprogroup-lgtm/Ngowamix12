@@ -112,7 +112,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 pb-24">
+    <div className="container mx-auto px-4 py-6 pb-24">
       <div className="flex items-center gap-3 mb-6">
         <div className="h-8 w-1 rounded-full bg-linear-to-b from-primary to-accent" />
         <h1 className="text-2xl font-bold">Chat communautaire</h1>

@@ -90,7 +90,7 @@ export default function AdminCatalogPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div className="container mx-auto px-4 py-8 pb-24">
       <h1 className="text-2xl font-bold flex items-center gap-2 mb-6">
         <Music className="h-6 w-6 text-primary" />
         Catalogue

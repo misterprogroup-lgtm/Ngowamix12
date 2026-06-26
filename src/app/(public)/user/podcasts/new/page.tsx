@@ -22,7 +22,7 @@ export default function NewPodcastPage() {
 
   if (!user) {
     return (
-      <div className="container mx-auto py-20 text-center text-text-muted">
+      <div className="container mx-auto px-4 py-20 text-center text-text-muted">
         <p>Connectez-vous pour créer un podcast</p>
       </div>
     );
@@ -64,7 +64,7 @@ export default function NewPodcastPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 max-w-2xl">
+    <div className="container mx-auto px-4 py-8 max-w-2xl">
       <Link href="/user/podcasts" className="text-sm text-text-secondary hover:text-primary transition-colors mb-6 inline-block">
         ← Retour à mes podcasts
       </Link>

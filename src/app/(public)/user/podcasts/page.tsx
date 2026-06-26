@@ -28,14 +28,14 @@ export default function UserPodcastsPage() {
 
   if (!user) {
     return (
-      <div className="container mx-auto py-20 text-center text-text-muted">
+      <div className="container mx-auto px-4 py-20 text-center text-text-muted">
         <p>Connectez-vous pour gérer vos podcasts</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <div className="h-8 w-1 rounded-full bg-linear-to-b from-primary to-accent" />

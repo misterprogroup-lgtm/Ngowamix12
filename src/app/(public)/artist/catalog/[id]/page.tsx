@@ -119,20 +119,18 @@ export default function AlbumTracksPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 pb-24">
-        <div className="animate-pulse space-y-6">
-          <div className="h-10 w-32 bg-surface-hover rounded-sm" />
-          <div className="h-16 bg-surface-hover rounded-xl" />
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-14 bg-surface-hover rounded-sm" />
-          ))}
-        </div>
+      <div className="animate-pulse space-y-6">
+        <div className="h-10 w-32 bg-surface-hover rounded-sm" />
+        <div className="h-16 bg-surface-hover rounded-xl" />
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="h-14 bg-surface-hover rounded-sm" />
+        ))}
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div>
       <Link href="/artist/catalog" className="flex items-center gap-2 text-text-secondary hover:text-primary mb-6 transition-colors">
         <ArrowLeft className="h-4 w-4" />
         Retour au catalogue

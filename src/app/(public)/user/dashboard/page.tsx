@@ -15,7 +15,7 @@ export default async function UserDashboard() {
   }
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div className="container mx-auto px-4 py-8 pb-24">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

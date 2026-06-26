@@ -88,7 +88,7 @@ export default function ArtistRoyaltiesPage() {
   ];
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div>
       <div className="flex items-center gap-3 mb-8">
         <div className="h-8 w-1 rounded-full bg-linear-to-b from-success to-primary" />
         <h1 className="text-2xl font-bold">Royalties & Gains</h1>

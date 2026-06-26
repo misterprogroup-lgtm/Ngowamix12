@@ -2,17 +2,18 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { SafeImage } from '@/components/ui/safe-image';
 import Link from 'next/link';
-import { Play, Clock, ShoppingBag, Music, Crown, Heart, Download, BadgeCheck, Headphones } from 'lucide-react';
-import { TrackRow } from '@/components/catalog/track-row';
+import { Play, Clock, ShoppingBag, Music, Crown, Heart, Download, BadgeCheck, Headphones, Sparkles } from 'lucide-react';
 import { TrackList } from '@/components/catalog/track-list';
 import { AlbumActions } from '@/components/catalog/album-actions';
 import { ReviewsSection } from '@/components/catalog/reviews-section';
-import { Button } from '@/components/ui/button';
+import { AlbumCard } from '@/components/catalog/album-card';
+import { PremiumLockOverlay } from '@/components/premium/premium-lock-overlay';
 import { Badge } from '@/components/ui/badge';
 import { ShareButtons } from '@/components/catalog/share-buttons';
 import { formatDuration, formatPrice } from '@/lib/utils';
 import { getCurrentUser } from '@/lib/auth';
 import { PREMIUM_PRICE } from '@/lib/constants';
+import { db } from '@/lib/db';
 import type { Track } from '@/types';
 
 interface AlbumPageProps {
@@ -76,6 +77,35 @@ async function getAlbumTracks(albumId: string) {
   }
 }
 
+async function getSimilarAlbums(genre: string | null, albumId: string) {
+  if (!genre) return [];
+  try {
+    const albums = await db.album.findMany({
+      where: { genre, id: { not: albumId }, status: 'PUBLISHED' },
+      include: { artist: { select: { name: true, slug: true, isVerified: true } } },
+      orderBy: { playCount: 'desc' },
+      take: 6,
+    });
+    return albums;
+  } catch {
+    return [];
+  }
+}
+
+async function getArtistAlbums(artistId: string, albumId: string) {
+  try {
+    const albums = await db.album.findMany({
+      where: { artistId, id: { not: albumId }, status: 'PUBLISHED' },
+      include: { artist: { select: { name: true, slug: true, isVerified: true } } },
+      orderBy: { releaseDate: 'desc' },
+      take: 6,
+    });
+    return albums;
+  } catch {
+    return [];
+  }
+}
+
 async function checkPurchase(albumId: string) {
   try {
     const user = await getCurrentUser();
@@ -105,9 +135,13 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
   const tracks = await getAlbumTracks(id);
   const isPurchased = await checkPurchase(id);
   const totalDuration = tracks.reduce((sum: number, track: Track) => sum + track.duration, 0);
+  const [similarAlbums, artistAlbums] = await Promise.all([
+    getSimilarAlbums(album.genre, id),
+    getArtistAlbums(album.artist.id, id),
+  ]);
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div className="container mx-auto px-4 py-8 pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -130,7 +164,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
                 src={album.coverImage}
                 alt={album.title}
                 fill
-                className="object-cover"
+                className={album.isPremiumOnly ? 'opacity-60' : 'object-cover'}
                 priority
                 sizes="(max-width: 768px) 100vw, 400px"
                 fallback={<div className="flex h-full items-center justify-center bg-surface text-text-muted"><Music className="h-20 w-20" /></div>}
@@ -140,6 +174,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
                 <Music className="h-20 w-20" />
               </div>
             )}
+            <PremiumLockOverlay isPremiumOnly={album.isPremiumOnly} variant="cover" />
           </div>
         </div>
 
@@ -249,6 +284,57 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
       )}
 
       <ReviewsSection albumId={id} />
+
+      {artistAlbums.length > 0 && (
+        <section className="mt-12">
+          <div className="flex items-center gap-2 mb-5">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-semibold">
+              Plus de <span className="text-primary">{album.artist.name}</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {artistAlbums.map((a) => (
+              <AlbumCard
+                key={a.id}
+                id={a.id}
+                title={a.title}
+                slug={a.slug}
+                coverImage={a.coverImage}
+                artistName={a.artist.name}
+                artistSlug={a.artist.slug}
+                price={a.price}
+                isPremiumOnly={a.isPremiumOnly}
+                type={a.type}
+                isArtistVerified={a.artist.isVerified}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {similarAlbums.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-lg font-semibold mb-5">Albums similaires</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {similarAlbums.map((a) => (
+              <AlbumCard
+                key={a.id}
+                id={a.id}
+                title={a.title}
+                slug={a.slug}
+                coverImage={a.coverImage}
+                artistName={a.artist.name}
+                artistSlug={a.artist.slug}
+                price={a.price}
+                isPremiumOnly={a.isPremiumOnly}
+                type={a.type}
+                isArtistVerified={a.artist.isVerified}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

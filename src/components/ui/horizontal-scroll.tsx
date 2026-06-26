@@ -54,7 +54,7 @@ export function HorizontalScroll({ children, title, subtitle, icon, description,
             <div>
               <div className="flex items-center gap-2">
                 {icon && <span>{icon}</span>}
-                <div className="text-2xl font-bold">{title}</div>
+                  <div className="text-2xl font-bold">{title}</div>
               </div>
               {subtitle && <p className="text-sm text-text-muted mt-0.5">{subtitle}</p>}
             </div>
@@ -94,7 +94,7 @@ export function HorizontalScroll({ children, title, subtitle, icon, description,
       <div className="relative">
         <div
           ref={scrollRef}
-          className={`flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory snap-scroll-container ${withPadding ? '-mx-4 px-4' : ''}`}
+          className={`flex overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory snap-scroll-container ${withPadding ? '-mx-4 px-4' : ''}`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', touchAction: 'pan-x pinch-zoom', overscrollBehaviorX: 'contain' }}
         >
           {children}

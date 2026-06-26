@@ -49,7 +49,7 @@ export default async function PodcastDetailPage({ params }: PageProps) {
 
   if (!podcast) {
     return (
-      <div className="container mx-auto py-20 text-center text-text-muted">
+      <div className="container mx-auto px-4 py-20 text-center text-text-muted">
         <Music className="h-16 w-16 mx-auto mb-4 opacity-50" />
         <p className="text-lg">Podcast non trouvé</p>
         <Link href="/podcasts" className="text-primary hover:underline mt-4 inline-block">
@@ -60,7 +60,7 @@ export default async function PodcastDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto px-4 py-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

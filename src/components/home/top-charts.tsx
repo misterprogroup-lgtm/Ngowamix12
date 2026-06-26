@@ -6,8 +6,6 @@ import Link from 'next/link';
 import { Play, Pause, Music, Clock, TrendingUp, Headphones, ArrowRight } from 'lucide-react';
 import { usePlayerStore } from '@/store/player-store';
 import { formatDuration, formatNumber } from '@/lib/utils';
-import { Skeleton } from '@/components/ui/skeleton';
-import { HorizontalScroll } from '@/components/ui/horizontal-scroll';
 import type { Track } from '@/types';
 
 interface ChartTrack {
@@ -18,7 +16,6 @@ interface ChartTrack {
   audioFile: string;
   album: {
     title: string;
-    slug: string;
     coverImage: string | null;
     artist: { name: string; slug: string };
   };
@@ -27,35 +24,15 @@ interface ChartTrack {
 interface TopAlbum {
   id: string;
   title: string;
-  slug: string;
   coverImage: string | null;
   playCount: number;
-  artist: { name: string; slug: string };
+  artist: { name: string };
 }
 
-export function TopCharts() {
-  const [tracks, setTracks] = useState<ChartTrack[]>([]);
-  const [topAlbum, setTopAlbum] = useState<TopAlbum | null>(null);
-  const [loading, setLoading] = useState(true);
+export function TopCharts({ tracks: initialTracks, topAlbum: initialTopAlbum }: { tracks: ChartTrack[]; topAlbum: TopAlbum | null }) {
+  const [tracks, setTracks] = useState<ChartTrack[]>(initialTracks);
+  const [topAlbum, setTopAlbum] = useState<TopAlbum | null>(initialTopAlbum);
   const { play, togglePlay, currentTrack, isPlaying } = usePlayerStore();
-
-  useEffect(() => {
-    Promise.all([
-      fetch('/api/tracks?limit=5&sort=plays').then((r) => r.json()),
-      fetch('/api/albums?limit=1&sort=plays&period=month').then((r) => r.json()),
-    ])
-      .then(([tracksData, albumsData]) => {
-        setTracks(tracksData.tracks || []);
-        const albums = albumsData.albums || [];
-        if (albums.length > 0) {
-          setTopAlbum(albums[0]);
-        } else {
-          setTopAlbum(null);
-        }
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
 
   const handlePlay = (track: ChartTrack) => {
     const trackData: Track = {
@@ -113,228 +90,112 @@ export function TopCharts() {
     }
   };
 
+  if (tracks.length === 0) return null;
+
   return (
-    <section className="bg-surface/30">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-              <TrendingUp className="h-6 w-6 text-primary" />
-              Classements
-            </h2>
-            <p className="text-text-secondary mt-1">
-              Les morceaux les plus écoutés du moment
-            </p>
-          </div>
-          <Link href="/explore" className="text-sm font-medium text-primary hover:text-primary-hover hidden md:flex items-center gap-1 shrink-0">
-            Voir tout <ArrowRight className="h-4 w-4" />
-          </Link>
+    <section>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-[#ff9900]" />
+          <h2 className="text-lg md:text-xl font-black text-white tracking-tight">Top 10</h2>
         </div>
+        <Link
+          href="/explore?sort=plays"
+          className="flex items-center gap-1 text-sm font-medium text-[#888] hover:text-[#ff9900] transition-colors"
+        >
+          VOIR TOUT <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
 
-        {loading ? (
-          <>
-            <div className="block md:hidden space-y-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-4 px-4 py-3">
-                  <Skeleton className="w-6 h-4" />
-                  <Skeleton className="h-10 w-10 rounded-md" />
-                  <div className="flex-1 space-y-1.5">
-                    <Skeleton className="h-4 w-40" />
-                    <Skeleton className="h-3 w-24" />
-                  </div>
-                  <Skeleton className="h-3 w-20" />
-                </div>
-              ))}
-            </div>
-            <div className="hidden md:grid md:grid-cols-5 gap-6">
-              <div className="md:col-span-2 space-y-4">
-                <Skeleton className="aspect-square rounded-2xl w-full max-w-sm mx-auto" />
-                <div className="space-y-2 text-center">
-                  <Skeleton className="h-5 w-40 mx-auto" />
-                  <Skeleton className="h-4 w-28 mx-auto" />
-                </div>
-              </div>
-              <div className="md:col-span-3 space-y-2">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="flex items-center gap-4 px-4 py-3">
-                    <Skeleton className="w-6 h-4" />
-                    <Skeleton className="h-10 w-10 rounded-md" />
-                    <div className="flex-1 space-y-1.5">
-                      <Skeleton className="h-4 w-40" />
-                      <Skeleton className="h-3 w-24" />
-                    </div>
-                    <Skeleton className="h-3 w-20" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        ) : tracks.length === 0 ? null : (
-          <>
-            {/* Mobile: standalone scrollable list (no grid) */}
-            <div className="block md:hidden">
-              <HorizontalScroll withPadding={false}>
-                {tracks.map((track, index) => {
-                  const isCurrentTrack = currentTrack?.id === track.id;
-                  return (
-                    <button
-                      key={track.id}
-                      onClick={() => handlePlay(track)}
-                      className="flex items-center gap-4 px-4 py-3 hover:bg-surface-hover transition-colors w-[300px] text-left group shrink-0 snap-start bg-surface rounded-lg"
-                    >
-                      <span className="relative w-6 text-center shrink-0">
-                        {isCurrentTrack && isPlaying ? (
-                          <Pause className="h-4 w-4 text-primary mx-auto" fill="currentColor" />
-                        ) : isCurrentTrack ? (
-                          <Play className="h-4 w-4 text-primary mx-auto" fill="currentColor" />
-                        ) : (
-                          <span className="text-sm text-text-muted font-medium group-hover:hidden">
-                            {index + 1}
-                          </span>
-                        )}
-                        <span className="hidden group-hover:inline text-primary">
-                          <Play className="h-4 w-4 mx-auto" fill="currentColor" />
-                        </span>
-                      </span>
-                      <div className="relative h-10 w-10 rounded-md bg-surface-hover overflow-hidden shrink-0">
-                        {track.album.coverImage ? (
-                          <SafeImage src={track.album.coverImage} alt="" fill sizes="40px" className="object-cover" fallback={<div className="flex h-full items-center justify-center"><Music className="h-4 w-4 text-text-muted" /></div>} />
-                        ) : (
-                          <div className="flex h-full items-center justify-center">
-                            <Music className="h-4 w-4 text-text-muted" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className={`text-sm font-medium truncate ${isCurrentTrack ? 'text-primary' : ''}`}>
-                          {track.title}
-                        </p>
-                        <p className="text-xs text-text-secondary truncate">
-                          {track.album.artist.name}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-3 text-xs text-text-muted shrink-0">
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {formatDuration(track.duration)}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <TrendingUp className="h-3 w-3" />
-                          {formatNumber(track.playCount)}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </HorizontalScroll>
-            </div>
-
-            {/* Desktop: grid with featured album */}
-            <div className="hidden md:grid md:grid-cols-5 gap-8 items-start">
-              {topAlbum && (
-                <div className="md:col-span-2">
-                  <Link
-                    href={`/album/${topAlbum.id}`}
-                    className="group block"
-                  >
-                    <div className="relative rounded-2xl overflow-hidden bg-linear-to-br from-primary/20 to-accent/20 p-8 max-w-sm mx-auto ring-1 ring-primary/10">
-                      <div className="absolute inset-0 bg-linear-to-br from-primary/10 to-accent/5" />
-                      <div className="relative z-10 flex flex-col items-center">
-                        <div className="relative aspect-square w-full max-w-[280px] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-white/20 mb-5">
-                          {topAlbum.coverImage ? (
-                            <SafeImage
-                              src={topAlbum.coverImage}
-                              alt={topAlbum.title}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
-                              sizes="(max-width: 768px) 100vw, 220px"
-                              fallback={<div className="flex h-full items-center justify-center"><Music className="h-16 w-16 text-text-muted" /></div>}
-                            />
-                          ) : (
-                            <div className="flex h-full items-center justify-center">
-                              <Music className="h-16 w-16 text-text-muted" />
-                            </div>
-                          )}
-                        </div>
-                        <div className="absolute top-2 left-2 bg-primary text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 z-20">
-                          <TrendingUp className="h-3 w-3" />
-                          #1 du mois
-                        </div>
-                        <p className="font-bold text-text-primary text-lg text-center truncate max-w-full">
-                          {topAlbum.title}
-                        </p>
-                        <p className="text-sm text-text-secondary text-center truncate max-w-full">
-                          {topAlbum.artist.name}
-                        </p>
-                        <p className="text-xs text-text-muted flex items-center gap-1 mt-2">
-                          <Headphones className="h-3 w-3" />
-                          {formatNumber(topAlbum.playCount)} écoutes ce mois-ci
-                        </p>
+      <div className="grid md:grid-cols-5 gap-6 items-start">
+        {topAlbum && (
+          <div className="hidden md:block md:col-span-2">
+            <Link href={`/album/${topAlbum.id}`} className="group block">
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#ff990022] to-[#ff990008] p-6 ring-1 ring-[#ff990033]">
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="relative aspect-square w-full max-w-[240px] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-white/10 mb-5">
+                    <SafeImage
+                      src={topAlbum.coverImage || ''}
+                      alt={topAlbum.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="240px"
+                      fallback={<div className="flex h-full items-center justify-center"><Music className="h-16 w-16 text-[#555]" /></div>}
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                      <div className="h-14 w-14 rounded-full bg-[#ff9900] text-white shadow-lg shadow-[#ff9900]/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0">
+                        <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
                       </div>
                     </div>
-                  </Link>
-                </div>
-              )}
-
-              <div className={topAlbum ? 'md:col-span-3' : 'md:col-span-5'}>
-                <div className="rounded-xl border border-border overflow-hidden">
-                  {tracks.map((track, index) => {
-                    const isCurrentTrack = currentTrack?.id === track.id;
-                    return (
-                      <button
-                        key={track.id}
-                        onClick={() => handlePlay(track)}
-                        className="flex items-center gap-4 px-4 py-3 hover:bg-surface-hover transition-colors border-b border-border last:border-0 w-full text-left group"
-                      >
-                        <span className="relative w-6 text-center shrink-0">
-                          {isCurrentTrack && isPlaying ? (
-                            <Pause className="h-4 w-4 text-primary mx-auto" fill="currentColor" />
-                          ) : isCurrentTrack ? (
-                            <Play className="h-4 w-4 text-primary mx-auto" fill="currentColor" />
-                          ) : (
-                            <span className="text-sm text-text-muted font-medium group-hover:hidden">
-                              {index + 1}
-                            </span>
-                          )}
-                          <span className="hidden group-hover:inline text-primary">
-                            <Play className="h-4 w-4 mx-auto" fill="currentColor" />
-                          </span>
-                        </span>
-                        <div className="relative h-10 w-10 rounded-md bg-surface-hover overflow-hidden shrink-0">
-                          {track.album.coverImage ? (
-                            <SafeImage src={track.album.coverImage} alt="" fill sizes="40px" className="object-cover" fallback={<div className="flex h-full items-center justify-center"><Music className="h-4 w-4 text-text-muted" /></div>} />
-                          ) : (
-                            <div className="flex h-full items-center justify-center">
-                              <Music className="h-4 w-4 text-text-muted" />
-                            </div>
-                          )}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className={`text-sm font-medium truncate ${isCurrentTrack ? 'text-primary' : ''}`}>
-                            {track.title}
-                          </p>
-                          <p className="text-xs text-text-secondary truncate">
-                            {track.album.artist.name}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-3 text-xs text-text-muted shrink-0">
-                          <span className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {formatDuration(track.duration)}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <TrendingUp className="h-3 w-3" />
-                            {formatNumber(track.playCount)}
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
+                  </div>
+                  <div className="absolute top-3 left-3 bg-[#ff9900] text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 z-20 shadow-lg">
+                    <TrendingUp className="h-3 w-3" />
+                    #1 du mois
+                  </div>
+                  <p className="font-bold text-white text-lg text-center truncate max-w-full">{topAlbum.title}</p>
+                  <p className="text-sm text-[#888] text-center truncate max-w-full">{topAlbum.artist.name}</p>
+                  <p className="text-xs text-[#666] flex items-center gap-1 mt-2">
+                    <Headphones className="h-3 w-3" />
+                    {formatNumber(topAlbum.playCount)} écoutes
+                  </p>
                 </div>
               </div>
-            </div>
-          </>
+            </Link>
+          </div>
         )}
+
+        <div className={topAlbum ? 'md:col-span-3' : 'md:col-span-5'}>
+          <div className="rounded-xl border border-[#ffffff08] overflow-hidden bg-[#0b0b0b]">
+            {tracks.slice(0, 10).map((track, index) => {
+              const isCurrentTrack = currentTrack?.id === track.id;
+              return (
+                <button
+                  key={track.id}
+                  onClick={() => handlePlay(track)}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#ffffff08] transition-colors border-b border-[#ffffff08] last:border-0 w-full text-left group"
+                >
+                  <span className="relative w-6 text-center shrink-0">
+                    {isCurrentTrack && isPlaying ? (
+                      <Pause className="h-4 w-4 text-[#ff9900] mx-auto" fill="currentColor" />
+                    ) : isCurrentTrack ? (
+                      <Play className="h-4 w-4 text-[#ff9900] mx-auto" fill="currentColor" />
+                    ) : (
+                      <span className="text-sm text-[#555] font-bold group-hover:hidden">{index + 1}</span>
+                    )}
+                    <span className="hidden group-hover:inline text-[#ff9900]">
+                      <Play className="h-4 w-4 mx-auto" fill="currentColor" />
+                    </span>
+                  </span>
+                  <div className="relative h-10 w-10 rounded-md bg-[#141414] overflow-hidden shrink-0">
+                    {track.album.coverImage ? (
+                      <SafeImage src={track.album.coverImage} alt="" fill sizes="40px" className="object-cover" fallback={<div className="flex h-full items-center justify-center"><Music className="h-4 w-4 text-[#555]" /></div>} />
+                    ) : (
+                      <div className="flex h-full items-center justify-center">
+                        <Music className="h-4 w-4 text-[#555]" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className={`text-sm font-semibold truncate ${isCurrentTrack ? 'text-[#ff9900]' : 'text-white'}`}>
+                      {track.title}
+                    </p>
+                    <p className="text-xs text-[#777] truncate">{track.album.artist.name}</p>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-[#555] shrink-0">
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {formatDuration(track.duration)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <TrendingUp className="h-3 w-3" />
+                      {formatNumber(track.playCount)}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );

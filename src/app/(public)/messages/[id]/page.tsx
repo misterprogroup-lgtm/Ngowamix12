@@ -40,7 +40,7 @@ export default async function ConversationPage({ params }: Props) {
   });
 
   return (
-    <div className="container mx-auto py-8 pb-24 max-w-2xl flex flex-col h-[calc(100vh-12rem)]">
+    <div className="container mx-auto px-4 py-8 pb-24 max-w-2xl flex flex-col h-[calc(100vh-12rem)]">
       <ConversationView
         conversationId={id}
         otherUserName={other.displayName || 'Utilisateur'}

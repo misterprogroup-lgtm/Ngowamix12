@@ -96,7 +96,7 @@ export default function AdminPromoCodesPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 pb-24">
+      <div className="container mx-auto px-4 py-8 pb-24">
         <div className="animate-pulse space-y-4 max-w-2xl">
           <div className="h-10 w-48 bg-surface-hover rounded-sm" />
           <div className="h-12 bg-surface-hover rounded-sm" />
@@ -106,7 +106,7 @@ export default function AdminPromoCodesPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div className="container mx-auto px-4 py-8 pb-24">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Gift className="h-6 w-6 text-primary" />

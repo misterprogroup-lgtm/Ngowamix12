@@ -296,9 +296,9 @@ function PremiumContent() {
           </ul>
         </div>
 
-        <div className="rounded-xl border-2 border-primary p-6 relative">
+        <div className="rounded-xl border-2 border-primary p-6 relative bg-gradient-to-br from-primary/[0.03] to-transparent shadow-lg shadow-primary/10">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-            <Badge variant="premium">Recommandé</Badge>
+            <Badge variant="premium" className="shadow-lg shadow-primary/30">Recommandé</Badge>
           </div>
           <h2 className="text-xl font-bold mb-1">Premium</h2>
           {plan === 'annual' ? (

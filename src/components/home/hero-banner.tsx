@@ -1,58 +1,95 @@
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Upload } from 'lucide-react';
+import { Play, Upload, Music } from 'lucide-react';
+import { SafeImage } from '@/components/ui/safe-image';
 
-export function HeroBanner() {
+interface Track {
+  id: string;
+  title: string;
+  album: {
+    coverImage: string | null;
+    artist: { name: string };
+  };
+}
+
+export function HeroBanner({ tracks }: { tracks: Track[] }) {
+  const featured = tracks.slice(0, 4);
+
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#141414] via-[#0b0b0b] to-[#141414] border border-[#ffffff08]">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#ff9900] opacity-[0.03] rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-[#ff9900] opacity-[0.02] rounded-full blur-3xl" />
-      <div className="relative grid md:grid-cols-2 gap-8 items-center p-8 md:p-12 lg:p-16">
-        <div className="space-y-6">
+    <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1a1100] via-[#0b0b0b] to-[#0a0a0a] border border-[#ffffff08]">
+      <div className="absolute top-0 right-0 w-72 h-72 bg-[#ff9900] opacity-[0.04] rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-[#ff9900] opacity-[0.03] rounded-full blur-3xl" />
+      <div className="relative grid md:grid-cols-2 gap-8 items-center p-6 md:p-10 lg:p-12">
+        <div className="space-y-5">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-[#ff990033] bg-[#ff990011] px-3 py-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#ff9900] animate-pulse" />
+            <span className="text-[11px] font-bold text-[#ff9900] uppercase tracking-wider">
+              Streaming gratuit
+            </span>
+          </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-black leading-tight text-white">
-            La plateforme qui{' '}
-            <span className="text-[#ff9900]">libère</span>{' '}
-            les artistes
+            La musique africaine{' '}
+            <span className="text-[#ff9900]">à portée</span>{' '}
+            de clic
           </h1>
-          <p className="text-base md:text-lg text-[#888] leading-relaxed max-w-md">
-            Une plateforme qui aide les artistes à atteindre et engager leurs fans partout dans le monde.
+          <p className="text-sm md:text-base text-[#888] leading-relaxed max-w-md">
+            Écoutez, découvrez et soutenez vos artistes africains préférés.
           </p>
-          <Button
-            size="lg"
-            className="bg-[#ff9900] hover:bg-[#e68a00] text-white rounded-full font-bold px-8 h-14 text-base shadow-lg shadow-[#ff9900]/25 hover:shadow-[#ff9900]/40 transition-all duration-300"
-          >
-            <Upload className="h-5 w-5" />
-            Uploadez votre musique GRATUITEMENT
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link href="/explore">
+              <Button
+                size="lg"
+                className="bg-[#ff9900] hover:bg-[#e68a00] text-white rounded-full font-bold px-7 h-[52px] text-sm shadow-lg shadow-[#ff9900]/25 hover:shadow-[#ff9900]/40 transition-all duration-300"
+              >
+                <Play className="h-4 w-4" />
+                Commencer
+              </Button>
+            </Link>
+            <Link href="/artist/upload">
+              <Button
+                variant="ghost"
+                size="lg"
+                className="rounded-full border border-[#ffffff15] text-[#ccc] hover:text-white hover:bg-[#ffffff0a] h-[52px] text-sm"
+              >
+                <Upload className="h-4 w-4" />
+                Uploadez votre musique
+              </Button>
+            </Link>
+          </div>
         </div>
+
         <div className="hidden md:flex justify-center items-center">
-          <div className="relative">
-            <div className="w-64 h-[26rem] rounded-3xl border-4 border-[#222] bg-[#0b0b0b] overflow-hidden shadow-2xl">
-              <div className="absolute top-0 left-0 right-0 h-6 bg-[#141414] flex items-center justify-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                <div className="w-2 h-2 rounded-full bg-green-500" />
-              </div>
-              <div className="mt-6 p-4 space-y-4">
-                <div className="h-4 w-3/4 rounded bg-[#ff990022]" />
-                <div className="h-3 w-1/2 rounded bg-[#ffffff08]" />
-                <div className="grid grid-cols-2 gap-2 mt-4">
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className="aspect-square rounded-lg bg-[#ffffff08] overflow-hidden">
-                      <div className="w-full h-full bg-gradient-to-br from-[#ff990022] to-[#ff990008] flex items-center justify-center">
-                        <div className="w-8 h-8 rounded-full bg-[#ff990033] flex items-center justify-center">
-                          <div className="w-3 h-3 ml-0.5 border-l-2 border-b-2 border-transparent border-l-white border-b-white transform -rotate-45" />
-                        </div>
-                      </div>
+          <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+            {featured.map((track) => (
+              <Link
+                key={track.id}
+                href={`/track/${track.id}`}
+                className="group relative aspect-square rounded-xl overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-300 hover:border-[#ff990033] hover:shadow-lg hover:shadow-black/30"
+              >
+                <SafeImage
+                  src={track.album?.coverImage || ''}
+                  alt={track.title}
+                  fill
+                  sizes="160px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  fallback={
+                    <div className="flex h-full items-center justify-center text-[#555]">
+                      <Music className="h-8 w-8" />
                     </div>
-                  ))}
+                  }
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <div className="h-10 w-10 rounded-full bg-[#ff9900] text-white shadow-lg shadow-[#ff9900]/30 flex items-center justify-center translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
+                  </div>
                 </div>
-                <div className="h-2 w-full rounded-full bg-[#ffffff08] mt-2">
-                  <div className="h-2 w-2/3 rounded-full bg-[#ff990044]" />
+                <div className="absolute bottom-2 left-2 right-2 z-10">
+                  <p className="text-xs font-bold text-white truncate drop-shadow-lg">{track.title}</p>
+                  <p className="text-[10px] text-[#bbb] truncate drop-shadow-lg">{track.album?.artist?.name}</p>
                 </div>
-              </div>
-            </div>
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-[#ff9900] opacity-10 rounded-full blur-2xl" />
-            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#ff9900] opacity-[0.07] rounded-full blur-2xl" />
+              </Link>
+            ))}
           </div>
         </div>
       </div>

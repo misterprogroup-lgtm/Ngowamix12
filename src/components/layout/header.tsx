@@ -4,13 +4,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { SafeImage } from '@/components/ui/safe-image';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, User, Shield, LayoutDashboard, Crown, LogOut, Settings, ChevronDown, Ticket, Menu, X, Home, Compass, Headphones, Podcast, ChevronRight, Megaphone, ListMusic, Upload } from 'lucide-react';
+import {
+  Search, User, LayoutDashboard, Crown, LogOut, Settings,
+  ChevronDown, Ticket, Menu, X, Home, Compass, Headphones,
+  Podcast, ChevronRight, ListMusic, Upload, Mic2, Disc3,
+  Music, ShieldCheck, TrendingUp, DollarSign, Users, Gift,
+  Radio, Palette, QrCode, MessageSquare,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/store/auth-store';
 import { ROUTES, APP_NAME } from '@/lib/constants';
-import { ThemeToggle } from '@/components/theme/theme-toggle';
-import { NotificationBell } from '@/components/layout/notification-bell';
+
 import { cn } from '@/lib/utils';
 import { useState, useRef, useEffect } from 'react';
 
@@ -21,8 +25,7 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [mobileAdminOpen, setMobileAdminOpen] = useState(false);
-  const [mobileArtistOpen, setMobileArtistOpen] = useState(false);
+  const [mobileSection, setMobileSection] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -47,107 +50,153 @@ export function Header() {
     }
   };
 
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
+  };
+
   const adminLinks = [
-    { href: ROUTES.ADMIN_DASHBOARD, label: 'Dashboard' },
-    { href: ROUTES.ADMIN_USERS, label: 'Utilisateurs' },
-    { href: ROUTES.ADMIN_CATALOG, label: 'Catalogue' },
-    { href: '/admin/verification', label: 'Vérifications' },
-    { href: ROUTES.ADMIN_SCANNER, label: 'Scanner' },
-    { href: ROUTES.ADMIN_TRANSACTIONS, label: 'Transactions' },
-    { href: ROUTES.ADMIN_SETTINGS, label: 'Paramètres' },
-    { href: ROUTES.ADMIN_PROMO_CODES, label: 'Codes Promo' },
-    { href: ROUTES.ADMIN_ADS, label: 'Publicités' },
-    { href: ROUTES.ADMIN_ALBUM_COVERS, label: 'Pochettes album' },
+    { href: ROUTES.ADMIN_DASHBOARD, label: 'Dashboard', icon: LayoutDashboard },
+    { href: ROUTES.ADMIN_USERS, label: 'Utilisateurs', icon: Users },
+    { href: ROUTES.ADMIN_CATALOG, label: 'Catalogue', icon: Music },
+    { href: '/admin/verification', label: 'Vérifications', icon: ShieldCheck },
+    { href: ROUTES.ADMIN_SCANNER, label: 'Scanner', icon: QrCode },
+    { href: ROUTES.ADMIN_TRANSACTIONS, label: 'Transactions', icon: DollarSign },
+    { href: ROUTES.ADMIN_SETTINGS, label: 'Paramètres', icon: Settings },
+    { href: ROUTES.ADMIN_PROMO_CODES, label: 'Codes Promo', icon: Gift },
+    { href: ROUTES.ADMIN_ADS, label: 'Publicités', icon: Radio },
+    { href: ROUTES.ADMIN_ALBUM_COVERS, label: 'Pochettes album', icon: Palette },
   ];
 
   const artistLinks = [
-    { href: ROUTES.ARTIST_DASHBOARD, label: 'Dashboard' },
-    { href: ROUTES.ARTIST_CATALOG, label: 'Catalogue' },
-    { href: ROUTES.ARTIST_PROFILE, label: 'Profil' },
-    { href: ROUTES.ARTIST_LIVESTREAM, label: 'Live' },
-    { href: ROUTES.ARTIST_ROYALTIES, label: 'Royalties' },
-    { href: ROUTES.ARTIST_SERVICES, label: 'Services' },
-    { href: ROUTES.ARTIST_REFERRAL, label: 'Parrainage' },
+    { href: ROUTES.ARTIST_DASHBOARD, label: 'Dashboard', icon: LayoutDashboard },
+    { href: ROUTES.ARTIST_CATALOG, label: 'Catalogue', icon: Disc3 },
+    { href: ROUTES.ARTIST_PROFILE, label: 'Profil', icon: User },
+    { href: ROUTES.ARTIST_LIVESTREAM, label: 'Live', icon: Radio },
+    { href: ROUTES.ARTIST_ROYALTIES, label: 'Royalties', icon: TrendingUp },
+    { href: ROUTES.ARTIST_SERVICES, label: 'Services', icon: Mic2 },
+    { href: ROUTES.ARTIST_REFERRAL, label: 'Parrainage', icon: Gift },
+  ];
+
+  const mainNav = [
+    { href: ROUTES.HOME, label: 'Accueil', icon: Home },
+    { href: ROUTES.EXPLORE, label: 'Explorer', icon: Compass },
+    { href: ROUTES.PLAYLISTS, label: 'Playlists', icon: ListMusic },
+    { href: ROUTES.FEED, label: "Fil d'actu", icon: MessageSquare },
+    { href: ROUTES.USER_LIBRARY, label: 'Ma Bibliothèque', icon: Headphones },
+  ];
+
+  const discoverNav = [
+    { href: ROUTES.PREMIUM, label: 'Premium', icon: Crown },
+    { href: ROUTES.PODCASTS, label: 'Podcasts', icon: Podcast },
+    { href: ROUTES.LIVESTREAMS, label: 'En direct', icon: Radio, badge: true },
+    { href: ROUTES.CHAT, label: 'Chat', icon: MessageSquare },
+    { href: ROUTES.TICKETS, label: 'Tickets', icon: Ticket },
   ];
 
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-[#0b0b0b]/90 backdrop-blur-md border-b border-[#ffffff08]">
-        <div className="flex items-center h-full px-4 md:px-6 gap-4">
-          <Link href={ROUTES.HOME} className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center h-full px-4 md:px-6 gap-3">
+          <Link href={ROUTES.HOME} className="flex items-center gap-2.5 shrink-0 mr-1">
+            <span className="text-base font-black text-white tracking-tight">
+              {APP_NAME}
+            </span>
             <Image src="/logo-icon.png" alt={APP_NAME} width={32} height={32} className="h-8 w-8" />
           </Link>
 
-          <Button variant="secondary" size="sm" className="hidden sm:inline-flex gap-1.5 rounded-full border-[#ff990033] text-[#ff9900] text-xs font-semibold px-3 py-1.5 h-auto">
-            <Crown className="h-3.5 w-3.5" />
-            Get Plus +
-          </Button>
+          <Link
+            href={ROUTES.PREMIUM}
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-[#ff990033] bg-[#ff990011] text-[#ff9900] text-[11px] font-bold px-3 py-1.5 h-auto hover:bg-[#ff990022] transition-colors"
+          >
+            <Crown className="h-3 w-3" />
+            Premium
+          </Link>
 
-          <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto">
+          <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto max-sm:hidden">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#666]" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555]" />
               <input
                 type="search"
                 placeholder="Rechercher artistes, titres, albums..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-11 pl-11 pr-4 rounded-full border border-[#ffffff15] bg-[#141414] text-sm text-white placeholder:text-[#666] focus:outline-none focus:border-[#ff9900] focus:ring-1 focus:ring-[#ff9900] transition-colors"
+                className="w-full h-10 pl-10 pr-4 rounded-full border border-[#ffffff12] bg-[#141414] text-sm text-white placeholder:text-[#555] focus:outline-none focus:border-[#ff9900] focus:ring-1 focus:ring-[#ff9900] transition-colors"
               />
             </div>
           </form>
 
-          <div className="hidden md:flex items-center gap-2 shrink-0">
+          <div className="hidden md:flex items-center gap-1.5 shrink-0">
             {user ? (
               <>
-                <NotificationBell />
-                <ThemeToggle />
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#ffffff0a] transition-colors"
+                    className="flex items-center gap-2 pl-2 pr-1.5 py-1.5 rounded-lg hover:bg-[#ffffff0a] transition-colors"
                   >
                     {user.isPremium && (
-                      <Crown className="h-4 w-4 text-[#ff9900]" />
+                      <Crown className="h-3.5 w-3.5 text-[#ff9900]" />
                     )}
                     {(() => {
                       const avatar = user.artist?.avatar || user.avatar;
                       return avatar ? (
-                        <SafeImage src={avatar} alt="" width={28} height={28} unoptimized className="h-7 w-7 rounded-full object-cover ring-2 ring-[#ffffff15]" fallback={<div className="h-7 w-7 rounded-full bg-[#1f1f1f] flex items-center justify-center"><User className="h-4 w-4 text-[#666]" /></div>} />
+                        <SafeImage src={avatar} alt="" width={26} height={26} unoptimized className="h-[26px] w-[26px] rounded-full object-cover ring-2 ring-[#ffffff15]" fallback={<div className="h-[26px] w-[26px] rounded-full bg-[#1f1f1f] flex items-center justify-center"><User className="h-3.5 w-3.5 text-[#666]" /></div>} />
                       ) : (
-                        <div className="h-7 w-7 rounded-full bg-[#1f1f1f] flex items-center justify-center">
-                          <User className="h-4 w-4 text-[#666]" />
+                        <div className="h-[26px] w-[26px] rounded-full bg-[#1f1f1f] flex items-center justify-center">
+                          <User className="h-3.5 w-3.5 text-[#666]" />
                         </div>
                       );
                     })()}
-                    <ChevronDown className={cn('h-4 w-4 text-[#666] transition-transform', showDropdown && 'rotate-180')} />
+                    <span className="max-w-[100px] truncate text-sm font-medium text-white hidden lg:block">
+                      {user.displayName || user.email?.split('@')[0]}
+                    </span>
+                    <ChevronDown className={cn('h-3.5 w-3.5 text-[#555] transition-transform shrink-0', showDropdown && 'rotate-180')} />
                   </button>
 
                   {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-56 rounded-xl border border-[#ffffff15] bg-[#141414] shadow-lg py-1 z-50">
+                    <div className="absolute right-0 mt-2 w-64 rounded-xl border border-[#ffffff15] bg-[#141414] shadow-xl py-2 z-50">
                       <div className="px-4 py-3 border-b border-[#ffffff0a]">
-                        <p className="text-sm font-medium text-white">{user.displayName || user.email}</p>
-                        <p className="text-xs text-[#999] mt-0.5">{user.email}</p>
+                        <div className="flex items-center gap-3">
+                          {(() => {
+                            const avatar = user.artist?.avatar || user.avatar;
+                            return avatar ? (
+                              <SafeImage src={avatar} alt="" width={40} height={40} unoptimized className="h-10 w-10 rounded-full object-cover ring-2 ring-[#ffffff15]" fallback={<div className="h-10 w-10 rounded-full bg-[#1f1f1f]" />} />
+                            ) : (
+                              <div className="h-10 w-10 rounded-full bg-[#1f1f1f] flex items-center justify-center">
+                                <User className="h-5 w-5 text-[#666]" />
+                              </div>
+                            );
+                          })()}
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-white truncate flex items-center gap-1.5">
+                              {user.displayName || user.email?.split('@')[0]}
+                              {user.isPremium && <Crown className="h-3.5 w-3.5 text-[#ff9900] shrink-0" />}
+                            </p>
+                            <p className="text-xs text-[#777] truncate">{user.email}</p>
+                          </div>
+                        </div>
                       </div>
 
                       <Link
                         href={ROUTES.USER_PROFILE}
                         onClick={() => setShowDropdown(false)}
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
                       >
                         <Settings className="h-4 w-4" />
                         Mon profil
                       </Link>
 
                       {user.role === 'ADMIN' && (
-                        <div className="border-b border-[#ffffff0a] pb-1 mb-1">
-                          <p className="px-4 py-1 text-xs font-semibold text-[#666] uppercase tracking-wider">Admin</p>
+                        <div className="border-t border-[#ffffff0a] pt-1 mt-1">
+                          <p className="px-4 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Administration</p>
                           {adminLinks.map((link) => (
                             <Link
                               key={link.href}
                               href={link.href}
                               onClick={() => setShowDropdown(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                              className="flex items-center gap-3 px-4 py-2 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
                             >
+                              <link.icon className="h-4 w-4" />
                               {link.label}
                             </Link>
                           ))}
@@ -155,15 +204,16 @@ export function Header() {
                       )}
 
                       {(user.role === 'ARTIST' || user.role === 'LABEL') && (
-                        <div className="border-b border-[#ffffff0a] pb-1 mb-1">
-                          <p className="px-4 py-1 text-xs font-semibold text-[#666] uppercase tracking-wider">Artiste</p>
+                        <div className="border-t border-[#ffffff0a] pt-1 mt-1">
+                          <p className="px-4 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Espace Artiste</p>
                           {artistLinks.map((link) => (
                             <Link
                               key={link.href}
                               href={link.href}
                               onClick={() => setShowDropdown(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                              className="flex items-center gap-3 px-4 py-2 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
                             >
+                              <link.icon className="h-4 w-4" />
                               {link.label}
                             </Link>
                           ))}
@@ -171,57 +221,59 @@ export function Header() {
                       )}
 
                       {user.role === 'LISTENER' && (
-                        <Link
-                          href={ROUTES.USER_DASHBOARD}
-                          onClick={() => setShowDropdown(false)}
-                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
-                        >
-                          <LayoutDashboard className="h-4 w-4" />
-                          Mon tableau de bord
-                        </Link>
+                        <div className="border-t border-[#ffffff0a] mt-1">
+                          <Link
+                            href={ROUTES.USER_DASHBOARD}
+                            onClick={() => setShowDropdown(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                          >
+                            <LayoutDashboard className="h-4 w-4" />
+                            Mon tableau de bord
+                          </Link>
+                        </div>
                       )}
 
-                      <div className="border-t border-[#ffffff0a] my-1" />
-
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-400 hover:bg-[#ffffff0a] transition-colors"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Se déconnecter
-                      </button>
+                      <div className="border-t border-[#ffffff0a] mt-1 pt-1">
+                        <button
+                          onClick={handleLogout}
+                          className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-400 hover:bg-[#ffffff0a] transition-colors"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Se déconnecter
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
+
+                <Link href="/artist/upload">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-1.5 text-[#ff9900] hover:text-white hover:bg-[#ff9900] rounded-full border border-[#ff990033] hover:border-[#ff9900] transition-all text-xs font-bold px-3.5">
+                    <Upload className="h-3.5 w-3.5" />
+                    UPLOADER
+                  </Button>
+                </Link>
               </>
             ) : (
               <>
                 <Link href={ROUTES.LOGIN}>
-                  <Button variant="ghost" size="sm" className="text-white hover:text-[#ff9900]">
+                  <Button variant="ghost" size="sm" className="text-[#ccc] hover:text-white text-sm">
                     Connexion
                   </Button>
                 </Link>
                 <Link href={ROUTES.REGISTER}>
-                  <Button variant="primary" size="sm" className="rounded-full">
+                  <Button variant="primary" size="sm" className="rounded-full text-sm px-5">
                     Inscription
                   </Button>
                 </Link>
               </>
             )}
-
-            <Link href="/upload">
-              <Button variant="ghost" size="sm" className="flex items-center gap-2 text-[#ff9900] hover:text-white hover:bg-[#ff9900] rounded-full border border-[#ff990033] hover:border-[#ff9900] transition-all">
-                <Upload className="h-4 w-4" />
-                UPLOADER
-              </Button>
-            </Link>
           </div>
         </div>
       </header>
 
       <button
         onClick={() => setShowMobileMenu(true)}
-        className="md:hidden fixed top-3 right-3 z-55 p-2.5 text-[#999] hover:text-white transition-colors"
+        className="md:hidden fixed top-3 right-3 z-55 p-2 text-[#999] hover:text-white transition-colors"
         aria-label="Menu"
       >
         <Menu className="h-5 w-5" />
@@ -229,10 +281,13 @@ export function Header() {
 
       {showMobileMenu && (
         <div className="md:hidden fixed inset-0 z-60">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowMobileMenu(false)} />
-          <div className="absolute right-0 top-0 bottom-0 w-72 bg-[#0b0b0b] border-l border-[#ffffff0a] shadow-xl flex flex-col animate-slideRight">
-            <div className="flex items-center justify-between px-4 h-16 border-b border-[#ffffff0a]">
-              <span className="font-bold text-white">Menu</span>
+          <div className="absolute inset-0 bg-black/60" onClick={() => setShowMobileMenu(false)} />
+          <div className="absolute right-0 top-0 bottom-0 w-80 bg-[#0b0b0b] border-l border-[#ffffff0a] shadow-2xl flex flex-col animate-slideRight">
+            <div className="flex items-center justify-between px-5 h-16 border-b border-[#ffffff0a]">
+              <div className="flex items-center gap-2.5">
+                <Image src="/logo-icon.png" alt={APP_NAME} width={28} height={28} className="h-7 w-7" />
+                <span className="font-bold text-white text-base">{APP_NAME}</span>
+              </div>
               <button
                 onClick={() => setShowMobileMenu(false)}
                 className="p-2 text-[#999] hover:text-white transition-colors"
@@ -241,224 +296,174 @@ export function Header() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto py-2">
-              <div className="px-3 mb-2 flex items-center gap-2">
-                {user && <NotificationBell />}
-                <ThemeToggle />
-              </div>
+            <div className="flex-1 overflow-y-auto py-4 px-3">
+              {user && (
+                <div className="px-3 mb-4" />
+              )}
 
-              <div className="px-3 space-y-0.5">
-                <Link
-                  href={ROUTES.HOME}
-                  onClick={() => setShowMobileMenu(false)}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                    pathname === '/' ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
-                  )}
-                >
-                  <Home className="h-4 w-4" />
-                  Accueil
-                </Link>
-                <Link
-                  href={ROUTES.EXPLORE}
-                  onClick={() => setShowMobileMenu(false)}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                    pathname.startsWith('/explore') ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
-                  )}
-                >
-                  <Compass className="h-4 w-4" />
-                  Explorer
-                </Link>
-                <Link
-                  href={ROUTES.MY_PLAYLIST}
-                  onClick={() => setShowMobileMenu(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
-                >
-                  <Headphones className="h-4 w-4" />
-                  Ma playlist
-                </Link>
-                <Link
-                  href={ROUTES.PLAYLISTS}
-                  onClick={() => setShowMobileMenu(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
-                >
-                  <ListMusic className="h-4 w-4" />
-                  Playlists
-                </Link>
-                <Link
-                  href={ROUTES.TICKETS}
-                  onClick={() => setShowMobileMenu(false)}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                    pathname.startsWith('/tickets') ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
-                  )}
-                >
-                  <Ticket className="h-4 w-4" />
-                  Tickets
-                </Link>
-                <Link
-                  href={ROUTES.PODCASTS}
-                  onClick={() => setShowMobileMenu(false)}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                    pathname.startsWith('/podcasts') ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
-                  )}
-                >
-                  <Podcast className="h-4 w-4" />
-                  Podcasts
-                </Link>
-                <Link
-                  href={ROUTES.LIVESTREAMS}
-                  onClick={() => setShowMobileMenu(false)}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                    pathname.startsWith('/livestream') ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
-                  )}
-                >
-                  <span className="relative flex h-4 w-4 items-center justify-center">
-                    <span className="absolute h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                  </span>
-                  En direct
-                </Link>
-                <Link
-                  href={ROUTES.CHAT}
-                  onClick={() => setShowMobileMenu(false)}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                    pathname.startsWith('/chat') ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
-                  )}
-                >
-                  <Headphones className="h-4 w-4" />
-                  Chat
-                </Link>
-                <Link
-                  href={ROUTES.PREMIUM}
-                  onClick={() => setShowMobileMenu(false)}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                    pathname.startsWith('/premium') ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
-                  )}
-                >
-                  <Crown className="h-4 w-4" />
-                  Premium
-                </Link>
+              <div className="space-y-0.5">
+                <p className="px-3 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Navigation</p>
+                {mainNav.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setShowMobileMenu(false)}
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                      isActive(link.href) ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                    )}
+                  >
+                    <link.icon className={cn('h-4 w-4', isActive(link.href) && 'text-[#ff9900]')} />
+                    {link.label}
+                  </Link>
+                ))}
               </div>
 
               <div className="border-t border-[#ffffff0a] my-3 mx-3" />
 
-              {user ? (
-                <div className="px-3 space-y-0.5">
-                  <div className="px-3 py-2">
-                    <p className="text-sm font-medium text-white truncate">{user.displayName || user.email}</p>
-                    <p className="text-xs text-[#999] truncate">{user.email}</p>
-                  </div>
-
+              <div className="space-y-0.5">
+                <p className="px-3 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Découvrir</p>
+                {discoverNav.map((link) => (
                   <Link
-                    href={ROUTES.USER_PROFILE}
+                    key={link.href}
+                    href={link.href}
                     onClick={() => setShowMobileMenu(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                      isActive(link.href) ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                    )}
                   >
-                    <Settings className="h-4 w-4" />
-                    Mon profil
+                    {link.badge ? (
+                      <span className="relative flex h-4 w-4 items-center justify-center">
+                        <link.icon className="h-4 w-4" />
+                        <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                      </span>
+                    ) : (
+                      <link.icon className="h-4 w-4" />
+                    )}
+                    {link.label}
                   </Link>
+                ))}
+              </div>
 
-                  {user.role === 'ADMIN' && (
-                    <div className="space-y-0.5">
-                      <button
-                        onClick={() => setMobileAdminOpen(!mobileAdminOpen)}
-                        className="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-semibold text-[#666] uppercase tracking-wider hover:text-white hover:bg-[#ffffff0a] transition-colors"
-                      >
-                        <span>Menu du Dashboard</span>
-                        {mobileAdminOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
-                      </button>
-                      {mobileAdminOpen && adminLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          onClick={() => setShowMobileMenu(false)}
-                          className={cn(
-                            'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ml-2',
-                            pathname === link.href
-                              ? 'text-[#ff9900] bg-[#ff990011]'
-                              : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
-                          )}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+              {user && (
+                <>
+                  <div className="border-t border-[#ffffff0a] my-3 mx-3" />
 
-                  {(user.role === 'ARTIST' || user.role === 'LABEL') && (
-                    <div className="space-y-0.5">
-                      <button
-                        onClick={() => setMobileArtistOpen(!mobileArtistOpen)}
-                        className="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-semibold text-[#666] uppercase tracking-wider hover:text-white hover:bg-[#ffffff0a] transition-colors"
-                      >
-                        <span>Menu du Dashboard</span>
-                        {mobileArtistOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
-                      </button>
-                      {mobileArtistOpen && artistLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          onClick={() => setShowMobileMenu(false)}
-                          className={cn(
-                            'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ml-2',
-                            pathname === link.href
-                              ? 'text-[#ff9900] bg-[#ff990011]'
-                              : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
-                          )}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-
-                  {user.role === 'LISTENER' && (
+                  <div className="space-y-0.5">
+                    <p className="px-3 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Compte</p>
                     <Link
-                      href={ROUTES.USER_DASHBOARD}
+                      href={ROUTES.USER_PROFILE}
                       onClick={() => setShowMobileMenu(false)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
                     >
-                      <LayoutDashboard className="h-4 w-4" />
-                      Mon tableau de bord
+                      <Settings className="h-4 w-4" />
+                      Mon profil
                     </Link>
-                  )}
 
-                  <div className="border-t border-[#ffffff0a] my-2" />
+                    {user.role === 'ADMIN' && (
+                      <>
+                        <button
+                          onClick={() => setMobileSection(mobileSection === 'admin' ? null : 'admin')}
+                          className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-[#666] uppercase tracking-wider hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                        >
+                          <span>Administration</span>
+                          <ChevronRight className={cn('h-3.5 w-3.5 transition-transform', mobileSection === 'admin' && 'rotate-90')} />
+                        </button>
+                        {mobileSection === 'admin' && adminLinks.map((link) => (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={() => setShowMobileMenu(false)}
+                            className={cn(
+                              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ml-4',
+                              pathname === link.href ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                            )}
+                          >
+                            <link.icon className="h-4 w-4" />
+                            {link.label}
+                          </Link>
+                        ))}
+                      </>
+                    )}
 
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      handleLogout();
-                    }}
-                    className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-[#ffffff0a] transition-colors"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Se déconnecter
-                  </button>
-                </div>
-              ) : (
-                <div className="px-3 space-y-2">
+                    {(user.role === 'ARTIST' || user.role === 'LABEL') && (
+                      <>
+                        <button
+                          onClick={() => setMobileSection(mobileSection === 'artist' ? null : 'artist')}
+                          className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-[#666] uppercase tracking-wider hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                        >
+                          <span>Espace Artiste</span>
+                          <ChevronRight className={cn('h-3.5 w-3.5 transition-transform', mobileSection === 'artist' && 'rotate-90')} />
+                        </button>
+                        {mobileSection === 'artist' && artistLinks.map((link) => (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={() => setShowMobileMenu(false)}
+                            className={cn(
+                              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ml-4',
+                              pathname === link.href ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                            )}
+                          >
+                            <link.icon className="h-4 w-4" />
+                            {link.label}
+                          </Link>
+                        ))}
+                      </>
+                    )}
+
+                    {user.role === 'LISTENER' && (
+                      <Link
+                        href={ROUTES.USER_DASHBOARD}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                      >
+                        <LayoutDashboard className="h-4 w-4" />
+                        Mon tableau de bord
+                      </Link>
+                    )}
+
+                    <div className="border-t border-[#ffffff0a] my-2 mx-3" />
+
+                    <button
+                      onClick={() => { setShowMobileMenu(false); handleLogout(); }}
+                      className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-[#ffffff0a] transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Se déconnecter
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {!user && (
+                <div className="border-t border-[#ffffff0a] my-3 mx-3 pt-3 space-y-2">
                   <Link
                     href={ROUTES.LOGIN}
                     onClick={() => setShowMobileMenu(false)}
-                    className="flex items-center justify-center w-full px-4 py-2.5 rounded-lg bg-[#ff9900] text-white text-sm font-medium hover:bg-[#e68a00] transition-colors"
+                    className="flex items-center justify-center w-full px-4 py-3 rounded-lg bg-[#ff9900] text-white text-sm font-bold hover:bg-[#e68a00] transition-colors"
                   >
                     Connexion
                   </Link>
                   <Link
                     href={ROUTES.REGISTER}
                     onClick={() => setShowMobileMenu(false)}
-                    className="flex items-center justify-center w-full px-4 py-2.5 rounded-lg border border-[#ffffff15] text-sm font-medium text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                    className="flex items-center justify-center w-full px-4 py-3 rounded-lg border border-[#ffffff15] text-sm font-medium text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
                   >
                     Inscription
                   </Link>
                 </div>
               )}
+
+              <Link
+                href="/artist/upload"
+                onClick={() => setShowMobileMenu(false)}
+                className="flex items-center justify-center gap-2 mx-3 mt-3 py-3 rounded-xl bg-[#ff9900] text-white text-sm font-bold hover:bg-[#e68a00] transition-all shadow-lg shadow-[#ff9900]/20"
+              >
+                <Upload className="h-4 w-4" />
+                UPLOADER VOTRE MUSIQUE
+              </Link>
             </div>
           </div>
         </div>

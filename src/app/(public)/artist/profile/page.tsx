@@ -144,20 +144,18 @@ export default function ArtistProfilePage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 pb-24">
-        <div className="animate-pulse space-y-6">
-          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
-          <div className="space-y-4">
-            <div className="h-12 bg-surface-hover rounded-sm" />
-            <div className="h-32 bg-surface-hover rounded-sm" />
-          </div>
+      <div className="animate-pulse space-y-6">
+        <div className="h-10 w-48 bg-surface-hover rounded-sm" />
+        <div className="space-y-4">
+          <div className="h-12 bg-surface-hover rounded-sm" />
+          <div className="h-32 bg-surface-hover rounded-sm" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div>
       <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
         <User className="h-6 w-6 text-primary" />
         Profil artiste

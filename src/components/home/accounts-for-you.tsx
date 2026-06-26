@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { SafeImage } from '@/components/ui/safe-image';
-import { BadgeCheck, User } from 'lucide-react';
-import { SectionHeader } from '@/components/ui/section-header';
+import { BadgeCheck, User, Heart, UserPlus } from 'lucide-react';
+import { HorizontalScroll } from '@/components/ui/horizontal-scroll';
+import { FollowButton } from '@/components/catalog/follow-button';
 
 interface Account {
   id: string;
@@ -24,45 +26,46 @@ export function AccountsForYou({ accounts }: { accounts: Account[] }) {
   if (!accounts.length) return null;
 
   return (
-    <section>
-      <SectionHeader title="COMPTES POUR VOUS" />
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
-        {accounts.map((account) => (
-          <div
-            key={account.id}
-            className="flex flex-col items-center text-center group cursor-pointer"
+    <HorizontalScroll title="ARTISTES À LA UNE" withPadding={false}>
+      {accounts.map((account) => (
+        <div
+          key={account.id}
+          className="flex flex-col items-center text-center group w-2/5 sm:w-1/4 shrink-0 snap-start px-1.5">
+          <Link
+            href={`/artist/${account.slug || account.id}`}
+            className="flex flex-col items-center text-center"
           >
-            <div className="relative mb-3">
-              <div className="h-24 w-24 md:h-28 md:w-28 rounded-full bg-[#141414] border-2 border-[#ffffff15] overflow-hidden transition-all duration-300 group-hover:border-[#ff990066] group-hover:shadow-lg group-hover:shadow-[#ff9900]/10">
+            <div className="relative mb-2 sm:mb-3">
+              <div className="h-20 w-20 sm:h-32 sm:w-32 rounded-full bg-[#141414] border-2 border-[#ffffff15] overflow-hidden transition-all duration-300 group-hover:border-[#ff990066] group-hover:shadow-lg group-hover:shadow-[#ff9900]/10">
                 <SafeImage
                   src={account.avatar || ''}
                   alt={account.name}
-                  width={112}
-                  height={112}
+                  width={128}
+                  height={128}
                   className="object-cover w-full h-full"
                   fallback={
                     <div className="flex h-full items-center justify-center text-[#666]">
-                      <User className="h-8 w-8" />
+                      <User className="h-6 w-6 sm:h-8 sm:w-8" />
                     </div>
                   }
                 />
               </div>
               <VerifiedBadge />
             </div>
-            <p className="text-sm font-bold text-white truncate max-w-[120px]">
+            <p className="text-xs sm:text-sm font-bold text-white truncate max-w-[100px] sm:max-w-[120px]">
               {account.name}
             </p>
             {account.followers && (
-              <p className="text-xs text-[#888] mt-0.5">
+              <p className="text-[10px] sm:text-xs text-[#888] mt-0.5">
                 {account.followers} Abonnés
               </p>
             )}
-            <button className="mt-3 px-5 py-1.5 rounded-full border border-[#ff9900] bg-transparent text-white text-xs font-semibold transition-all duration-300 hover:bg-[#ff9900] hover:text-white">
-              SUIVRE
-            </button>
+          </Link>
+          <div className="mt-2 sm:mt-3">
+            <FollowButton artistId={account.id} />
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+      ))}
+    </HorizontalScroll>
   );
 }

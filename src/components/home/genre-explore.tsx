@@ -48,7 +48,7 @@ export function GenreExplore({ onGenreSelect }: GenreExploreProps) {
     <section className="bg-surface/30">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-2xl font-bold">Explore</h2>
+          <h2 className="text-2xl font-bold">Explorer</h2>
           <Link href="/explore" className="text-sm font-medium text-primary hover:text-primary-hover hidden md:flex items-center gap-1 shrink-0">
             Voir tout <ArrowRight className="h-4 w-4" />
           </Link>

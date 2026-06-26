@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { Play, Pause, Heart, Sparkles, Share2, Plus, Repeat2 } from 'lucide-react';
+import { Play, Pause, Heart, Sparkles, Share2, Plus, Crown } from 'lucide-react';
 import { usePlayerStore } from '@/store/player-store';
+import { useAuthStore } from '@/store/auth-store';
 import { formatDuration, cn } from '@/lib/utils';
 import type { Track } from '@/types';
 import { useState, useEffect } from 'react';
@@ -35,6 +36,7 @@ export function TrackRow({
   onToggleFavorite,
 }: TrackRowProps) {
   const { play, pause, currentTrack, isPlaying: storeIsPlaying } = usePlayerStore();
+  const { user } = useAuthStore();
   const [isFavorited, setIsFavorited] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showPlaylistPicker, setShowPlaylistPicker] = useState(false);
@@ -48,6 +50,7 @@ export function TrackRow({
   const isPlaying = currentTrack?.id === track.id && storeIsPlaying;
 
   const handlePlay = () => {
+    if (track.isPremiumOnly && !(user?.isPremium ?? false)) return;
     if (isPlaying) {
       pause();
     } else {
@@ -109,7 +112,7 @@ export function TrackRow({
             {track.title}
           </Link>
           {isNewTrack(track) && (
-            <span className="shrink-0 text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-sm flex items-center gap-0.5">
+            <span className="shrink-0 text-[10px] font-semibold text-primary bg-primary/10 px-1.5 py-0.5 rounded-sm flex items-center gap-0.5">
               <Sparkles className="h-2.5 w-2.5" />
               Nouveau
             </span>
@@ -117,6 +120,12 @@ export function TrackRow({
           {track.isExplicit && (
             <span className="shrink-0 text-xs text-text-muted border border-border px-1.5 rounded-sm">
               E
+            </span>
+          )}
+          {track.isPremiumOnly && !(user?.isPremium ?? false) && (
+            <span className="shrink-0 flex items-center gap-0.5 text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-sm">
+              <Crown className="h-2.5 w-2.5" />
+              Premium
             </span>
           )}
         </div>

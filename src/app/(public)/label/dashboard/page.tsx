@@ -67,7 +67,7 @@ export default function LabelDashboard() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 pb-24">
+      <div className="container mx-auto px-4 py-8 pb-24">
         <div className="animate-pulse space-y-6">
           <div className="h-8 w-64 bg-surface-hover rounded-sm" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -83,7 +83,7 @@ export default function LabelDashboard() {
 
   if (!data) {
     return (
-      <div className="container mx-auto py-8 pb-24">
+      <div className="container mx-auto px-4 py-8 pb-24">
         <p className="text-text-secondary">Erreur lors du chargement</p>
       </div>
     );
@@ -99,7 +99,7 @@ export default function LabelDashboard() {
   ];
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div className="container mx-auto px-4 py-8 pb-24">
       <div className="flex items-center gap-4 mb-8">
         <div className="h-16 w-16 rounded-full bg-surface-hover flex items-center justify-center overflow-hidden ring-2 ring-border shrink-0">
           {data.label.avatar ? (

@@ -70,14 +70,14 @@ export default function ArtistReferralPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 pb-24 flex items-center justify-center">
+      <div className="flex items-center justify-center py-20">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 pb-24 max-w-2xl">
+    <div className="max-w-2xl">
       <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
         <Gift className="h-6 w-6 text-primary" />
         Parrainage

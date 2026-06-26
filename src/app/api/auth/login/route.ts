@@ -86,6 +86,7 @@ export async function POST(request: Request) {
         ...userWithoutPassword,
         avatar: maybeProxyAvatar(userWithoutPassword.avatar),
       },
+      token,
       message: 'Connexion réussie',
     });
   } catch (error) {

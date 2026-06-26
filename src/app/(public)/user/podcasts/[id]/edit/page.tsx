@@ -100,11 +100,11 @@ export default function EditPodcastPage({
     }
   };
 
-  if (loading) return <div className="container mx-auto py-20 text-center text-text-muted">Chargement...</div>;
-  if (error && !title) return <div className="container mx-auto py-20 text-center text-text-muted">{error}</div>;
+  if (loading) return <div className="container mx-auto px-4 py-20 text-center text-text-muted">Chargement...</div>;
+  if (error && !title) return <div className="container mx-auto px-4 py-20 text-center text-text-muted">{error}</div>;
 
   return (
-    <div className="container mx-auto py-8 max-w-3xl">
+    <div className="container mx-auto px-4 py-8 max-w-3xl">
       <Link href="/user/podcasts" className="text-sm text-text-secondary hover:text-primary transition-colors mb-6 inline-block">
         ← Retour à mes podcasts
       </Link>

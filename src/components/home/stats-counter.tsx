@@ -43,11 +43,7 @@ function Counter({ value, suffix = '' }: { value: number; suffix?: string }) {
     return () => observer.disconnect();
   }, [value]);
 
-  return (
-    <span ref={ref}>
-      {formatNumber(count)}{suffix}
-    </span>
-  );
+  return <span ref={ref}>{formatNumber(count)}{suffix}</span>;
 }
 
 const statsConfig = [
@@ -57,51 +53,34 @@ const statsConfig = [
   { key: 'users', icon: Headphones, label: 'Auditeurs', color: 'from-green-500 to-emerald-500' },
 ] as const;
 
-export function StatsCounter() {
-  const [stats, setStats] = useState<Stats>({ tracks: 0, artists: 0, albums: 0, users: 0 });
-  const [loaded, setLoaded] = useState(false);
+export function StatsCounter({ tracks, artists, albums, users }: Stats) {
+  const allZero = tracks === 0 && artists === 0 && albums === 0 && users === 0;
+  if (allZero) return null;
 
-  useEffect(() => {
-    fetch('/api/public/stats')
-      .then((res) => res.json())
-      .then((data) => {
-        setStats({
-          tracks: data.tracks || 0,
-          artists: data.artists || 0,
-          albums: data.albums || 0,
-          users: data.users || 0,
-        });
-        setLoaded(true);
-      })
-      .catch(() => setLoaded(true));
-  }, []);
-
-  if (!loaded) return null;
+  const stats = { tracks, artists, albums, users };
 
   return (
-    <section className="py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {statsConfig.map(({ key, icon: Icon, label, color }) => {
-            const value = stats[key as keyof Stats];
-            if (value === 0) return null;
-            return (
-              <div
-                key={key}
-                className="relative overflow-hidden rounded-xl border border-border bg-surface p-6 text-center group hover:border-primary/30 transition-colors"
-              >
-                <div className={`absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full bg-linear-to-br ${color} opacity-5 group-hover:opacity-10 transition-opacity`} />
-                <div className={`w-10 h-10 rounded-lg bg-linear-to-br ${color} flex items-center justify-center mx-auto mb-3`}>
-                  <Icon className="h-5 w-5 text-white" />
-                </div>
-                <p className="text-3xl font-bold text-text-primary mb-1">
-                  <Counter value={value} />
-                </p>
-                <p className="text-sm text-text-secondary">{label}</p>
+    <section className="py-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+        {statsConfig.map(({ key, icon: Icon, label, color }) => {
+          const value = stats[key];
+          if (value === 0) return null;
+          return (
+            <div
+              key={key}
+              className="relative overflow-hidden rounded-xl border border-[#ffffff08] bg-[#0b0b0b] p-6 text-center group hover:border-[#ff990033] transition-colors"
+            >
+              <div className={`absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full bg-linear-to-br ${color} opacity-5 group-hover:opacity-10 transition-opacity`} />
+              <div className={`w-10 h-10 rounded-lg bg-linear-to-br ${color} flex items-center justify-center mx-auto mb-3`}>
+                <Icon className="h-5 w-5 text-white" />
               </div>
-            );
-          })}
-        </div>
+              <p className="text-3xl font-bold text-white mb-1">
+                <Counter value={value} />
+              </p>
+              <p className="text-sm text-[#777]">{label}</p>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

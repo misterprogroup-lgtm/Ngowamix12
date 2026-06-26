@@ -125,7 +125,7 @@ export default function WatchLivestreamPage() {
   useHls(hlsUrl, videoRef);
 
   return (
-    <div className="container mx-auto py-6 pb-24">
+    <div className="container mx-auto px-4 py-6 pb-24">
       <Link href="/livestream" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-4">
         <ArrowLeft className="h-4 w-4" />Retour aux directs
       </Link>

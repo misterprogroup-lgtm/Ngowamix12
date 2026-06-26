@@ -25,10 +25,9 @@ interface SearchArtist {
 
 interface SearchTrack {
   id: string;
-  albumId: string;
   title: string;
   duration: number;
-  album?: { title?: string; coverImage: string | null; artist?: { name: string } };
+  album: { id: string; title?: string; coverImage: string | null; artist: { name: string } };
 }
 
 interface SearchResults {
@@ -73,41 +72,12 @@ export function MobileSearchOverlay({
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
-        const [albumsRes, artistsRes, tracksRes] = await Promise.all([
-          fetch(`/api/albums?limit=20`),
-          fetch(`/api/artists?limit=20`),
-          fetch(`/api/tracks?limit=20`),
-        ]);
-
-        const [albumsData, artistsData, tracksData] = await Promise.all([
-          albumsRes.json(),
-          artistsRes.json(),
-          tracksRes.json(),
-        ]);
-
-        const lowerQuery = query.toLowerCase();
-
-        const filteredAlbums = (albumsData.albums || []).filter(
-          (album: SearchAlbum) =>
-            album.title.toLowerCase().includes(lowerQuery) ||
-            album.artist.name.toLowerCase().includes(lowerQuery)
-        );
-
-        const filteredArtists = (artistsData.artists || []).filter(
-          (artist: SearchArtist) => artist.name.toLowerCase().includes(lowerQuery)
-        );
-
-        const filteredTracks = (tracksData.tracks || []).filter(
-          (track: SearchTrack) =>
-            track.title.toLowerCase().includes(lowerQuery) ||
-            track.album?.title?.toLowerCase().includes(lowerQuery) ||
-            track.album?.artist?.name?.toLowerCase().includes(lowerQuery)
-        );
-
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=5`);
+        const data = await res.json();
         setResults({
-          albums: filteredAlbums,
-          artists: filteredArtists,
-          tracks: filteredTracks,
+          albums: data.albums || [],
+          artists: data.artists || [],
+          tracks: data.tracks || [],
         });
       } catch {
         // ignore
@@ -252,7 +222,7 @@ export function MobileSearchOverlay({
                           {results.tracks.map((track: SearchTrack) => (
                             <Link
                               key={track.id}
-                              href={`/album/${track.albumId}`}
+                              href={`/track/${track.id}`}
                               onClick={handleResultClick}
                               className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/20 dark:hover:bg-black/20 transition-colors"
                             >

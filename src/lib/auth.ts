@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from 'jose';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import { db } from './db';
 import { UserRole } from '@/generated/prisma/client';
@@ -79,9 +79,19 @@ export async function clearSessionCookie(): Promise<void> {
 }
 
 export async function getCurrentUser(): Promise<JWTPayload | null> {
-  const token = await getSessionCookie();
-  if (!token) return null;
-  return verifyToken(token);
+  const cookieToken = await getSessionCookie();
+  if (cookieToken) {
+    const payload = await verifyToken(cookieToken);
+    if (payload) return payload;
+  }
+
+  const headersList = await headers();
+  const authHeader = headersList.get('Authorization');
+  if (authHeader?.startsWith('Bearer ')) {
+    return verifyToken(authHeader.slice(7));
+  }
+
+  return null;
 }
 
 export async function getCurrentUserFromRequest(request: Request): Promise<JWTPayload | null> {

@@ -231,14 +231,12 @@ export default function ArtistCatalog() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 pb-24">
-        <div className="animate-pulse space-y-6">
-          <div className="h-10 w-48 bg-surface-hover rounded-sm" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-24 bg-surface-hover rounded-sm" />
-            ))}
-          </div>
+      <div className="animate-pulse space-y-6">
+        <div className="h-10 w-48 bg-surface-hover rounded-sm" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-24 bg-surface-hover rounded-sm" />
+          ))}
         </div>
       </div>
     );
@@ -261,7 +259,7 @@ export default function ArtistCatalog() {
   };
 
   return (
-    <div className="container mx-auto py-8 pb-24">
+    <div>
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Mon catalogue</h1>
         <div className="flex gap-2">

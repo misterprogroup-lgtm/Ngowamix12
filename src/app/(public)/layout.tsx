@@ -6,9 +6,9 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="flex">
       <Sidebar />
-      <div className="md:ml-72">{children}</div>
-    </>
+      <div className="flex-1 min-w-0">{children}</div>
+    </div>
   );
 }

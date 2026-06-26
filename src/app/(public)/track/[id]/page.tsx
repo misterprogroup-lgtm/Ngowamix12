@@ -2,10 +2,15 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { SafeImage } from '@/components/ui/safe-image';
 import Link from 'next/link';
-import { Music, Clock, Headphones, BadgeCheck } from 'lucide-react';
+import { Clock, Headphones, Music, BadgeCheck, ListMusic } from 'lucide-react';
 import { db } from '@/lib/db';
 import { APP_NAME } from '@/lib/constants';
 import { formatDuration, formatNumber } from '@/lib/utils';
+import { TrackActions } from '@/components/track/track-actions';
+import { TrackList } from '@/components/catalog/track-list';
+import { PremiumLockOverlay } from '@/components/premium/premium-lock-overlay';
+import { AnimateOnView } from '@/components/ui/animate-on-view';
+import type { Track } from '@/types';
 
 const BASE_URL = process.env.APP_URL || 'https://ngowamix.com';
 
@@ -54,13 +59,43 @@ export default async function TrackPage({ params }: PageProps) {
     include: {
       album: {
         include: {
-          artist: { select: { name: true, slug: true, isVerified: true } },
+          artist: { select: { id: true, name: true, slug: true, isVerified: true, avatar: true } },
         },
       },
     },
   });
 
   if (!track) notFound();
+
+  const albumTracks = await db.track.findMany({
+    where: { albumId: track.albumId },
+    include: {
+      album: {
+        include: {
+          artist: { select: { id: true, name: true, slug: true, isVerified: true, avatar: true } },
+        },
+      },
+    },
+    orderBy: { trackNumber: 'asc' },
+  });
+
+  const recommendations = await db.track.findMany({
+    where: {
+      id: { not: track.id },
+      album: track.album.genre ? { genre: track.album.genre } : undefined,
+    },
+    include: {
+      album: {
+        include: {
+          artist: { select: { id: true, name: true, slug: true, isVerified: true, avatar: true } },
+        },
+      },
+    },
+    orderBy: { playCount: 'desc' },
+    take: 6,
+  });
+
+  const totalDuration = albumTracks.reduce((sum, t) => sum + t.duration, 0);
 
   return (
     <div className="container mx-auto px-4 py-8 pb-24">
@@ -108,27 +143,51 @@ export default async function TrackPage({ params }: PageProps) {
 
       <Link
         href={`/album/${track.album.id}`}
-        className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-primary transition-colors mb-6"
+        className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-primary transition-colors mb-8"
       >
         ← Retour à l&apos;album
       </Link>
 
-      <div className="max-w-2xl mx-auto">
-        <div className="flex flex-col items-center text-center mb-10">
-          <div className="relative w-56 h-56 rounded-2xl overflow-hidden shadow-2xl mb-6 bg-surface-hover">
+      <AnimateOnView className="flex flex-col md:flex-row gap-8 lg:gap-12 mb-12">
+        <div className="shrink-0 w-full md:w-auto">
+          <div className="relative w-full max-w-xs mx-auto md:mx-0 md:w-72 aspect-square rounded-2xl overflow-hidden shadow-2xl shadow-black/40 ring-1 ring-white/5 bg-surface-hover">
             {track.album.coverImage ? (
-              <SafeImage src={track.album.coverImage} alt={track.album.title} fill className="object-cover" priority sizes="224px" fallback={<div className="flex h-full items-center justify-center text-text-muted"><Music className="h-16 w-16" /></div>} />
+              <SafeImage
+                src={track.album.coverImage}
+                alt={track.album.title}
+                fill
+                className={track.isPremiumOnly ? 'opacity-60' : 'object-cover'}
+                priority
+                sizes="(max-width: 768px) 100vw, 288px"
+                fallback={<div className="flex h-full items-center justify-center text-text-muted"><Music className="h-20 w-20" /></div>}
+              />
             ) : (
               <div className="flex h-full items-center justify-center text-text-muted">
-                <Music className="h-16 w-16" />
+                <Music className="h-20 w-20" />
               </div>
+            )}
+            <PremiumLockOverlay isPremiumOnly={track.isPremiumOnly} variant="cover" />
+          </div>
+        </div>
+
+        <div className="flex-1 min-w-0 flex flex-col justify-center">
+          <div className="flex items-center gap-2 mb-1">
+            {track.isExplicit && (
+              <span className="px-2 py-0.5 rounded-sm bg-red-500/10 text-red-500 text-xs font-bold">EXPLICIT</span>
+            )}
+            {track.isPremiumOnly && (
+              <span className="px-2 py-0.5 rounded-sm bg-primary/10 text-primary text-xs font-bold">PREMIUM</span>
+            )}
+            {track.isPremiumOnly && (
+              <span className="px-2 py-0.5 rounded-sm bg-primary/10 text-primary text-xs font-bold">HQ</span>
             )}
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">{track.title}</h1>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">{track.title}</h1>
+
           <Link
             href={`/artist/${track.album.artist.slug}`}
-            className="text-lg text-text-secondary hover:text-primary transition-colors inline-flex items-center gap-1"
+            className="text-lg md:text-xl text-text-secondary hover:text-primary transition-colors inline-flex items-center gap-1.5 w-fit"
           >
             {track.album.artist.name}
             {track.album.artist.isVerified && (
@@ -138,12 +197,12 @@ export default async function TrackPage({ params }: PageProps) {
 
           <Link
             href={`/album/${track.album.id}`}
-            className="mt-1 text-sm text-text-muted hover:text-primary transition-colors"
+            className="mt-1 text-sm text-text-muted hover:text-primary transition-colors w-fit"
           >
-            {track.album.title}
+            {track.album.title} · {albumTracks.length} titre{albumTracks.length !== 1 ? 's' : ''} · {formatDuration(totalDuration)}
           </Link>
 
-          <div className="flex items-center gap-4 mt-4 text-sm text-text-secondary">
+          <div className="flex items-center gap-4 mt-3 text-sm text-text-secondary">
             <span className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
               {formatDuration(track.duration)}
@@ -152,22 +211,66 @@ export default async function TrackPage({ params }: PageProps) {
               <Headphones className="h-4 w-4" />
               {formatNumber(track.playCount)} écoutes
             </span>
-            {track.isExplicit && (
-              <span className="px-2 py-0.5 rounded-sm bg-red-500/10 text-red-500 text-xs font-semibold">EXPLICIT</span>
-            )}
+          </div>
+
+          <div className="mt-6">
+            <TrackActions
+              track={track as unknown as Track}
+              albumTracks={albumTracks as unknown as Track[]}
+            />
           </div>
         </div>
+      </AnimateOnView>
 
-        <div className="text-center">
-          <Link
-            href={`/album/${track.album.id}`}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-medium hover:bg-primary-hover transition-colors"
-          >
-            <Music className="h-5 w-5" />
-            Écouter sur l&apos;album
-          </Link>
-        </div>
-      </div>
+      {albumTracks.length > 1 && (
+        <AnimateOnView delay={100} as="section" className="mb-12">
+          <div className="flex items-center gap-2 mb-4">
+            <ListMusic className="h-5 w-5 text-text-secondary" />
+            <h2 className="text-lg font-semibold">
+              Autres titres de l&apos;album
+            </h2>
+          </div>
+          <TrackList tracks={albumTracks as unknown as Track[]} />
+        </AnimateOnView>
+      )}
+
+      {recommendations.length > 0 && (
+        <AnimateOnView delay={200} as="section">
+          <h2 className="text-lg font-semibold mb-4">Vous aimerez aussi</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {recommendations.map((rec) => (
+              <Link
+                key={rec.id}
+                href={`/track/${rec.id}`}
+                className="group block"
+              >
+                <div className="relative aspect-square rounded-xl overflow-hidden bg-surface-hover mb-2 ring-1 ring-white/5 group-hover:ring-primary/30 transition-all shadow-md shadow-black/20">
+                  {rec.album.coverImage ? (
+                    <SafeImage
+                      src={rec.album.coverImage}
+                      alt={rec.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
+                      fallback={<div className="flex h-full items-center justify-center text-text-muted"><Music className="h-8 w-8" /></div>}
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-text-muted">
+                      <Music className="h-8 w-8" />
+                    </div>
+                  )}
+                </div>
+                <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
+                  {rec.title}
+                </p>
+                <p className="text-xs text-text-muted truncate">
+                  {rec.album.artist.name}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </AnimateOnView>
+      )}
     </div>
   );
 }

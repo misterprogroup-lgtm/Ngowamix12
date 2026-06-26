@@ -10,7 +10,7 @@ interface SectionHeaderProps {
 export function SectionHeader({ title, href = '/explore', linkLabel = 'VOIR TOUT' }: SectionHeaderProps) {
   return (
     <div className="flex items-center justify-between mb-6">
-      <h2 className="text-lg md:text-xl font-black text-white tracking-tight">
+      <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">
         {title}
       </h2>
       <Link

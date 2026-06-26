@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function CopyrightPage() {
   return (
-    <div className="container mx-auto py-8 pb-24 max-w-3xl">
+    <div className="container mx-auto px-4 py-8 pb-24 max-w-3xl">
       <h1 className="text-3xl font-bold mb-6">Politique de droits d&apos;auteur</h1>
       <div className="space-y-4 text-text-secondary text-sm">
         <p>

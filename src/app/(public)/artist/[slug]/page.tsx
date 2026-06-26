@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { SafeImage } from '@/components/ui/safe-image';
-import { Music, Headphones, Instagram, Twitter, Facebook, Youtube, CheckCircle2, Play, Ticket, Heart } from 'lucide-react';
+import { Music, Headphones, Instagram, Twitter, Facebook, Youtube, CheckCircle2, Play, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { AlbumCard } from '@/components/catalog/album-card';
 import { TopTracks } from '@/components/catalog/top-tracks';
@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { FollowButton } from '@/components/catalog/follow-button';
 import { MessageArtistButton } from '@/components/messages/message-artist-button';
+import { AnimateOnView } from '@/components/ui/animate-on-view';
+import { ArtistDiscography } from '@/components/artist/artist-discography';
 import { formatNumber } from '@/lib/utils';
 import { APP_NAME } from '@/lib/constants';
 import { db } from '@/lib/db';
@@ -49,25 +51,17 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
   const artist = await db.artist.findUnique({
     where: { slug },
     include: {
-      _count: {
-        select: { albums: true },
-      },
+      _count: { select: { albums: true } },
     },
   });
 
-  if (!artist) {
-    notFound();
-  }
+  if (!artist) notFound();
 
   const albums = await db.album.findMany({
     where: { artistId: artist.id, status: 'PUBLISHED' },
     include: {
-      artist: {
-        select: { name: true, slug: true, avatar: true },
-      },
-      _count: {
-        select: { reviews: true },
-      },
+      artist: { select: { name: true, slug: true, avatar: true, isVerified: true } },
+      _count: { select: { reviews: true } },
     },
     orderBy: { createdAt: 'desc' },
   });
@@ -78,29 +72,15 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
         where: { albumId: album.id },
         _avg: { rating: true },
       });
-      return {
-        ...album,
-        averageRating: stats._avg.rating || 0,
-        totalReviews: album._count.reviews,
-      };
+      return { ...album, averageRating: stats._avg.rating || 0, totalReviews: album._count.reviews };
     }),
   );
 
   const topTracks = await db.track.findMany({
-    where: {
-      album: {
-        artistId: artist.id,
-        status: 'PUBLISHED',
-      },
-    },
+    where: { album: { artistId: artist.id, status: 'PUBLISHED' } },
     include: {
       album: {
-        select: {
-          title: true,
-          slug: true,
-          coverImage: true,
-          artist: { select: { name: true, slug: true } },
-        },
+        select: { id: true, title: true, slug: true, coverImage: true, artist: { select: { name: true, slug: true } } },
       },
     },
     orderBy: { playCount: 'desc' },
@@ -109,38 +89,27 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
 
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const monthlyListens = await db.listenHistory.count({
-    where: {
-      track: {
-        album: {
-          artistId: artist.id,
-        },
-      },
-      playedAt: { gte: startOfMonth },
-    },
-  });
+  const [monthlyListens, followerCount] = await Promise.all([
+    db.listenHistory.count({ where: { track: { album: { artistId: artist.id } }, playedAt: { gte: startOfMonth } } }),
+    db.favorite.count({ where: { artistId: artist.id } }),
+  ]);
 
   const socialLinks = artist.socialLinks ? JSON.parse(artist.socialLinks) as Record<string, string> : null;
+  const genres = artist.genres ? artist.genres.split(',').map(g => g.trim()).filter(Boolean) : [];
 
   const upcomingConcerts = await db.concert.count({
-    where: {
-      artistId: artist.id,
-      date: { gte: now },
-      isActive: true,
-    },
+    where: { artistId: artist.id, date: { gte: now }, isActive: true },
   });
 
   const currentUser = await getCurrentUser();
   let isFollowing = false;
   if (currentUser) {
-    const fav = await db.favorite.findFirst({
-      where: { userId: currentUser.sub, artistId: artist.id },
-    });
+    const fav = await db.favorite.findFirst({ where: { userId: currentUser.sub, artistId: artist.id } });
     isFollowing = !!fav;
   }
-  const followerCount = await db.favorite.count({
-    where: { artistId: artist.id },
-  });
+
+  const singles = albumsWithRatings.filter(a => a.type === 'SINGLE');
+  const fullAlbums = albumsWithRatings.filter(a => a.type === 'ALBUM' || a.type === 'EP');
 
   return (
     <div className="pb-24">
@@ -158,100 +127,59 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
           }),
         }}
       />
-      <div className="relative h-64 md:h-80 overflow-hidden">
+
+      <AnimateOnView className="relative h-56 md:h-80 overflow-hidden">
         {artist.coverImage ? (
           <SafeImage src={artist.coverImage} alt={artist.name} fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 1200px" fallback={<div className="h-full bg-linear-to-r from-primary/20 to-accent/20" />} />
         ) : (
           <div className="h-full bg-linear-to-r from-primary/20 to-accent/20" />
         )}
         <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 container mx-auto px-4 pb-8">
-          <div className="flex items-end gap-6">
-            <div className="relative h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden border-4 border-background shrink-0">
+        <div className="absolute bottom-0 left-0 right-0 container mx-auto px-4 pb-6 md:pb-8">
+          <div className="flex items-end gap-4 md:gap-6">
+            <div className="relative h-20 w-20 md:h-36 md:w-36 rounded-full overflow-hidden border-2 md:border-4 border-background shrink-0 -mb-2 md:mb-0 shadow-xl">
               {artist.avatar ? (
-                <SafeImage src={artist.avatar} alt={artist.name} fill className="object-cover" priority sizes="128px" fallback={<div className="flex h-full items-center justify-center bg-surface text-text-muted"><Music className="h-12 w-12" /></div>} />
+                <SafeImage src={artist.avatar} alt={artist.name} fill className="object-cover" priority sizes="80px" fallback={<div className="flex h-full items-center justify-center bg-surface text-text-muted"><Music className="h-8 w-8 md:h-12 md:w-12" /></div>} />
               ) : (
-                <div className="flex h-full items-center justify-center bg-surface text-text-muted">
-                  <Music className="h-12 w-12" />
-                </div>
+                <div className="flex h-full items-center justify-center bg-surface text-text-muted"><Music className="h-8 w-8 md:h-12 md:w-12" /></div>
               )}
             </div>
-            <div>
-              <div className="flex items-center gap-2 mb-2">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
                 {artist.isVerified && <Badge variant="premium"><CheckCircle2 className="h-3 w-3 mr-1" />Vérifié</Badge>}
                 {artist.country && <Badge variant="secondary">{artist.country}</Badge>}
+                {genres.slice(0, 2).map(g => (
+                  <Badge key={g} variant="secondary">{g}</Badge>
+                ))}
               </div>
-              <h1 className="text-3xl md:text-5xl font-bold mb-2 flex items-center gap-2">
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold flex items-center gap-2">
                 {artist.name}
-                {artist.isVerified && <CheckCircle2 className="h-6 w-6 text-primary hidden md:block" />}
+                {artist.isVerified && <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6 text-primary shrink-0" />}
               </h1>
-              <div className="flex items-center gap-4 md:gap-6 text-sm text-text-secondary">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center h-10 w-10 md:h-auto md:w-auto rounded-full bg-surface md:bg-transparent shrink-0">
-                    <Headphones className="h-4 w-4" />
-                  </div>
-                  <div className="flex flex-col md:flex-row md:items-center leading-tight">
-                    <span className="text-xs md:text-sm font-semibold md:font-normal text-text-primary md:text-text-secondary">
-                      {formatNumber(monthlyListens)}
-                    </span>
-                    <span className="hidden md:inline md:ml-1">
-                      écoute{monthlyListens !== 1 ? 's' : ''} ce mois-ci
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center h-10 w-10 md:h-auto md:w-auto rounded-full bg-surface md:bg-transparent shrink-0">
-                    <Music className="h-4 w-4" />
-                  </div>
-                  <div className="flex flex-col md:flex-row md:items-center leading-tight">
-                    <span className="text-xs md:text-sm font-semibold md:font-normal text-text-primary md:text-text-secondary">
-                      {albums.length}
-                    </span>
-                    <span className="hidden md:inline md:ml-1">
-                      titre{albums.length !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                </div>
+              <div className="flex items-center gap-4 md:gap-6 mt-2 text-sm text-text-secondary">
+                <span className="flex items-center gap-1.5">
+                  <Headphones className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                  <span className="font-semibold text-text-primary">{formatNumber(monthlyListens)}</span>
+                  <span className="hidden md:inline">écoute{monthlyListens !== 1 ? 's' : ''} / mois</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Music className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                  <span className="font-semibold text-text-primary">{albums.length}</span>
+                  <span className="hidden md:inline">titre{albums.length !== 1 ? 's' : ''}</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                  <span className="font-semibold text-text-primary">{formatNumber(followerCount)}</span>
+                  <span className="hidden md:inline">abonné{followerCount !== 1 ? 's' : ''}</span>
+                </span>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </AnimateOnView>
 
-      <div className="container mx-auto px-4 mt-8">
-        {artist.bio && (
-          <div className="max-w-3xl mb-12">
-            <h2 className="text-xl font-semibold mb-3">Biographie</h2>
-            <p className="text-text-secondary whitespace-pre-wrap">{artist.bio}</p>
-          </div>
-        )}
-
-        {socialLinks && Object.keys(socialLinks).length > 0 && (
-          <div className="flex items-center gap-3 mb-8">
-            {socialLinks.instagram && (
-              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-primary transition-colors">
-                <Instagram className="h-5 w-5" />
-              </a>
-            )}
-            {socialLinks.twitter && (
-              <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-primary transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-            )}
-            {socialLinks.facebook && (
-              <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-primary transition-colors">
-                <Facebook className="h-5 w-5" />
-              </a>
-            )}
-            {socialLinks.youtube && (
-              <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-primary transition-colors">
-                <Youtube className="h-5 w-5" />
-              </a>
-            )}
-          </div>
-        )}
-
-        <div className="flex flex-wrap items-center gap-3 mb-12">
+      <div className="container mx-auto px-4 mt-6 md:mt-8">
+        <AnimateOnView delay={100} className="flex flex-wrap items-center gap-3 mb-8">
           <FollowButton artistId={artist.id} initiallyFollowing={isFollowing} followerCount={followerCount} />
           <MessageArtistButton artistUserId={artist.userId} />
           <SupportArtist artistId={artist.id} artistName={artist.name} />
@@ -263,11 +191,45 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
               </Button>
             </Link>
           )}
-        </div>
+        </AnimateOnView>
+
+        {artist.bio && (
+          <AnimateOnView delay={150} className="mb-10">
+            <div className="rounded-xl border border-border bg-surface p-5 md:p-6">
+              <h2 className="text-base font-semibold mb-2">Biographie</h2>
+              <p className="text-sm text-text-secondary whitespace-pre-wrap leading-relaxed">{artist.bio}</p>
+            </div>
+          </AnimateOnView>
+        )}
+
+        {socialLinks && Object.keys(socialLinks).length > 0 && (
+          <AnimateOnView delay={175} className="flex items-center gap-3 mb-8">
+            {socialLinks.instagram && (
+              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm text-text-secondary hover:text-primary hover:border-primary/30 transition-all">
+                <Instagram className="h-4 w-4" /> Instagram
+              </a>
+            )}
+            {socialLinks.twitter && (
+              <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm text-text-secondary hover:text-primary hover:border-primary/30 transition-all">
+                <Twitter className="h-4 w-4" /> X
+              </a>
+            )}
+            {socialLinks.facebook && (
+              <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm text-text-secondary hover:text-primary hover:border-primary/30 transition-all">
+                <Facebook className="h-4 w-4" /> Facebook
+              </a>
+            )}
+            {socialLinks.youtube && (
+              <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-sm text-text-secondary hover:text-primary hover:border-primary/30 transition-all">
+                <Youtube className="h-4 w-4" /> YouTube
+              </a>
+            )}
+          </AnimateOnView>
+        )}
 
         {topTracks.length > 0 && (
-          <section className="mb-12">
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+          <AnimateOnView delay={200} as="section" className="mb-12">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Play className="h-5 w-5 text-primary" />
               Les plus écoutés
             </h2>
@@ -284,31 +246,18 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
                 artist: { name: t.album.artist.name, slug: t.album.artist.slug },
               },
             }))} />
-          </section>
+          </AnimateOnView>
         )}
 
         {albums.length > 0 ? (
-          <section>
-            <h2 className="text-xl font-semibold mb-6">Musiques</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {albumsWithRatings.map((album) => (
-                <AlbumCard
-                  key={album.id}
-                  id={album.id}
-                  title={album.title}
-                  slug={album.slug}
-                  coverImage={album.coverImage}
-                  artistName={artist.name}
-                  artistSlug={artist.slug}
-                  price={Number(album.price)}
-                  isPremiumOnly={album.isPremiumOnly}
-                  type={album.type}
-                  averageRating={album.averageRating}
-                  totalReviews={album.totalReviews}
-                />
-              ))}
-            </div>
-          </section>
+          <AnimateOnView delay={250}>
+            <ArtistDiscography
+              singles={singles}
+              albums={fullAlbums}
+              artistName={artist.name}
+              artistSlug={artist.slug}
+            />
+          </AnimateOnView>
         ) : (
           <div className="text-center py-16">
             <Music className="h-12 w-12 text-text-muted mx-auto mb-4" />

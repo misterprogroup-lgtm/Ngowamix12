@@ -79,7 +79,7 @@ export default function FamilyPremiumPage() {
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-text-muted" /></div>;
 
   return (
-    <div className="container mx-auto py-8 pb-24 max-w-2xl">
+    <div className="container mx-auto px-4 py-8 pb-24 max-w-2xl">
       <div className="flex items-center gap-3 mb-8">
         <div className="h-8 w-1 rounded-full bg-linear-to-b from-primary to-accent" />
         <h1 className="text-2xl font-bold">Abonnement Famille</h1>

@@ -4,6 +4,7 @@ import { Play, Music, Star, BadgeCheck } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn, formatPrice } from '@/lib/utils';
 import { ShareButton } from '@/components/catalog/share-button';
+import { PremiumLockOverlay } from '@/components/premium/premium-lock-overlay';
 
 interface AlbumCardProps {
   id: string;
@@ -58,9 +59,10 @@ export function AlbumCard({
               <Music className="h-12 w-12" />
             </div>
           )}
-          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-xl shadow-black/30 translate-y-2 group-hover:translate-y-0 transition-transform">
-              <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
+          <PremiumLockOverlay isPremiumOnly={isPremiumOnly} variant="card" />
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 translate-y-2 group-hover:translate-y-0 transition-all">
+              <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
             </div>
           </div>
           <div className="absolute top-2 left-2 flex gap-1.5">

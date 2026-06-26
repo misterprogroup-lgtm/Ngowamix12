@@ -141,7 +141,7 @@ export async function POST(request: Request) {
     sendEmail(user.email, 'Vérification de votre email — Ngowamix', generateEmailVerificationEmail(user.firstName || user.email, otp).html);
 
     return NextResponse.json(
-      { user, message: 'Inscription réussie. Veuillez vérifier votre email.' },
+      { user, token, message: 'Inscription réussie. Veuillez vérifier votre email.' },
       { status: 201 }
     );
   } catch (error: unknown) {

@@ -17,6 +17,8 @@ import {
   WifiOff,
   Megaphone,
   BadgeCheck,
+  Heart,
+  ListMusic,
 } from 'lucide-react';
 import { usePlayerStore } from '@/store/player-store';
 import { useAuthStore } from '@/store/auth-store';
@@ -30,6 +32,8 @@ export function AudioPlayer() {
   const [error, setError] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeAnim, setLikeAnim] = useState(false);
 
   useEffect(() => {
     setIsOnline(navigator.onLine);
@@ -70,6 +74,33 @@ export function AudioPlayer() {
     toggleShuffle,
     play,
   } = usePlayerStore();
+
+  useEffect(() => {
+    if (!currentTrack) { setIsLiked(false); return; }
+    fetch(`/api/user/favorites/check?ids=${currentTrack.id}`)
+      .then(r => r.json())
+      .then(data => setIsLiked(data.favoriteIds?.includes(currentTrack.id) ?? false))
+      .catch(() => setIsLiked(false));
+  }, [currentTrack?.id]);
+
+  const toggleLike = async () => {
+    if (!currentTrack) return;
+    setLikeAnim(true);
+    setTimeout(() => setLikeAnim(false), 300);
+    const prev = isLiked;
+    setIsLiked(!prev);
+    try {
+      const res = await fetch('/api/user/favorites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ trackId: currentTrack.id }),
+      });
+      const data = await res.json();
+      setIsLiked(data.action === 'added');
+    } catch {
+      setIsLiked(prev);
+    }
+  };
 
   useEffect(() => {
     if (user) setUserPremium(user.isPremium);
@@ -242,9 +273,9 @@ export function AudioPlayer() {
           {/* Track info */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-3 min-w-0 flex-1 md:flex-none md:w-64"
+            className="flex items-center gap-3 min-w-0 flex-1 md:flex-none md:w-72"
           >
-            <div className="relative h-10 w-10 md:h-14 md:w-14 shrink-0 rounded-lg overflow-hidden bg-surface-hover shadow-md shadow-black/10">
+            <div className="relative h-10 w-10 md:h-14 md:w-14 shrink-0 rounded-full overflow-hidden bg-surface-hover shadow-md shadow-black/10 ring-2 ring-border">
               {isAdPlaying ? (
                 <div className="flex h-full items-center justify-center bg-primary/20">
                   <Megaphone className="h-5 w-5 text-primary" />
@@ -254,7 +285,10 @@ export function AudioPlayer() {
                   src={currentTrack.album.coverImage}
                   alt={currentTrack.album.title}
                   fill
-                  className="object-cover"
+                  className={cn(
+                    'object-cover transition-transform duration-300',
+                    isPlaying ? 'animate-spin-slow' : 'animate-spin-slow animate-spin-slow-paused'
+                  )}
                   sizes="48px"
                   fallback={<div className="flex h-full items-center justify-center text-text-muted"><Music className="h-4 w-4 md:h-5 md:w-5" /></div>}
                 />
@@ -264,7 +298,7 @@ export function AudioPlayer() {
                 </div>
               )}
             </div>
-            <div className="min-w-0 text-left">
+            <div className="min-w-0 text-left flex-1">
               {isAdPlaying && currentAd ? (
                 <>
                   <p className="text-sm font-medium text-primary truncate">Publicité</p>
@@ -274,6 +308,12 @@ export function AudioPlayer() {
                 <>
                   <p className="text-sm font-medium text-text-primary truncate flex items-center gap-1.5">
                     {currentTrack.title}
+                    {currentTrack.isExplicit && (
+                      <span className="shrink-0 px-1 py-0.5 rounded-sm bg-red-500/10 text-red-500 text-[10px] font-bold leading-none">E</span>
+                    )}
+                    {currentTrack.isPremiumOnly && (
+                      <span className="shrink-0 px-1 py-0.5 rounded-sm bg-primary/10 text-primary text-[10px] font-bold leading-none">HQ</span>
+                    )}
                   </p>
                   {currentTrack.album && (
                     <Link
@@ -288,6 +328,20 @@ export function AudioPlayer() {
                 </>
               ) : null}
             </div>
+            {currentTrack && (
+              <button
+                onClick={(e) => { e.stopPropagation(); toggleLike(); }}
+                className={cn(
+                  'shrink-0 p-1.5 rounded-full transition-all duration-200 hidden md:block',
+                  likeAnim && 'animate-pop',
+                  isLiked
+                    ? 'text-primary hover:text-primary-hover'
+                    : 'text-text-muted hover:text-text-primary'
+                )}
+              >
+                <Heart className="h-4 w-4" fill={isLiked ? 'currentColor' : 'none'} />
+              </button>
+            )}
           </button>
 
           {/* Controls */}
@@ -346,29 +400,37 @@ export function AudioPlayer() {
 
             {!isExpanded && (
               <div className="flex items-center gap-2 w-full">
-                <span className="text-xs text-text-muted w-8 text-right hidden md:block">
+                <span className="text-xs text-text-muted w-8 text-right hidden md:block tabular-nums">
                   {formatDuration(progress)}
                 </span>
                 <div
                   className={cn(
-                    'flex-1 h-1 rounded-full cursor-pointer group',
+                    'flex-1 h-1 rounded-full cursor-pointer group relative',
                     isAdPlaying ? 'bg-primary/20' : 'bg-surface-hover'
                   )}
                   onClick={handleProgressClick}
                 >
                   <div
                     className={cn(
-                      'h-full rounded-full relative group-hover:opacity-100 transition-colors',
-                      error ? 'bg-error' : isAdPlaying ? 'bg-primary' : 'bg-primary'
+                      'h-full rounded-full transition-colors',
+                      error ? 'bg-error' : 'bg-primary'
                     )}
                     style={{ width: `${progressPercent}%` }}
                   >
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-white shadow-md shadow-black/40 transition-transform duration-150 group-hover:scale-125" />
                   </div>
                 </div>
-                <span className="text-xs text-text-muted w-8 hidden md:block">
+                <span className="text-xs text-text-muted w-8 hidden md:block tabular-nums">
                   {formatDuration(duration)}
                 </span>
+                {/* Wave bars on the right */}
+                {isPlaying && !isAdPlaying && (
+                  <div className="hidden md:flex items-end gap-[2px] h-3 ml-1">
+                    <span className="w-0.5 bg-primary rounded-full animate-wave" style={{ animationDelay: '0s', height: '100%' }} />
+                    <span className="w-0.5 bg-primary rounded-full animate-wave" style={{ animationDelay: '0.15s', height: '70%' }} />
+                    <span className="w-0.5 bg-primary rounded-full animate-wave" style={{ animationDelay: '0.3s', height: '50%' }} />
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -395,61 +457,108 @@ export function AudioPlayer() {
 
         {/* Expanded view */}
         {isExpanded && (
-          <div className="mt-4 space-y-3">
-            <div className="flex items-center gap-2 w-full">
-              <span className="text-xs text-text-muted w-10 text-right">
-                {formatDuration(progress)}
-              </span>
-              <div
-                className={cn(
-                  'flex-1 h-2 rounded-full cursor-pointer group',
-                  isAdPlaying ? 'bg-primary/20' : 'bg-surface-hover'
-                )}
-                onClick={handleProgressClick}
-              >
-                <div
-                  className={cn(
-                    'h-full rounded-full relative',
-                    error ? 'bg-error' : isAdPlaying ? 'bg-primary' : 'bg-primary'
+          <div className="mt-2 space-y-3 flex-1 flex flex-col">
+            <div className="flex items-center justify-center gap-6 flex-1">
+              {/* Cover */}
+              <div className="hidden md:flex items-center justify-center">
+                <div className="relative h-24 w-24 rounded-full overflow-hidden bg-surface-hover shadow-xl shadow-black/30 ring-2 ring-border">
+                  {currentTrack?.album?.coverImage ? (
+                    <SafeImage
+                      src={currentTrack.album.coverImage}
+                      alt={currentTrack.album.title}
+                      fill
+                      className={cn(
+                        'object-cover',
+                        isPlaying ? 'animate-spin-slow' : 'animate-spin-slow animate-spin-slow-paused'
+                      )}
+                      sizes="96px"
+                      fallback={<Music className="h-8 w-8 text-text-muted m-auto" />}
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-text-muted">
+                      <Music className="h-8 w-8" />
+                    </div>
                   )}
-                  style={{ width: `${progressPercent}%` }}
-                >
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               </div>
-              <span className="text-xs text-text-muted w-10">
-                {formatDuration(duration)}
-              </span>
-            </div>
 
-            <div className="flex items-center justify-center gap-4">
-              <button onClick={toggleShuffle} className={cn('text-text-muted hover:text-text-primary p-2', shuffle && 'text-primary')}>
-                <Shuffle className="h-5 w-5" />
-              </button>
-              <button onClick={prev} className="text-text-secondary hover:text-text-primary p-2">
-                <SkipBack className="h-6 w-6" />
-              </button>
-              <button
-                onClick={togglePlay}
-                className={cn(
-                  'flex h-14 w-14 items-center justify-center rounded-full transition-colors',
-                  error ? 'bg-error/20 text-error' : 'bg-primary text-white hover:bg-primary-hover'
+              {/* Controls + progress */}
+              <div className="flex flex-col items-center gap-3 flex-1 max-w-md">
+                <div className="flex items-center gap-2 w-full">
+                  <span className="text-xs text-text-muted w-10 text-right tabular-nums">
+                    {formatDuration(progress)}
+                  </span>
+                  <div
+                    className={cn(
+                      'flex-1 h-2 rounded-full cursor-pointer group relative',
+                      isAdPlaying ? 'bg-primary/20' : 'bg-surface-hover'
+                    )}
+                    onClick={handleProgressClick}
+                  >
+                    <div
+                      className={cn(
+                        'h-full rounded-full',
+                        error ? 'bg-error' : 'bg-primary'
+                      )}
+                      style={{ width: `${progressPercent}%` }}
+                    >
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-white shadow-md shadow-black/40 transition-transform duration-150 group-hover:scale-125" />
+                    </div>
+                  </div>
+                  <span className="text-xs text-text-muted w-10 tabular-nums">
+                    {formatDuration(duration)}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <button onClick={toggleShuffle} className={cn('text-text-muted hover:text-text-primary p-2 transition-colors', shuffle && 'text-primary')}>
+                    <Shuffle className="h-5 w-5" />
+                  </button>
+                  <button onClick={prev} className="text-text-secondary hover:text-text-primary p-2 transition-colors">
+                    <SkipBack className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={togglePlay}
+                    className={cn(
+                      'flex h-14 w-14 items-center justify-center rounded-full transition-all duration-200 hover:scale-105 active:scale-95',
+                      error ? 'bg-error/20 text-error' : 'bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20'
+                    )}
+                  >
+                    {error ? (
+                      <AlertCircle className="h-6 w-6" />
+                    ) : isPlaying ? (
+                      <Pause className="h-6 w-6" fill="currentColor" />
+                    ) : (
+                      <Play className="h-6 w-6 ml-1" fill="currentColor" />
+                    )}
+                  </button>
+                  <button onClick={next} className="text-text-secondary hover:text-text-primary p-2 transition-colors">
+                    <SkipForward className="h-6 w-6" />
+                  </button>
+                  <button onClick={toggleRepeat} className={cn('text-text-muted hover:text-text-primary p-2 transition-colors', repeat && 'text-primary')}>
+                    <Repeat className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Like + Queue */}
+              <div className="hidden md:flex flex-col items-center gap-3 w-20">
+                {currentTrack && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggleLike(); }}
+                    className={cn(
+                      'p-2 rounded-full transition-all duration-200',
+                      likeAnim && 'animate-pop',
+                      isLiked ? 'text-primary hover:text-primary-hover' : 'text-text-muted hover:text-text-primary'
+                    )}
+                  >
+                    <Heart className="h-6 w-6" fill={isLiked ? 'currentColor' : 'none'} />
+                  </button>
                 )}
-              >
-                {error ? (
-                  <AlertCircle className="h-6 w-6" />
-                ) : isPlaying ? (
-                  <Pause className="h-6 w-6" fill="currentColor" />
-                ) : (
-                  <Play className="h-6 w-6 ml-1" fill="currentColor" />
-                )}
-              </button>
-              <button onClick={next} className="text-text-secondary hover:text-text-primary p-2">
-                <SkipForward className="h-6 w-6" />
-              </button>
-              <button onClick={toggleRepeat} className={cn('text-text-muted hover:text-text-primary p-2', repeat && 'text-primary')}>
-                <Repeat className="h-5 w-5" />
-              </button>
+                <button className="text-text-muted hover:text-text-primary p-2 transition-colors">
+                  <ListMusic className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           </div>
         )}

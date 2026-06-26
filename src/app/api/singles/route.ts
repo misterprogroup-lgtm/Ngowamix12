@@ -7,23 +7,32 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '20', 10);
 
-    const where: Record<string, unknown> = {
-      status: 'PUBLISHED',
-      type: 'SINGLE',
-      artist: { user: { role: { not: 'ADMIN' } } },
+    const where = {
+      album: {
+        type: 'SINGLE' as const,
+        status: 'PUBLISHED' as const,
+        artist: { user: { role: { not: 'ADMIN' as const } } },
+      },
     };
 
-    const [singles, total] = await Promise.all([
-      db.album.findMany({
+    const [tracks, total] = await Promise.all([
+      db.track.findMany({
         where,
         include: {
-          artist: {
+          album: {
             select: {
               id: true,
-              name: true,
-              slug: true,
-              avatar: true,
-              isVerified: true,
+              title: true,
+              coverImage: true,
+              artist: {
+                select: {
+                  id: true,
+                  name: true,
+                  slug: true,
+                  avatar: true,
+                  isVerified: true,
+                },
+              },
             },
           },
         },
@@ -31,11 +40,11 @@ export async function GET(request: Request) {
         skip: (page - 1) * limit,
         take: limit,
       }),
-      db.album.count({ where }),
+      db.track.count({ where }),
     ]);
 
     return NextResponse.json({
-      singles,
+      tracks,
       pagination: {
         page,
         limit,

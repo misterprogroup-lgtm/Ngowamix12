@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { SafeImage } from '@/components/ui/safe-image';
 import Link from 'next/link';
-import { Play, Pause, Music, BadgeCheck } from 'lucide-react';
+import { Play, Music, BadgeCheck, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { usePlayerStore } from '@/store/player-store';
 import type { Track } from '@/types';
 
@@ -34,9 +33,7 @@ export function ArtistCard({
   const isArtistPlaying = currentTrack?.album?.artist?.id === id && isPlaying;
 
   const handlePlay = async () => {
-    if (isArtistPlaying) {
-      return;
-    }
+    if (isArtistPlaying) return;
     setLoading(true);
     try {
       const res = await fetch(`/api/tracks?artistId=${encodeURIComponent(id)}&limit=20`);
@@ -53,30 +50,36 @@ export function ArtistCard({
   };
 
   return (
-    <div className={cn('flex flex-col items-center text-center', className)}>
+    <div className={cn('flex flex-col items-center text-center group cursor-pointer', className)}>
       <Link
         href={`/artist/${slug}`}
-        className="group flex flex-col items-center gap-3 text-center transition-transform hover:scale-105"
+        className="flex flex-col items-center gap-3 text-center transition-transform hover:scale-105"
       >
-        <div className="relative h-32 w-32 rounded-full bg-surface-hover">
-          <div className="relative h-full w-full overflow-hidden rounded-full">
+        <div className="relative mb-1">
+          <div className="h-28 w-28 rounded-full bg-surface border-2 border-border overflow-hidden transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/10">
             {avatar ? (
               <SafeImage
                 src={avatar}
                 alt={name}
-                fill
-                className="object-cover transition-transform group-hover:scale-110"
-                sizes="128px"
-                fallback={<div className="flex h-full items-center justify-center text-text-muted"><Music className="h-10 w-10" /></div>}
+                width={112}
+                height={112}
+                className="object-cover w-full h-full transition-transform group-hover:scale-110"
+                fallback={
+                  <div className="flex h-full items-center justify-center text-text-muted">
+                    <User className="h-8 w-8" />
+                  </div>
+                }
               />
             ) : (
               <div className="flex h-full items-center justify-center text-text-muted">
-                <Music className="h-10 w-10" />
+                <User className="h-8 w-8" />
               </div>
             )}
           </div>
           {isVerified && (
-            <BadgeCheck className="absolute -bottom-1 -right-1 h-7 w-7 text-primary bg-background rounded-full" />
+            <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-primary flex items-center justify-center ring-2 ring-background">
+              <BadgeCheck className="h-3.5 w-3.5 text-white" />
+            </div>
           )}
         </div>
         <div>
@@ -87,18 +90,19 @@ export function ArtistCard({
         </div>
       </Link>
       {showPlayButton && (
-        <div className="mt-2">
-          <Button variant="outline" size="sm" onClick={handlePlay} disabled={loading}>
-            {loading ? (
-              <span className="h-3.5 w-3.5 mr-1 animate-spin rounded-full border-2 border-text-muted border-t-transparent" />
-            ) : isArtistPlaying ? (
-              <Pause className="h-3.5 w-3.5 mr-1" fill="currentColor" />
-            ) : (
-              <Play className="h-3.5 w-3.5 mr-1" fill="currentColor" />
-            )}
-            {loading ? 'Chargement...' : isArtistPlaying ? 'En cours' : 'Écouter'}
-          </Button>
-        </div>
+        <button
+          onClick={handlePlay}
+          disabled={loading}
+          className="mt-2 px-5 py-1.5 rounded-full border border-primary bg-transparent text-text-primary text-xs font-semibold transition-all duration-300 hover:bg-primary hover:text-white disabled:opacity-50"
+        >
+          {loading ? (
+            <span className="h-3 w-3 inline-block animate-spin rounded-full border-2 border-text-muted border-t-transparent" />
+          ) : isArtistPlaying ? (
+            'En cours'
+          ) : (
+            'Écouter'
+          )}
+        </button>
       )}
     </div>
   );

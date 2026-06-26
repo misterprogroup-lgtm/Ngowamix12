@@ -12,7 +12,7 @@ export default async function OfflinePage() {
 
   if (!user?.isPremium && user?.role !== 'ADMIN') {
     return (
-      <div className="container mx-auto py-8 pb-24 max-w-2xl text-center">
+      <div className="container mx-auto px-4 py-8 pb-24 max-w-2xl text-center">
         <Download className="h-12 w-12 mx-auto mb-3 opacity-50 text-text-muted" />
         <h1 className="text-xl font-bold mb-2">Mode hors-ligne</h1>
         <p className="text-text-muted mb-4">Le mode hors-ligne est réservé aux abonnés Premium</p>
@@ -24,7 +24,7 @@ export default async function OfflinePage() {
   }
 
   return (
-    <div className="container mx-auto py-8 pb-24 max-w-2xl">
+    <div className="container mx-auto px-4 py-8 pb-24 max-w-2xl">
       <div className="flex items-center gap-3 mb-6">
         <Link href={ROUTES.USER_DASHBOARD} className="text-text-muted hover:text-text">
           <ArrowLeft className="h-5 w-5" />

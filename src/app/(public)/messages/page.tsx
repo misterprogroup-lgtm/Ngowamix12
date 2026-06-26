@@ -13,7 +13,7 @@ export default async function MessagesPage() {
 
   if (!user) {
     return (
-      <div className="container mx-auto py-8 pb-24 max-w-2xl text-center">
+      <div className="container mx-auto px-4 py-8 pb-24 max-w-2xl text-center">
         <Mail className="h-12 w-12 mx-auto mb-3 opacity-50 text-text-muted" />
         <p className="text-text-muted">Connectez-vous pour voir vos messages</p>
         <Link href={ROUTES.LOGIN}>
@@ -42,7 +42,7 @@ export default async function MessagesPage() {
   });
 
   return (
-    <div className="container mx-auto py-8 pb-24 max-w-2xl">
+    <div className="container mx-auto px-4 py-8 pb-24 max-w-2xl">
       <h1 className="text-2xl font-bold mb-6">Messages</h1>
 
       {conversations.length === 0 ? (
