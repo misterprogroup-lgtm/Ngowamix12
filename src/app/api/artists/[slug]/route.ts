@@ -50,6 +50,9 @@ export async function GET(
         playCount: true,
         purchaseCount: true,
         createdAt: true,
+        artist: {
+          select: { id: true, name: true, slug: true },
+        },
       },
     });
 
