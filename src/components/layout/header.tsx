@@ -4,17 +4,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { SafeImage } from '@/components/ui/safe-image';
 import { usePathname, useRouter } from 'next/navigation';
-import {
-  Search, User, LayoutDashboard, Crown, LogOut, Settings,
-  ChevronDown, Ticket, Menu, X, Home, Compass, Headphones,
-  Podcast, ChevronRight, ListMusic, Upload, Mic2, Disc3,
-  Music, ShieldCheck, TrendingUp, DollarSign, Users, Gift,
-  Radio, Palette, QrCode, MessageSquare,
-} from 'lucide-react';
+import { Search, User, LogOut, ChevronDown, Menu, X, Upload, ChevronRight, Crown, LayoutDashboard, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth-store';
-import { ROUTES, APP_NAME } from '@/lib/constants';
-
+import { APP_NAME, ROUTES } from '@/lib/constants';
+import {
+  adminLinks, artistLinks, headerNav, discoverLinks,
+} from '@/lib/navigation';
 import { cn } from '@/lib/utils';
 import { useState, useRef, useEffect } from 'react';
 
@@ -54,45 +50,6 @@ export function Header() {
     if (href === '/') return pathname === '/';
     return pathname.startsWith(href);
   };
-
-  const adminLinks = [
-    { href: ROUTES.ADMIN_DASHBOARD, label: 'Dashboard', icon: LayoutDashboard },
-    { href: ROUTES.ADMIN_USERS, label: 'Utilisateurs', icon: Users },
-    { href: ROUTES.ADMIN_CATALOG, label: 'Catalogue', icon: Music },
-    { href: '/admin/verification', label: 'Vérifications', icon: ShieldCheck },
-    { href: ROUTES.ADMIN_SCANNER, label: 'Scanner', icon: QrCode },
-    { href: ROUTES.ADMIN_TRANSACTIONS, label: 'Transactions', icon: DollarSign },
-    { href: ROUTES.ADMIN_SETTINGS, label: 'Paramètres', icon: Settings },
-    { href: ROUTES.ADMIN_PROMO_CODES, label: 'Codes Promo', icon: Gift },
-    { href: ROUTES.ADMIN_ADS, label: 'Publicités', icon: Radio },
-    { href: ROUTES.ADMIN_ALBUM_COVERS, label: 'Pochettes album', icon: Palette },
-  ];
-
-  const artistLinks = [
-    { href: ROUTES.ARTIST_DASHBOARD, label: 'Dashboard', icon: LayoutDashboard },
-    { href: ROUTES.ARTIST_CATALOG, label: 'Catalogue', icon: Disc3 },
-    { href: ROUTES.ARTIST_PROFILE, label: 'Profil', icon: User },
-    { href: ROUTES.ARTIST_LIVESTREAM, label: 'Live', icon: Radio },
-    { href: ROUTES.ARTIST_ROYALTIES, label: 'Royalties', icon: TrendingUp },
-    { href: ROUTES.ARTIST_SERVICES, label: 'Services', icon: Mic2 },
-    { href: ROUTES.ARTIST_REFERRAL, label: 'Parrainage', icon: Gift },
-  ];
-
-  const mainNav = [
-    { href: ROUTES.HOME, label: 'Accueil', icon: Home },
-    { href: ROUTES.EXPLORE, label: 'Explorer', icon: Compass },
-    { href: ROUTES.PLAYLISTS, label: 'Playlists', icon: ListMusic },
-    { href: ROUTES.FEED, label: "Fil d'actu", icon: MessageSquare },
-    { href: ROUTES.USER_LIBRARY, label: 'Ma Bibliothèque', icon: Headphones },
-  ];
-
-  const discoverNav = [
-    { href: ROUTES.PREMIUM, label: 'Premium', icon: Crown },
-    { href: ROUTES.PODCASTS, label: 'Podcasts', icon: Podcast },
-    { href: ROUTES.LIVESTREAMS, label: 'En direct', icon: Radio, badge: true },
-    { href: ROUTES.CHAT, label: 'Chat', icon: MessageSquare },
-    { href: ROUTES.TICKETS, label: 'Tickets', icon: Ticket },
-  ];
 
   return (
     <>
@@ -273,16 +230,24 @@ export function Header() {
 
       <button
         onClick={() => setShowMobileMenu(true)}
-        className="md:hidden fixed top-3 right-3 z-55 p-2 text-[#999] hover:text-white transition-colors"
+        className="md:hidden fixed top-3 right-3 z-55 p-3 text-[#999] hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
         aria-label="Menu"
       >
         <Menu className="h-5 w-5" />
       </button>
 
       {showMobileMenu && (
-        <div className="md:hidden fixed inset-0 z-60">
+        <div
+          className="md:hidden fixed inset-0 z-60"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu de navigation"
+        >
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowMobileMenu(false)} />
-          <div className="absolute right-0 top-0 bottom-0 w-80 bg-[#0b0b0b] border-l border-[#ffffff0a] shadow-2xl flex flex-col animate-slideRight">
+          <div
+            className="absolute right-0 top-0 bottom-0 w-80 bg-[#0b0b0b] border-l border-[#ffffff0a] shadow-2xl flex flex-col animate-slideRight"
+            style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)', paddingTop: 'env(safe-area-inset-top, 0px)' }}
+          >
             <div className="flex items-center justify-between px-5 h-16 border-b border-[#ffffff0a]">
               <div className="flex items-center gap-2.5">
                 <Image src="/logo-icon.png" alt={APP_NAME} width={28} height={28} className="h-7 w-7" />
@@ -290,7 +255,8 @@ export function Header() {
               </div>
               <button
                 onClick={() => setShowMobileMenu(false)}
-                className="p-2 text-[#999] hover:text-white transition-colors"
+                className="p-3 text-[#999] hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="Fermer le menu"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -303,7 +269,7 @@ export function Header() {
 
               <div className="space-y-0.5">
                 <p className="px-3 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Navigation</p>
-                {mainNav.map((link) => (
+                {headerNav.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
@@ -323,7 +289,7 @@ export function Header() {
 
               <div className="space-y-0.5">
                 <p className="px-3 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Découvrir</p>
-                {discoverNav.map((link) => (
+                {discoverLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}

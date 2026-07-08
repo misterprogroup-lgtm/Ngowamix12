@@ -79,11 +79,12 @@ export function GenreFilter({
             <button
               key={g.value}
               onClick={() => setSelected(g.value)}
-              className={`shrink-0 rounded-full text-sm font-bold px-5 py-2 transition-colors ${
+              className={`shrink-0 rounded-full text-sm font-bold px-5 py-2.5 transition-colors ${
                 selected === g.value
                   ? 'bg-primary text-black'
                   : 'border border-[#ffffff15] text-[#ccc] hover:border-primary/20 hover:text-white'
               }`}
+              aria-pressed={selected === g.value}
             >
               {g.label}
             </button>

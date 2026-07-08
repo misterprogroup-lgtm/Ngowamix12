@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { SafeImage } from '@/components/ui/safe-image';
-import { BadgeCheck, User, Heart, UserPlus } from 'lucide-react';
+import { BadgeCheck, User } from 'lucide-react';
 import { HorizontalScroll } from '@/components/ui/horizontal-scroll';
 import { FollowButton } from '@/components/catalog/follow-button';
 
@@ -12,6 +12,7 @@ interface Account {
   name: string;
   followers?: string;
   slug?: string;
+  isVerified?: boolean;
 }
 
 function VerifiedBadge() {
@@ -50,7 +51,7 @@ export function AccountsForYou({ accounts }: { accounts: Account[] }) {
                   }
                 />
               </div>
-              <VerifiedBadge />
+              {account.isVerified && <VerifiedBadge />}
             </div>
             <p className="text-xs sm:text-sm font-bold text-white truncate max-w-[100px] sm:max-w-[120px]">
               {account.name}

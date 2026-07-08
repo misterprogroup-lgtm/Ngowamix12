@@ -1,48 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import {
-  Compass, TrendingUp, ListMusic, MessageSquare, Headphones,
-  Crown, Podcast, Radio, Ticket, Heart, Clock, Download,
-  Upload, Library, Music,
-} from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { APP_NAME, ROUTES } from '@/lib/constants';
-
-const menuLinks = [
-  { href: '/', label: 'Accueil', icon: Compass },
-  { href: '/explore', label: 'Explorer', icon: TrendingUp },
-  { href: '/playlists', label: 'Playlists', icon: ListMusic },
-  { href: '/feed', label: "Fil d'actu", icon: MessageSquare },
-];
-
-const discoverLinks = [
-  { href: ROUTES.PREMIUM, label: 'Premium', icon: Crown },
-  { href: ROUTES.PODCASTS, label: 'Podcasts', icon: Podcast },
-  { href: ROUTES.LIVESTREAMS, label: 'En direct', icon: Radio, badge: true },
-  { href: ROUTES.CHAT, label: 'Chat', icon: MessageSquare },
-  { href: ROUTES.TICKETS, label: 'Tickets', icon: Ticket },
-];
-
-const libraryLinks = [
-  { href: ROUTES.USER_LIBRARY, label: 'Ma Bibliothèque', icon: Library },
-  { href: '/user/library?tab=favorites', label: 'Favoris', icon: Heart },
-  { href: '/user/library?tab=recent', label: 'Récemment écoutés', icon: Clock },
-  { href: ROUTES.OFFLINE, label: 'Téléchargements', icon: Download },
-];
-
-const ARTIST_ROUTES = [
-  '/artist/dashboard',
-  '/artist/catalog',
-  '/artist/services',
-  '/artist/profile',
-  '/artist/livestream',
-  '/artist/royalties',
-  '/artist/referral',
-  '/artist/upload',
-];
+import { menuLinks, discoverLinks, libraryLinks, ARTIST_ROUTES } from '@/lib/navigation';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -58,7 +20,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="hidden md:flex sticky top-16 w-[380px] h-[calc(100vh-4rem)] shrink-0 flex-col bg-[#0d0d0d] z-40">
+    <aside className="hidden md:flex sticky top-16 w-72 h-[calc(100vh-4rem)] shrink-0 flex-col bg-[#0d0d0d] z-40">
       <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-5 flex flex-col gap-6 scrollbar-hide">
 
         <div className="space-y-0.5">

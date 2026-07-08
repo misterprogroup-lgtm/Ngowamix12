@@ -154,7 +154,7 @@ export function ExploreClient() {
 
       {/* Ma playlist (compact) */}
       <AnimateOnView delay={50}>
-        <div className="mb-6">
+        <div className="mb-8">
           <ListenHistoryPlaylist />
         </div>
       </AnimateOnView>
@@ -168,7 +168,7 @@ export function ExploreClient() {
 
       {/* Type tabs */}
       <AnimateOnView delay={100}>
-        <div className="flex gap-2 mb-6 overflow-x-auto scrollbar-hide -mx-4 px-4">
+        <div className="flex gap-2 mb-8 overflow-x-auto scrollbar-hide -mx-4 px-4">
           {typeTabs.map((tab) => (
             <button
               key={tab.value}
@@ -192,7 +192,7 @@ export function ExploreClient() {
       {/* Active filters chips */}
       {(genre || country) && (
         <AnimateOnView delay={120}>
-          <div className="flex flex-wrap items-center gap-2 mb-6">
+          <div className="flex flex-wrap items-center gap-2 mb-8">
             {genre && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-medium">
                 {genre}
@@ -224,7 +224,7 @@ export function ExploreClient() {
 
       {/* Genre pills */}
       <AnimateOnView delay={130}>
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-6 -mx-4 px-4">
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-8 -mx-4 px-4">
           {GENRES.slice(0, 12).map((g) => (
             <button
               key={g}

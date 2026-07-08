@@ -31,10 +31,10 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#ffffff08] bg-[#0a0a0a]">
+    <footer className="border-t border-[#ffffff08] bg-[#0a0a0a]" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="mx-auto max-w-7xl px-4 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
-          <div className="col-span-2 md:col-span-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
+          <div className="sm:col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-4">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
                 <Music className="h-[18px] w-[18px] text-white" />
@@ -140,8 +140,9 @@ export function Footer() {
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
             </a>
-            <span className="text-[#333]">|</span>
+            <span className="text-[#333] hidden sm:inline">|</span>
             <Link href="/terms" className="text-sm text-[#555] hover:text-primary transition-colors">CGU</Link>
+            <span className="text-[#333]">|</span>
             <Link href="/privacy" className="text-sm text-[#555] hover:text-primary transition-colors">Confidentialité</Link>
           </div>
         </div>

@@ -63,13 +63,27 @@ export function PersonalizedRecommendations() {
     load();
   }, []);
 
-  if (loading) return null;
-  if (tracks.length === 0 && artists.length === 0) return null;
-
   return (
     <div className="space-y-8">
-      {tracks.length > 0 && <RecommendedTracks tracks={tracks} />}
-      {artists.length > 0 && <RecommendedArtists artists={artists} />}
+      {loading ? (
+        <div>
+          <h2 className="text-2xl font-bold mb-6">Recommandé pour toi</h2>
+          <div className="flex gap-4 overflow-hidden">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="w-48 shrink-0 space-y-3">
+                <div className="aspect-square rounded-xl bg-surface-hover animate-pulse" />
+                <div className="h-4 w-3/4 bg-surface-hover animate-pulse rounded" />
+                <div className="h-3 w-1/2 bg-surface-hover animate-pulse rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <>
+          {tracks.length > 0 && <RecommendedTracks tracks={tracks} />}
+          {artists.length > 0 && <RecommendedArtists artists={artists} />}
+        </>
+      )}
     </div>
   );
 }

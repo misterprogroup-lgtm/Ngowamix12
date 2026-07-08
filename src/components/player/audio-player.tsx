@@ -332,7 +332,7 @@ export function AudioPlayer() {
               <button
                 onClick={(e) => { e.stopPropagation(); toggleLike(); }}
                 className={cn(
-                  'shrink-0 p-1.5 rounded-full transition-all duration-200 hidden md:block',
+                  'shrink-0 p-1.5 rounded-full transition-all duration-200',
                   likeAnim && 'animate-pop',
                   isLiked
                     ? 'text-primary hover:text-primary-hover'
@@ -350,7 +350,7 @@ export function AudioPlayer() {
               <button
                 onClick={toggleShuffle}
                 className={cn(
-                  'hidden md:block text-text-muted hover:text-text-primary transition-colors p-1',
+                  'text-text-muted hover:text-text-primary transition-colors p-1',
                   shuffle && 'text-primary'
                 )}
               >
@@ -358,14 +358,14 @@ export function AudioPlayer() {
               </button>
               <button
                 onClick={prev}
-                className="text-text-secondary hover:text-text-primary transition-colors p-1"
+                className="text-text-secondary hover:text-text-primary transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
               >
                 <SkipBack className="h-4 w-4 md:h-5 md:w-5" />
               </button>
               <button
                 onClick={togglePlay}
                 className={cn(
-                  'flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full transition-colors',
+                  'flex h-10 w-10 items-center justify-center rounded-full transition-colors',
                   error
                     ? 'bg-error/20 text-error hover:bg-error/30'
                     : isAdPlaying
@@ -383,14 +383,14 @@ export function AudioPlayer() {
               </button>
               <button
                 onClick={next}
-                className="text-text-secondary hover:text-text-primary transition-colors p-1"
+                className="text-text-secondary hover:text-text-primary transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
               >
                 <SkipForward className="h-4 w-4 md:h-5 md:w-5" />
               </button>
               <button
                 onClick={toggleRepeat}
                 className={cn(
-                  'hidden md:block text-text-muted hover:text-text-primary transition-colors p-1',
+                  'text-text-muted hover:text-text-primary transition-colors p-1',
                   repeat && 'text-primary'
                 )}
               >
@@ -400,7 +400,7 @@ export function AudioPlayer() {
 
             {!isExpanded && (
               <div className="flex items-center gap-2 w-full">
-                <span className="text-xs text-text-muted w-8 text-right hidden md:block tabular-nums">
+                <span className="text-xs text-text-muted w-8 text-right tabular-nums">
                   {formatDuration(progress)}
                 </span>
                 <div
@@ -420,12 +420,12 @@ export function AudioPlayer() {
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-white shadow-md shadow-black/40 transition-transform duration-150 group-hover:scale-125" />
                   </div>
                 </div>
-                <span className="text-xs text-text-muted w-8 hidden md:block tabular-nums">
+                <span className="text-xs text-text-muted w-8 tabular-nums">
                   {formatDuration(duration)}
                 </span>
                 {/* Wave bars on the right */}
                 {isPlaying && !isAdPlaying && (
-                  <div className="hidden md:flex items-end gap-[2px] h-3 ml-1">
+                  <div className="flex items-end gap-[2px] h-3 ml-1">
                     <span className="w-0.5 bg-primary rounded-full animate-wave" style={{ animationDelay: '0s', height: '100%' }} />
                     <span className="w-0.5 bg-primary rounded-full animate-wave" style={{ animationDelay: '0.15s', height: '70%' }} />
                     <span className="w-0.5 bg-primary rounded-full animate-wave" style={{ animationDelay: '0.3s', height: '50%' }} />

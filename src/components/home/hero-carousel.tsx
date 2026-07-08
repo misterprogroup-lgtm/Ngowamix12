@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect, useCallback } from 'react';
-import { Crown, Upload, DollarSign } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Crown, Upload, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { APP_NAME, PREMIUM_PRICE, PREMIUM_CURRENCY } from '@/lib/constants';
 
@@ -61,32 +61,82 @@ const slides = [
 
 export function HeroCarousel() {
   const [current, setCurrent] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   const goTo = useCallback((index: number) => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
     setCurrent(index);
-    setTimeout(() => setIsTransitioning(false), 500);
-  }, [isTransitioning]);
+  }, []);
+
+  const next = useCallback(() => {
+    setCurrent((prev) => (prev + 1) % slides.length);
+  }, []);
+
+  const prev = useCallback(() => {
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+  }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(timer);
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.3 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    const timer = setInterval(next, 6000);
+    return () => clearInterval(timer);
+  }, [isVisible, next]);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') { prev(); e.preventDefault(); }
+      if (e.key === 'ArrowRight') { next(); e.preventDefault(); }
+    };
+    el.addEventListener('keydown', handler);
+    return () => el.removeEventListener('keydown', handler);
+  }, [prev, next]);
 
   const slide = slides[current];
 
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br border border-[#ffffff08] min-h-[340px] md:min-h-[360px]"
+    <section
+      ref={sectionRef}
+      tabIndex={0}
+      className="relative overflow-hidden rounded-2xl bg-gradient-to-br border border-[#ffffff08] min-h-[340px] md:min-h-[360px] focus:outline-none focus:ring-2 focus:ring-primary/50"
       style={{ backgroundImage: `linear-gradient(to bottom right, ${slide.gradient})` }}
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Promotions"
     >
       <div className="absolute top-0 right-0 w-72 h-72 bg-white opacity-[0.02] rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-white opacity-[0.02] rounded-full blur-3xl" />
 
-      <div className="relative p-6 md:p-10 lg:p-12">
+      <button
+        onClick={prev}
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity group-hover/carousel:opacity-100"
+        aria-label="Slide précédent"
+      >
+        <ChevronLeft className="h-5 w-5" />
+      </button>
+      <button
+        onClick={next}
+        className="absolute right-3 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity group-hover/carousel:opacity-100"
+        aria-label="Slide suivant"
+      >
+        <ChevronRight className="h-5 w-5" />
+      </button>
+
+      <div
+        className="relative p-6 md:p-10 lg:p-12"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         <div className="max-w-2xl space-y-5 min-h-[200px] md:min-h-[220px]">
           <div className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 ${slide.badgeColor}`}>
             <span className={`h-1.5 w-1.5 rounded-full ${slide.dotColor} animate-pulse`} />
@@ -107,18 +157,23 @@ export function HeroCarousel() {
         </div>
       </div>
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === current
-                ? `${slides[i].dotColor} w-6`
-                : 'bg-[#ffffff20] w-2 hover:bg-[#ffffff40]'
-            }`}
+            className="relative"
             aria-label={`Slide ${i + 1}`}
-          />
+          >
+            <span
+              className={`block rounded-full transition-all duration-300 ${
+                i === current
+                  ? `${slides[i].dotColor} w-6`
+                  : 'bg-[#ffffff20] w-2 hover:bg-[#ffffff40]'
+              }`}
+              style={{ height: '8px' }}
+            />
+          </button>
         ))}
       </div>
     </section>

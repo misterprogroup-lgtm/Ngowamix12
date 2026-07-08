@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { SafeImage } from '@/components/ui/safe-image';
 import { Play, Music } from 'lucide-react';

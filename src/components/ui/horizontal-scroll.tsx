@@ -47,14 +47,14 @@ export function HorizontalScroll({ children, title, subtitle, icon, description,
   };
 
   return (
-    <div className={className}>
+    <div className={className} role="region" aria-label={typeof title === 'string' ? title : undefined}>
       {(title || seeAllHref) && (
         <div className="flex items-center justify-between mb-6">
           {title && (
             <div>
               <div className="flex items-center gap-2">
                 {icon && <span>{icon}</span>}
-                  <div className="text-2xl font-bold">{title}</div>
+                  <h2 className="text-2xl font-bold">{title}</h2>
               </div>
               {subtitle && <p className="text-sm text-text-muted mt-0.5">{subtitle}</p>}
             </div>
@@ -83,7 +83,7 @@ export function HorizontalScroll({ children, title, subtitle, icon, description,
               </div>
             )}
             {seeAllHref && (
-              <Link href={seeAllHref} className="text-sm font-medium text-primary hover:text-primary-hover hidden md:flex items-center gap-1 shrink-0">
+              <Link href={seeAllHref} className="text-sm font-medium text-primary hover:text-primary-hover flex items-center gap-1 shrink-0">
                 Voir tout <ChevronRight className="h-4 w-4" />
               </Link>
             )}

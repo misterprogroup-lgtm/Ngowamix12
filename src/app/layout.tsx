@@ -99,11 +99,8 @@ export default function RootLayout({
                 <ToastProvider>
                   <AuthProvider>
                   <Header />
-                  <main className="flex-1 pt-16 pb-32 md:pb-0">
+                  <main className="flex-1 pt-16 pb-20 md:pb-0">
                     <PageTransition>
-                      <div className="container mx-auto pt-4 px-4">
-                        
-                      </div>
                       <Analytics />
                       <SpeedInsights />
                       {children}

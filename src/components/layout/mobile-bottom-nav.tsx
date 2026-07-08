@@ -3,24 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Compass, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ROUTES } from '@/lib/constants';
 import { MobileSearchOverlay } from '@/components/layout/mobile-search-overlay';
-
-interface NavLink {
-  href: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  isSearch?: true;
-}
-
-const links: NavLink[] = [
-  { href: ROUTES.HOME, label: 'Accueil', icon: Home },
-  { href: '/search', label: 'Rechercher', icon: Search, isSearch: true },
-  { href: ROUTES.EXPLORE, label: 'Explorer', icon: Compass },
-  { href: ROUTES.PREMIUM, label: 'Premium', icon: Crown },
-];
+import { bottomNavLinks } from '@/lib/navigation';
 
 export function MobileBottomNav() {
   const pathname = usePathname();
@@ -34,7 +19,7 @@ export function MobileBottomNav() {
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="flex items-center justify-around h-16">
-          {links.map((link) => {
+          {bottomNavLinks.map((link) => {
             if (link.isSearch) {
               return (
                 <button
@@ -46,7 +31,7 @@ export function MobileBottomNav() {
                   )}
                 >
                   <link.icon className="h-5 w-5" />
-                  <span className="text-[10px] font-medium">{link.label}</span>
+<span className="text-[11px] font-medium">{link.label}</span>
                 </button>
               );
             }

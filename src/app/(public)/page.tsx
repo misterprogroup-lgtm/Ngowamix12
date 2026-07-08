@@ -1,12 +1,9 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Crown, Headphones, Download } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Suspense } from 'react';
 import { db } from '@/lib/db';
 import { APP_NAME, PREMIUM_PRICE, PREMIUM_CURRENCY } from '@/lib/constants';
 import { HeroCarousel } from '@/components/home/hero-carousel';
 import { GenreFilter } from '@/components/home/genre-filter';
-
 import { ArtistCTA } from '@/components/home/artist-cta';
 
 export const dynamic = 'force-dynamic';
@@ -61,7 +58,7 @@ async function getTrendingAlbums() {
       cover: a.coverImage,
       artist: a.artist.name,
       title: a.title,
-      genre: (a as any).genres,
+      genre: a.genre,
     }));
   } catch {
     return [];
@@ -83,6 +80,7 @@ async function getFeaturedArtists() {
       name: a.name,
       slug: a.slug,
       followers: a._count.favorites.toString(),
+      isVerified: a.isVerified,
     }));
   } catch {
     return [];
@@ -105,7 +103,7 @@ async function getRecentTracks() {
       cover: t.album?.coverImage,
       artist: t.album?.artist?.name || 'Artiste',
       title: t.title,
-      genre: (t as any).genre,
+      genre: t.album?.genre,
     }));
   } catch {
     return [];
@@ -127,7 +125,7 @@ export default async function HomePage() {
     artistImage: t.album?.artist?.avatar || null,
     cover: t.album?.coverImage || null,
     plays: t.playCount,
-    genre: (t as any).genre,
+    genre: t.album?.genre,
   }));
 
   return (
@@ -145,40 +143,9 @@ export default async function HomePage() {
         recent={recentTracks}
       />
 
-      <div className="mx-4 md:mx-8 mb-8">
-        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-primary/15 via-[#0b0b0b] to-[#0b0b0b] border border-[#ffffff08] p-8 md:p-12">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-primary opacity-[0.04] rounded-full blur-3xl" />
-          <div className="max-w-2xl relative z-10">
-            <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-5">
-              <Crown className="h-6 w-6 text-white" />
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Passez au Premium
-            </h2>
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-center gap-3 text-[#888]">
-                <Headphones className="h-5 w-5 text-primary shrink-0" />
-                Écoute sans publicité
-              </li>
-              <li className="flex items-center gap-3 text-[#888]">
-                <Download className="h-5 w-5 text-primary shrink-0" />
-                Téléchargements illimités
-              </li>
-              <li className="flex items-center gap-3 text-[#888]">
-                <Crown className="h-5 w-5 text-primary shrink-0" />
-                Qualité audio supérieure
-              </li>
-            </ul>
-            <Link href="/premium">
-              <Button variant="premium" size="lg">
-                S&apos;abonner — {PREMIUM_PRICE} {PREMIUM_CURRENCY}/mois
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <ArtistCTA />
+      <Suspense fallback={<div className="mx-4 md:mx-8 mb-8 h-48 rounded-2xl bg-surface animate-pulse" />}>
+        <ArtistCTA />
+      </Suspense>
 
       <script
         type="application/ld+json"
