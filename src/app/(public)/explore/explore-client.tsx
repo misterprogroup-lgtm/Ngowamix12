@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AnimateOnView } from '@/components/ui/animate-on-view';
 import { ListenHistoryPlaylist } from '@/components/catalog/listen-history-playlist';
-import { PersonalizedRecommendations } from '@/components/home/personalized-recommendations';
+
 import { GENRES, COUNTRIES } from '@/lib/constants';
 import type { Track } from '@/types';
 
@@ -159,12 +159,6 @@ export function ExploreClient() {
         </div>
       </AnimateOnView>
 
-      {/* Recommandations */}
-      <AnimateOnView delay={80}>
-        <div className="mb-8">
-          <PersonalizedRecommendations />
-        </div>
-      </AnimateOnView>
 
       {/* Type tabs */}
       <AnimateOnView delay={100}>
