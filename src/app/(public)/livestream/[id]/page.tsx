@@ -190,7 +190,7 @@ export default function WatchLivestreamPage() {
 
         <div className="flex flex-col h-[500px] rounded-2xl bg-surface border border-border overflow-hidden">
           <div className="p-3 border-b border-border">
-            <h3 className="font-semibold text-sm">Chat en direct</h3>
+            <h3 className="font-bold text-sm">Chat en direct</h3>
           </div>
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {messages.length === 0 ? (

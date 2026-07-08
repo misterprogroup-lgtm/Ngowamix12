@@ -100,6 +100,16 @@ export async function POST(request: Request) {
       },
     });
 
+    if (artistId) {
+      await db.activity.create({
+        data: {
+          userId: user.sub,
+          type: 'FOLLOW_ARTIST',
+          artistId,
+        },
+      });
+    }
+
     const message = artistId ? 'Artiste suivi' : 'Ajouté aux favoris';
     return NextResponse.json({ action: 'added', favorite, message });
   } catch (error) {

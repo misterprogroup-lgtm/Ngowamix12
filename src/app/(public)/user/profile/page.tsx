@@ -100,7 +100,7 @@ export default function ProfilePage() {
 
       <div className="space-y-8">
         <div className="rounded-xl border border-border p-6">
-          <h2 className="text-lg font-semibold mb-4">Photo de profil</h2>
+          <h2 className="text-lg font-bold mb-4">Photo de profil</h2>
           <div className="flex items-center gap-6">
             <div className="relative h-24 w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-2 border-border bg-surface shrink-0">
               {avatarPreview ? (
@@ -137,7 +137,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="rounded-xl border border-border p-6">
-          <h2 className="text-lg font-semibold mb-4">Informations du profil</h2>
+          <h2 className="text-lg font-bold mb-4">Informations du profil</h2>
           <form onSubmit={handleSaveProfile} className="space-y-4">
             <Input
               label="Nom affiché"
@@ -167,7 +167,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="rounded-xl border border-border p-6">
-          <h2 className="text-lg font-semibold mb-4">Changer le mot de passe</h2>
+          <h2 className="text-lg font-bold mb-4">Changer le mot de passe</h2>
           <form onSubmit={handleChangePassword} className="space-y-4">
             <Input
               type="password"

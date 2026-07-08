@@ -200,7 +200,7 @@ export default function ArtistDashboard() {
       <AnimateOnView delay={200}>
         <div className="rounded-xl border border-border p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold">Albums récents</h2>
+            <h2 className="text-lg font-bold">Albums récents</h2>
             <Link href={ROUTES.ARTIST_CATALOG}>
               <Button variant="ghost" size="sm">Voir tout</Button>
             </Link>

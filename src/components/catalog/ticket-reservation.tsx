@@ -86,7 +86,7 @@ export function TicketReservation({ concert }: TicketReservationProps) {
 
   return (
     <div className="rounded-xl border border-border bg-surface p-6 sticky top-24 space-y-4">
-      <h3 className="text-lg font-semibold text-text-primary">Billets</h3>
+      <h3 className="text-lg font-bold text-text-primary">Billets</h3>
 
       <div className="space-y-3">
         <button

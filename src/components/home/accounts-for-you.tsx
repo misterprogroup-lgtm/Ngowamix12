@@ -16,7 +16,7 @@ interface Account {
 
 function VerifiedBadge() {
   return (
-    <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-[#ff9900] flex items-center justify-center ring-2 ring-[#0a0a0a]">
+    <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-primary flex items-center justify-center ring-2 ring-[#0a0a0a]">
       <BadgeCheck className="h-3 w-3 text-white" />
     </div>
   );
@@ -36,7 +36,7 @@ export function AccountsForYou({ accounts }: { accounts: Account[] }) {
             className="flex flex-col items-center text-center"
           >
             <div className="relative mb-2 sm:mb-3">
-              <div className="h-20 w-20 sm:h-32 sm:w-32 rounded-full bg-[#141414] border-2 border-[#ffffff15] overflow-hidden transition-all duration-300 group-hover:border-[#ff990066] group-hover:shadow-lg group-hover:shadow-[#ff9900]/10">
+              <div className="h-20 w-20 sm:h-32 sm:w-32 rounded-full bg-[#141414] border-2 border-[#ffffff15] overflow-hidden transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-lg group-hover:shadow-primary/10">
                 <SafeImage
                   src={account.avatar || ''}
                   alt={account.name}

@@ -44,8 +44,17 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireAuth();
+    const user = await requireAuth(request);
     const { id } = await params;
+
+    const existing = await db.podcast.findUnique({ where: { id }, select: { userId: true } });
+    if (!existing) {
+      return NextResponse.json({ error: 'Podcast non trouvé' }, { status: 404 });
+    }
+    if (existing.userId !== user.sub) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
+    }
+
     const body = await request.json();
     const { title, slug, description, coverImage, category, author, isPublished } = body;
 
@@ -69,8 +78,17 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireAuth(request);
+    const user = await requireAuth(request);
     const { id } = await params;
+
+    const existing = await db.podcast.findUnique({ where: { id }, select: { userId: true } });
+    if (!existing) {
+      return NextResponse.json({ error: 'Podcast non trouvé' }, { status: 404 });
+    }
+    if (existing.userId !== user.sub) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
+    }
+
     await db.podcast.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error) {

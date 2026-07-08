@@ -37,12 +37,18 @@ export default async function FeedPage() {
       })).map((f) => f.artistId).filter(Boolean) as string[]
     : [];
 
-  const activities = followedArtistIds.length > 0
-    ? await db.activity.findMany({
-        where: { userId: { in: followedArtistIds } },
-        orderBy: { createdAt: 'desc' },
-        take: 50,
-        include: {
+  const followedUserIds = followedArtistIds.length > 0
+    ? (await db.artist.findMany({
+        where: { id: { in: followedArtistIds } },
+        select: { userId: true },
+      })).map((a) => a.userId)
+    : [];
+
+  const activities = await db.activity.findMany({
+    where: followedUserIds.length > 0 ? { userId: { in: followedUserIds } } : {},
+    orderBy: { createdAt: 'desc' },
+    take: 50,
+    include: {
           user: { select: { id: true, displayName: true, avatar: true } },
           track: {
             select: {
@@ -60,8 +66,7 @@ export default async function FeedPage() {
             select: { id: true, name: true, slug: true, avatar: true },
           },
         },
-      })
-    : [];
+      });
 
   return (
     <div className="container mx-auto px-4 py-8 pb-24 max-w-2xl">

@@ -17,19 +17,19 @@ export function HeroBanner({ tracks }: { tracks: Track[] }) {
 
   return (
     <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1a1100] via-[#0b0b0b] to-[#0a0a0a] border border-[#ffffff08]">
-      <div className="absolute top-0 right-0 w-72 h-72 bg-[#ff9900] opacity-[0.04] rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-[#ff9900] opacity-[0.03] rounded-full blur-3xl" />
+      <div className="absolute top-0 right-0 w-72 h-72 bg-primary opacity-[0.04] rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-primary opacity-[0.03] rounded-full blur-3xl" />
       <div className="relative grid md:grid-cols-2 gap-8 items-center p-6 md:p-10 lg:p-12">
         <div className="space-y-5">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-[#ff990033] bg-[#ff990011] px-3 py-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#ff9900] animate-pulse" />
-            <span className="text-[11px] font-bold text-[#ff9900] uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="text-[11px] font-bold text-primary uppercase tracking-wider">
               Streaming gratuit
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-black leading-tight text-white">
             La musique africaine{' '}
-            <span className="text-[#ff9900]">à portée</span>{' '}
+            <span className="text-primary">à portée</span>{' '}
             de clic
           </h1>
           <p className="text-sm md:text-base text-[#888] leading-relaxed max-w-md">
@@ -39,7 +39,7 @@ export function HeroBanner({ tracks }: { tracks: Track[] }) {
             <Link href="/explore">
               <Button
                 size="lg"
-                className="bg-[#ff9900] hover:bg-[#e68a00] text-white rounded-full font-bold px-7 h-[52px] text-sm shadow-lg shadow-[#ff9900]/25 hover:shadow-[#ff9900]/40 transition-all duration-300"
+                className="bg-primary hover:bg-primary-hover text-white rounded-full font-bold px-7 h-[52px] text-sm shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300"
               >
                 <Play className="h-4 w-4" />
                 Commencer
@@ -64,7 +64,7 @@ export function HeroBanner({ tracks }: { tracks: Track[] }) {
               <Link
                 key={track.id}
                 href={`/track/${track.id}`}
-                className="group relative aspect-square rounded-xl overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-300 hover:border-[#ff990033] hover:shadow-lg hover:shadow-black/30"
+                className="group relative aspect-square rounded-xl overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-300 hover:border-primary/20 hover:shadow-lg hover:shadow-black/30"
               >
                 <SafeImage
                   src={track.album?.coverImage || ''}
@@ -80,7 +80,7 @@ export function HeroBanner({ tracks }: { tracks: Track[] }) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <div className="h-10 w-10 rounded-full bg-[#ff9900] text-white shadow-lg shadow-[#ff9900]/30 flex items-center justify-center translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="h-10 w-10 rounded-full bg-primary text-white shadow-lg shadow-primary/30 flex items-center justify-center translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     <Play className="h-4 w-4 ml-0.5" fill="currentColor" />
                   </div>
                 </div>

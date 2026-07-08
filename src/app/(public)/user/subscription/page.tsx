@@ -127,7 +127,7 @@ export default function SubscriptionPage() {
 
           {/* Benefits */}
           <div className="rounded-xl border border-border p-6 mb-8">
-            <h2 className="text-lg font-semibold mb-4">Vos avantages Premium</h2>
+            <h2 className="text-lg font-bold mb-4">Vos avantages Premium</h2>
             <ul className="space-y-3">
               {[
                 'Écoute sans publicité',
@@ -149,7 +149,7 @@ export default function SubscriptionPage() {
           <div className="rounded-xl border border-border p-6 mb-8">
             <div className="flex items-center gap-3 mb-4">
               <Clock className="h-5 w-5 text-warning" />
-              <h2 className="text-lg font-semibold">Pas d&apos;abonnement actif</h2>
+              <h2 className="text-lg font-bold">Pas d&apos;abonnement actif</h2>
             </div>
             <p className="text-text-secondary mb-6">
               Passez au Premium pour profiter de l&apos;écoute sans publicité et des téléchargements illimités.
@@ -168,7 +168,7 @@ export default function SubscriptionPage() {
           <div className="rounded-xl border border-border p-6 mb-8">
             <div className="flex items-center gap-3 mb-4">
               <Download className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-semibold">Téléchargements gratuits</h2>
+              <h2 className="text-lg font-bold">Téléchargements gratuits</h2>
             </div>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -194,7 +194,7 @@ export default function SubscriptionPage() {
           <div className="rounded-xl border border-border p-6">
             <div className="flex items-center gap-3 mb-4">
               <AlertCircle className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-semibold">Informations</h2>
+              <h2 className="text-lg font-bold">Informations</h2>
             </div>
             <ul className="space-y-3 text-text-secondary">
               <li>• L&apos;abonnement est renouvelé automatiquement chaque mois</li>

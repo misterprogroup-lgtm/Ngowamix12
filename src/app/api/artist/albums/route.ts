@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireRole } from '@/lib/auth';
@@ -53,7 +54,8 @@ export async function POST(request: Request) {
       coverPath = coverUrl;
     } else if (coverFile && coverFile.size > 0) {
       const buffer = Buffer.from(await coverFile.arrayBuffer());
-      const filename = `${Date.now()}-${coverFile.name}`;
+      const ext = coverFile.name.split('.').pop() || 'jpg';
+      const filename = `${crypto.randomUUID()}.${ext}`;
       const result = await uploadFile(buffer, filename, 'covers');
       coverPath = result.url;
     }
@@ -86,6 +88,14 @@ export async function POST(request: Request) {
         },
       });
     } else {
+      await db.activity.create({
+        data: {
+          userId: artist.userId,
+          type: 'NEW_ALBUM',
+          albumId: album.id,
+        },
+      });
+
       const listeners = await db.user.findMany({
         where: { role: 'LISTENER' },
         select: { id: true },

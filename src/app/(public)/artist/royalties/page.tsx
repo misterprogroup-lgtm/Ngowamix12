@@ -148,7 +148,7 @@ export default function ArtistRoyaltiesPage() {
 
       {tab === 'earnings' && earnings && (
         <div className="rounded-2xl bg-surface border border-border p-6">
-          <h3 className="font-semibold mb-4">Résumé des gains</h3>
+          <h3 className="font-bold mb-4">Résumé des gains</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center py-2 border-b border-border">
               <span className="text-text-secondary">Gains des streams</span>

@@ -137,7 +137,7 @@ export function NotificationSettings() {
   if (permission === 'loading') {
     return (
       <div className="rounded-xl border border-border p-6">
-        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
           <Bell className="h-5 w-5 text-primary" />
           Notifications push
         </h2>
@@ -152,7 +152,7 @@ export function NotificationSettings() {
   if (permission === 'pwa-required') {
     return (
       <div className="rounded-xl border border-border p-6">
-        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
           <Bell className="h-5 w-5 text-primary" />
           Notifications push
         </h2>
@@ -178,7 +178,7 @@ export function NotificationSettings() {
   if (permission === 'unsupported') {
     return (
       <div className="rounded-xl border border-border p-6">
-        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
           <Bell className="h-5 w-5 text-primary" />
           Notifications push
         </h2>
@@ -193,7 +193,7 @@ export function NotificationSettings() {
 
   return (
     <div className="rounded-xl border border-border p-6">
-      <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+      <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
         <Bell className="h-5 w-5 text-primary" />
         Notifications push
       </h2>

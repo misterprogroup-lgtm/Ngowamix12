@@ -33,8 +33,23 @@ const libraryLinks = [
   { href: ROUTES.OFFLINE, label: 'Téléchargements', icon: Download },
 ];
 
+const ARTIST_ROUTES = [
+  '/artist/dashboard',
+  '/artist/catalog',
+  '/artist/services',
+  '/artist/profile',
+  '/artist/livestream',
+  '/artist/royalties',
+  '/artist/referral',
+  '/artist/upload',
+];
+
 export function Sidebar() {
   const pathname = usePathname();
+
+  if (ARTIST_ROUTES.some((route) => pathname.startsWith(route))) {
+    return null;
+  }
 
   const isActive = (href: string) => {
     const base = href.split('?')[0];
@@ -64,7 +79,7 @@ export function Sidebar() {
               >
                 <link.icon className={cn(
                   'h-5 w-5 shrink-0 transition-colors duration-200',
-                  isActive(link.href) ? 'text-[#ff9900]' : 'text-[#ff9900]'
+                  isActive(link.href) ? 'text-primary' : 'text-primary'
                 )} />
                 {link.label}
               </Link>
@@ -92,14 +107,14 @@ export function Sidebar() {
                   <span className="relative flex h-5 w-5 items-center justify-center shrink-0">
                     <link.icon className={cn(
                       'h-5 w-5 transition-colors duration-200',
-                      isActive(link.href) ? 'text-[#ff9900]' : 'text-[#ff9900]'
+                      isActive(link.href) ? 'text-primary' : 'text-primary'
                     )} />
                     <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500 animate-pulse" />
                   </span>
                 ) : (
                   <link.icon className={cn(
                     'h-5 w-5 shrink-0 transition-colors duration-200',
-                    isActive(link.href) ? 'text-[#ff9900]' : 'text-[#ff9900]'
+                    isActive(link.href) ? 'text-primary' : 'text-primary'
                   )} />
                 )}
                 {link.label}
@@ -126,7 +141,7 @@ export function Sidebar() {
               >
                 <link.icon className={cn(
                   'h-5 w-5 shrink-0 transition-colors duration-200',
-                  isActive(link.href) ? 'text-[#ff9900]' : 'text-[#ff9900]'
+                  isActive(link.href) ? 'text-primary' : 'text-primary'
                 )} />
                 {link.label}
               </Link>
@@ -138,7 +153,7 @@ export function Sidebar() {
       <div className="px-5 py-4 border-t border-[#ffffff08]">
         <Link
           href="/artist/upload"
-          className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[#ff9900] text-white text-base font-bold hover:bg-[#e68a00] transition-all duration-200 shadow-lg shadow-[#ff9900]/20"
+          className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-primary text-white text-base font-bold hover:bg-primary-hover transition-all duration-200 shadow-lg shadow-primary/20"
         >
           <Upload className="h-5 w-5" />
           UPLOADER

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser, verifyTokenHash } from '@/lib/auth';
+import { checkRateLimit } from '@/lib/rate-limit';
 import { z } from 'zod';
 
 const verifySchema = z.object({
@@ -9,6 +10,15 @@ const verifySchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const { allowed } = checkRateLimit(`verify-email:${ip}`, { maxRequests: 10, windowMs: 60000 });
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives. Réessayez plus tard.' },
+        { status: 429 }
+      );
+    }
+
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json(

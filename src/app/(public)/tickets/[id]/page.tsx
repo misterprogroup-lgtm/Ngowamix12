@@ -136,13 +136,13 @@ export default async function ConcertDetailPage({ params }: { params: Promise<{ 
 
                 {concert.description && (
                   <div>
-                    <h2 className="text-xl font-semibold text-text-primary mb-3">À propos de l&apos;événement</h2>
+                    <h2 className="text-xl font-bold text-text-primary mb-3">À propos de l&apos;événement</h2>
                     <p className="text-text-secondary whitespace-pre-line">{concert.description}</p>
                   </div>
                 )}
 
                 <div>
-                  <h2 className="text-xl font-semibold text-text-primary mb-3">Artiste</h2>
+                  <h2 className="text-xl font-bold text-text-primary mb-3">Artiste</h2>
                   <div className="flex items-center gap-4">
                     {concert.artist.avatar ? (
                       <SafeImage
@@ -160,7 +160,7 @@ export default async function ConcertDetailPage({ params }: { params: Promise<{ 
                     )}
                     <div>
                       <div className="flex items-center gap-1">
-                        <h3 className="font-semibold text-text-primary">{concert.artist.name}</h3>
+                        <h3 className="font-bold text-text-primary">{concert.artist.name}</h3>
                         {concert.artist.isVerified && (
                           <BadgeCheck className="h-4 w-4 text-primary shrink-0" />
                         )}

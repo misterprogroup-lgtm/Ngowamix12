@@ -96,12 +96,12 @@ export function TopCharts({ tracks: initialTracks, topAlbum: initialTopAlbum }: 
     <section>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-[#ff9900]" />
+          <TrendingUp className="h-5 w-5 text-primary" />
           <h2 className="text-lg md:text-xl font-black text-white tracking-tight">Top 10</h2>
         </div>
         <Link
           href="/explore?sort=plays"
-          className="flex items-center gap-1 text-sm font-medium text-[#888] hover:text-[#ff9900] transition-colors"
+          className="flex items-center gap-1 text-sm font-medium text-[#888] hover:text-primary transition-colors"
         >
           VOIR TOUT <ArrowRight className="h-3.5 w-3.5" />
         </Link>
@@ -111,7 +111,7 @@ export function TopCharts({ tracks: initialTracks, topAlbum: initialTopAlbum }: 
         {topAlbum && (
           <div className="hidden md:block md:col-span-2">
             <Link href={`/album/${topAlbum.id}`} className="group block">
-              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#ff990022] to-[#ff990008] p-6 ring-1 ring-[#ff990033]">
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary/15 to-primary/5 p-6 ring-1 ring-primary/20">
                 <div className="relative z-10 flex flex-col items-center">
                   <div className="relative aspect-square w-full max-w-[240px] rounded-2xl overflow-hidden shadow-2xl ring-2 ring-white/10 mb-5">
                     <SafeImage
@@ -123,12 +123,12 @@ export function TopCharts({ tracks: initialTracks, topAlbum: initialTopAlbum }: 
                       fallback={<div className="flex h-full items-center justify-center"><Music className="h-16 w-16 text-[#555]" /></div>}
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                      <div className="h-14 w-14 rounded-full bg-[#ff9900] text-white shadow-lg shadow-[#ff9900]/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0">
+                      <div className="h-14 w-14 rounded-full bg-primary text-white shadow-lg shadow-primary/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0">
                         <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
                       </div>
                     </div>
                   </div>
-                  <div className="absolute top-3 left-3 bg-[#ff9900] text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 z-20 shadow-lg">
+                  <div className="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 z-20 shadow-lg">
                     <TrendingUp className="h-3 w-3" />
                     #1 du mois
                   </div>
@@ -156,13 +156,13 @@ export function TopCharts({ tracks: initialTracks, topAlbum: initialTopAlbum }: 
                 >
                   <span className="relative w-6 text-center shrink-0">
                     {isCurrentTrack && isPlaying ? (
-                      <Pause className="h-4 w-4 text-[#ff9900] mx-auto" fill="currentColor" />
+                      <Pause className="h-4 w-4 text-primary mx-auto" fill="currentColor" />
                     ) : isCurrentTrack ? (
-                      <Play className="h-4 w-4 text-[#ff9900] mx-auto" fill="currentColor" />
+                      <Play className="h-4 w-4 text-primary mx-auto" fill="currentColor" />
                     ) : (
                       <span className="text-sm text-[#555] font-bold group-hover:hidden">{index + 1}</span>
                     )}
-                    <span className="hidden group-hover:inline text-[#ff9900]">
+                    <span className="hidden group-hover:inline text-primary">
                       <Play className="h-4 w-4 mx-auto" fill="currentColor" />
                     </span>
                   </span>
@@ -176,7 +176,7 @@ export function TopCharts({ tracks: initialTracks, topAlbum: initialTopAlbum }: 
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className={`text-sm font-semibold truncate ${isCurrentTrack ? 'text-[#ff9900]' : 'text-white'}`}>
+                    <p className={`text-sm font-semibold truncate ${isCurrentTrack ? 'text-primary' : 'text-white'}`}>
                       {track.title}
                     </p>
                     <p className="text-xs text-[#777] truncate">{track.album.artist.name}</p>

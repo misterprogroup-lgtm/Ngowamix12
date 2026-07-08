@@ -174,7 +174,7 @@ export function ReviewsSection({ albumId }: ReviewsSectionProps) {
   if (loading) {
     return (
       <section className="mt-12 pt-8 border-t border-border">
-        <h2 className="text-xl font-semibold mb-6">Avis ({'...'})</h2>
+        <h2 className="text-xl font-bold mb-6">Avis ({'...'})</h2>
         <div className="animate-pulse space-y-4">
           {Array.from({ length: 2 }).map((_, i) => (
             <div key={i} className="h-20 bg-surface-hover rounded-xl" />
@@ -188,7 +188,7 @@ export function ReviewsSection({ albumId }: ReviewsSectionProps) {
     <section className="mt-12 pt-8 border-t border-border">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-xl font-bold">
             Avis ({totalReviews})
           </h2>
           {totalReviews > 0 && (

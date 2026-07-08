@@ -226,7 +226,7 @@ export default async function TrackPage({ params }: PageProps) {
         <AnimateOnView delay={100} as="section" className="mb-12">
           <div className="flex items-center gap-2 mb-4">
             <ListMusic className="h-5 w-5 text-text-secondary" />
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-lg font-bold">
               Autres titres de l&apos;album
             </h2>
           </div>
@@ -236,7 +236,7 @@ export default async function TrackPage({ params }: PageProps) {
 
       {recommendations.length > 0 && (
         <AnimateOnView delay={200} as="section">
-          <h2 className="text-lg font-semibold mb-4">Vous aimerez aussi</h2>
+          <h2 className="text-lg font-bold mb-4">Vous aimerez aussi</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {recommendations.map((rec) => (
               <Link

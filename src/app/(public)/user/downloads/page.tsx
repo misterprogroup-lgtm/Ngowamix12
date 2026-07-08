@@ -57,7 +57,7 @@ export default function DownloadsPage() {
 
       {userData?.isPremium ? (
         <div className="rounded-xl border border-border p-6 mb-8">
-          <h2 className="text-lg font-semibold mb-4">Téléchargements</h2>
+          <h2 className="text-lg font-bold mb-4">Téléchargements</h2>
           <div className="flex items-center justify-between">
             <span className="text-sm text-text-secondary">Forfait</span>
             <span className="text-sm font-bold text-success">Illimité</span>
@@ -65,7 +65,7 @@ export default function DownloadsPage() {
         </div>
       ) : (
         <div className="rounded-xl border border-border p-6 mb-8">
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
             <AlertCircle className="h-5 w-5 text-warning" />
             Téléchargements gratuits
           </h2>

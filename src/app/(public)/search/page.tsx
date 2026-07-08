@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { Suspense, useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 import { Search, Music, User, X } from 'lucide-react';
 import Link from 'next/link';
 import { AlbumCard } from '@/components/catalog/album-card';
@@ -32,7 +33,7 @@ interface ArtistResult {
 
 type Tab = 'tracks' | 'albums' | 'artists';
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get('q') || '';
@@ -248,5 +249,13 @@ export default function SearchPage() {
         </>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+      <SearchContent />
+    </Suspense>
   );
 }

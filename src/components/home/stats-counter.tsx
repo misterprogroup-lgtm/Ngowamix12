@@ -68,7 +68,7 @@ export function StatsCounter({ tracks, artists, albums, users }: Stats) {
           return (
             <div
               key={key}
-              className="relative overflow-hidden rounded-xl border border-[#ffffff08] bg-[#0b0b0b] p-6 text-center group hover:border-[#ff990033] transition-colors"
+              className="relative overflow-hidden rounded-xl border border-[#ffffff08] bg-[#0b0b0b] p-6 text-center group hover:border-primary/20 transition-colors"
             >
               <div className={`absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 rounded-full bg-linear-to-br ${color} opacity-5 group-hover:opacity-10 transition-opacity`} />
               <div className={`w-10 h-10 rounded-lg bg-linear-to-br ${color} flex items-center justify-center mx-auto mb-3`}>

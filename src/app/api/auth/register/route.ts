@@ -138,7 +138,9 @@ export async function POST(request: Request) {
 
     await setSessionCookie(token);
 
-    sendEmail(user.email, 'Vérification de votre email — Ngowamix', generateEmailVerificationEmail(user.firstName || user.email, otp).html);
+    sendEmail(user.email, 'Vérification de votre email — Ngowamix', generateEmailVerificationEmail(user.firstName || user.email, otp).html).catch(() => {
+      // Email non bloquant
+    });
 
     return NextResponse.json(
       { user, token, message: 'Inscription réussie. Veuillez vérifier votre email.' },

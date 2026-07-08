@@ -1,5 +1,7 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { ExploreClient } from './explore-client';
+import { Loader2 } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Explorer le catalogue',
@@ -16,5 +18,9 @@ export const metadata: Metadata = {
 };
 
 export default function ExplorePage() {
-  return <ExploreClient />;
+  return (
+    <Suspense fallback={<div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+      <ExploreClient />
+    </Suspense>
+  );
 }

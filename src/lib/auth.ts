@@ -122,8 +122,8 @@ export async function requireAuth(request?: Request): Promise<JWTPayload> {
   return user;
 }
 
-export async function requireRole(roles: UserRole[]): Promise<JWTPayload> {
-  const user = await requireAuth();
+export async function requireRole(roles: UserRole[], request?: Request): Promise<JWTPayload> {
+  const user = await requireAuth(request);
   if (!roles.includes(user.role)) {
     throw new Error('Forbidden');
   }

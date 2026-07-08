@@ -186,7 +186,7 @@ export default function AdminSettingsPage() {
               onChange={(e) => setSettings({ ...settings, supportEmail: e.target.value })}
             />
             <div className="rounded-xl border border-border p-5 space-y-3">
-              <h3 className="font-semibold flex items-center gap-2">
+              <h3 className="font-bold flex items-center gap-2">
                 <Mail className="h-4 w-4 text-primary" />
                 Test d'envoi d'email
               </h3>
@@ -291,7 +291,7 @@ export default function AdminSettingsPage() {
               <div key={provider.id || provider.provider} className="rounded-xl border border-border p-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold">{provider.merchantName || provider.provider}</h3>
+                    <h3 className="font-bold">{provider.merchantName || provider.provider}</h3>
                     <p className="text-sm text-text-secondary">{provider.description}</p>
                   </div>
                   <label className="flex items-center gap-2 cursor-pointer">

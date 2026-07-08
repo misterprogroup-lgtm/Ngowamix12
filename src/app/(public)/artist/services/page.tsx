@@ -108,7 +108,7 @@ export default function ArtistServicesPage() {
       <form onSubmit={handleSave} className="space-y-6">
         {tab === 'payout' && (
           <div className="space-y-5 p-6 rounded-2xl bg-surface border border-border">
-            <h2 className="font-semibold">Moyen de paiement par défaut</h2>
+            <h2 className="font-bold">Moyen de paiement par défaut</h2>
             <p className="text-sm text-text-secondary -mt-3">
               Ces infos seront pré-remplies lors de vos demandes de retrait.
             </p>
@@ -206,13 +206,13 @@ export default function ArtistServicesPage() {
 
         {tab === 'streaming' && (
           <div className="space-y-5 p-6 rounded-2xl bg-surface border border-border">
-            <h2 className="font-semibold">Streaming vidéo</h2>
+            <h2 className="font-bold">Streaming vidéo</h2>
             <p className="text-sm text-text-secondary -mt-3">
               Configure ton serveur de diffusion pour la vidéo en direct.
             </p>
 
             <div className="p-4 rounded-xl bg-success/5 border border-success/20">
-              <h3 className="font-semibold text-sm mb-2">YouTube Live (gratuit, recommandé)</h3>
+              <h3 className="font-bold text-sm mb-2">YouTube Live (gratuit, recommandé)</h3>
               <p className="text-sm text-text-secondary mb-3">
                 Aucun serveur nécessaire. Tu crées ton live sur YouTube et tu colles le lien dans le formulaire de création de live.
               </p>
@@ -234,7 +234,7 @@ export default function ArtistServicesPage() {
             </div>
 
             <div className="p-4 rounded-xl bg-surface-hover border border-border">
-              <h3 className="font-semibold text-sm mb-2">Owncast (auto-hébergé)</h3>
+              <h3 className="font-bold text-sm mb-2">Owncast (auto-hébergé)</h3>
               <p className="text-sm text-text-secondary mb-3">
                 Option avancée : installe Owncast sur un VPS pour un contrôle total.
               </p>

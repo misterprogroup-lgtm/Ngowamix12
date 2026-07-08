@@ -10,7 +10,7 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     });
 
-    return NextResponse.json(ads);
+    return NextResponse.json({ ads });
   } catch (error) {
     console.error('Get ads error:', error);
     return NextResponse.json(

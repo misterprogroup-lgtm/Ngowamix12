@@ -269,7 +269,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
 
       {tracks.length > 0 ? (
         <section>
-          <h2 className="text-xl font-semibold mb-4">
+          <h2 className="text-xl font-bold mb-4">
             Liste des titres
           </h2>
           <div className="space-y-1">
@@ -289,7 +289,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
         <section className="mt-12">
           <div className="flex items-center gap-2 mb-5">
             <Sparkles className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-lg font-bold">
               Plus de <span className="text-primary">{album.artist.name}</span>
             </h2>
           </div>
@@ -315,7 +315,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
 
       {similarAlbums.length > 0 && (
         <section className="mt-12">
-          <h2 className="text-lg font-semibold mb-5">Albums similaires</h2>
+          <h2 className="text-lg font-bold mb-5">Albums similaires</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {similarAlbums.map((a) => (
               <AlbumCard

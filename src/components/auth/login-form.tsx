@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth-store';
 import { ROUTES } from '@/lib/constants';
+import { GoogleSignInButton } from '@/components/auth/google-signin-button';
 import type { User } from '@/types';
 
 export function LoginForm() {
@@ -61,6 +62,17 @@ export function LoginForm() {
           {error}
         </div>
       )}
+
+      <GoogleSignInButton mode="signin" />
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-text-muted">ou</span>
+        </div>
+      </div>
 
       <Input
         type="email"

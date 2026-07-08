@@ -196,7 +196,7 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
         {artist.bio && (
           <AnimateOnView delay={150} className="mb-10">
             <div className="rounded-xl border border-border bg-surface p-5 md:p-6">
-              <h2 className="text-base font-semibold mb-2">Biographie</h2>
+              <h2 className="text-base font-bold mb-2">Biographie</h2>
               <p className="text-sm text-text-secondary whitespace-pre-wrap leading-relaxed">{artist.bio}</p>
             </div>
           </AnimateOnView>
@@ -229,7 +229,7 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
 
         {topTracks.length > 0 && (
           <AnimateOnView delay={200} as="section" className="mb-12">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
               <Play className="h-5 w-5 text-primary" />
               Les plus écoutés
             </h2>

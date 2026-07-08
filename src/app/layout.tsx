@@ -13,9 +13,6 @@ import { TermsAcceptanceModal } from '@/components/layout/terms-modal';
 import { AuthProvider } from '@/components/auth/auth-provider';
 import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav';
 import { MissingAvatarPopup } from '@/components/layout/missing-avatar-popup';
-import { AdPopup } from '@/components/ads/ad-popup';
-import { AdBanner } from '@/components/ads/ad-banner';
-import { AdSidebar } from '@/components/ads/ad-sidebar';
 import { PageTransition } from '@/components/layout/page-transition';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -105,7 +102,7 @@ export default function RootLayout({
                   <main className="flex-1 pt-16 pb-32 md:pb-0">
                     <PageTransition>
                       <div className="container mx-auto pt-4 px-4">
-                        <AdBanner />
+                        
                       </div>
                       <Analytics />
                       <SpeedInsights />
@@ -119,7 +116,6 @@ export default function RootLayout({
               <PushNotificationManager />
               <TermsAcceptanceModal />
               <MissingAvatarPopup />
-              <AdPopup />
               </AuthProvider>
               <Script id="register-sw" strategy="afterInteractive">
             {`

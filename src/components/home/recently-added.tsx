@@ -21,7 +21,7 @@ export function RecentlyAdded({ songs }: { songs: RecentlyAddedSong[] }) {
           key={song.id}
           href={`/track/${song.id}`}
           className="group w-2/5 sm:w-1/4 shrink-0 snap-start px-1.5">
-          <div className="relative aspect-square rounded-[10px] overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-300 group-hover:border-[#ff990033] group-hover:shadow-md group-hover:shadow-black/20">
+          <div className="relative aspect-square rounded-[10px] overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-300 group-hover:border-primary/20 group-hover:shadow-md group-hover:shadow-black/20">
             <SafeImage
               src={song.cover || ''}
               alt={song.title}
@@ -35,14 +35,14 @@ export function RecentlyAdded({ songs }: { songs: RecentlyAddedSong[] }) {
               }
             />
             <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <div className="h-11 w-11 rounded-full bg-[#ff9900] text-white shadow-lg shadow-[#ff9900]/30 flex items-center justify-center translate-y-3 group-hover:translate-y-0 transition-transform duration-300">
+              <div className="h-11 w-11 rounded-full bg-primary text-white shadow-lg shadow-primary/30 flex items-center justify-center translate-y-3 group-hover:translate-y-0 transition-transform duration-300">
                 <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
               </div>
             </div>
           </div>
           <div className="mt-2.5 space-y-0.5 px-0.5">
             <p className="text-xs text-[#999] truncate">{song.artist}</p>
-            <p className="text-sm font-bold text-white truncate group-hover:text-[#ff9900] transition-colors duration-300">
+            <p className="text-sm font-bold text-white truncate group-hover:text-primary transition-colors duration-300">
               {song.title}
             </p>
           </div>

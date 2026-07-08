@@ -1,10 +1,20 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth, hashToken } from '@/lib/auth';
+import { checkRateLimit } from '@/lib/rate-limit';
 import { generateVerificationCode, sendVerificationCode } from '@/lib/sms';
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const { allowed } = checkRateLimit(`send-verification:${ip}`, { maxRequests: 3, windowMs: 60000 });
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives. Réessayez plus tard.' },
+        { status: 429 }
+      );
+    }
+
     const user = await requireAuth();
 
     const userData = await db.user.findUnique({

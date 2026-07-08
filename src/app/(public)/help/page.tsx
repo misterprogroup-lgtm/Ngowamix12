@@ -55,7 +55,7 @@ export default function HelpPage() {
                   <item.icon className="h-5 w-5 text-primary" />
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-lg font-semibold mb-2">{item.q}</h2>
+                  <h2 className="text-lg font-bold mb-2">{item.q}</h2>
                   {item.a ? (
                     <p className="text-text-secondary leading-relaxed">{item.a}</p>
                   ) : (

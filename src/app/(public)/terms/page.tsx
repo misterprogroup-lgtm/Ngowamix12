@@ -17,7 +17,7 @@ export default function TermsPage() {
 
       <div className="prose prose-sm max-w-none text-text-secondary space-y-8">
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">1. Présentation du service</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">1. Présentation du service</h2>
           <p>
             Ngowamix est une plateforme numérique dédiée à la découverte, l'écoute et l'achat de musique africaine. Le service permet aux artistes et labels de publier leurs créations musicales et aux auditeurs d'écouter, télécharger et acheter des albums, singles et EPs.
           </p>
@@ -27,7 +27,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">2. Acceptation des conditions</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">2. Acceptation des conditions</h2>
           <p>
             En créant un compte sur Ngowamix ou en utilisant nos services, vous acceptez sans réserve l'ensemble des présentes Conditions Générales d'Utilisation (ci-après « CGU »). Si vous n'acceptez pas ces conditions, vous ne devez pas utiliser nos services.
           </p>
@@ -37,7 +37,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">3. Création de compte</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">3. Création de compte</h2>
           <p>
             Pour accéder à la plupart des fonctionnalités, vous devez créer un compte en fournissant des informations exactes, complètes et à jour. Vous vous engagez à :
           </p>
@@ -61,7 +61,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">4. Utilisation du service</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">4. Utilisation du service</h2>
           <h3 className="text-base font-medium text-text-primary mt-4 mb-2">4.1 Pour les auditeurs</h3>
           <p>
             En tant qu'auditeur, vous pouvez écouter des extraits et titres en streaming gratuit, acheter des albums ou singles, télécharger vos achats pour écoute hors-ligne, et bénéficier d'un quota de téléchargements premium mensuel si vous êtes abonné.
@@ -104,7 +104,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">5. Propriété intellectuelle</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">5. Propriété intellectuelle</h2>
           <p>
             Les contenus musicaux publiés sur Ngowamix restent la propriété exclusive de leurs créateurs (artistes, labels, producteurs). En publiant du contenu, vous accordez à Ngowamix une licence non exclusive pour :
           </p>
@@ -119,7 +119,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">6. Abonnements et paiements</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">6. Abonnements et paiements</h2>
           <h3 className="text-base font-medium text-text-primary mt-4 mb-2">6.1 Abonnement premium</h3>
           <p>
             Ngowamix propose un abonnement premium donnant accès à des fonctionnalités supplémentaires (téléchargements illimités, écoute sans publicité, accès anticipé). L'abonnement est payable d'avance et se renouvelle automatiquement sauf résiliation par l'utilisateur.
@@ -143,7 +143,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">7. Rémunération des artistes et labels</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">7. Rémunération des artistes et labels</h2>
           <p>
             Ngowamix reverse aux artistes et labels une part des revenus générés par leurs contenus selon les modalités définies dans un contrat séparé. Les revenus proviennent des ventes directes, des abonnements premium et d'autres sources de monétisation.
           </p>
@@ -153,7 +153,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">8. Responsabilité</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">8. Responsabilité</h2>
           <p>
             Ngowamix s'efforce d'assurer la disponibilité et la fiabilité du service mais ne garantit pas que le service fonctionnera sans interruption ou erreur. Ngowamix ne saurait être tenu responsable :
           </p>
@@ -170,7 +170,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">9. Protection des données personnelles</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">9. Protection des données personnelles</h2>
           <p>
             Ngowamix collecte et traite vos données personnelles conformément à sa Politique de Confidentialité disponible sur{' '}
             <Link href="/privacy" className="text-primary hover:underline">
@@ -184,7 +184,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">10. Suspension et résiliation</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">10. Suspension et résiliation</h2>
           <p>
             Ngowamix peut suspendre ou résilier votre compte sans préavis en cas de :
           </p>
@@ -203,14 +203,14 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">11. Droit applicable et juridiction</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">11. Droit applicable et juridiction</h2>
           <p>
             Les présentes CGU sont régies par le droit applicable dans le pays de résidence de Ngowamix. En cas de litige, les parties s'efforceront de trouver une solution amiable. À défaut, le litige sera porté devant les tribunaux compétents.
           </p>
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">12. Contact</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">12. Contact</h2>
           <p>
             Pour toute question concernant ces conditions d'utilisation, vous pouvez nous contacter à :
           </p>

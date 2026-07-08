@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser, hashToken } from '@/lib/auth';
+import { checkRateLimit } from '@/lib/rate-limit';
 import { sendEmail, generateEmailVerificationEmail } from '@/lib/email';
 
 function generateOTP(): string {
@@ -9,6 +10,15 @@ function generateOTP(): string {
 
 export async function POST() {
   try {
+    const ip = 'resend-otp'; // rate limit par utilisateur via le JWT
+    const { allowed } = checkRateLimit(ip, { maxRequests: 5, windowMs: 60000 });
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives. Réessayez plus tard.' },
+        { status: 429 }
+      );
+    }
+
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json(
@@ -48,7 +58,9 @@ export async function POST() {
       },
     });
 
-    sendEmail(dbUser.email, 'Vérification de votre email — Ngowamix', generateEmailVerificationEmail(dbUser.firstName || dbUser.email, otp).html);
+    sendEmail(dbUser.email, 'Vérification de votre email — Ngowamix', generateEmailVerificationEmail(dbUser.firstName || dbUser.email, otp).html).catch(() => {
+      // Email non bloquant
+    });
 
     return NextResponse.json({
       message: 'Nouveau code envoyé',

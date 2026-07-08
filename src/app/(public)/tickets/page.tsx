@@ -96,7 +96,7 @@ export default async function TicketsPage({ searchParams }: TicketsPageProps) {
           ) : (
             <div className="text-center py-20">
               <Ticket className="h-16 w-16 mx-auto text-text-muted mb-4" />
-              <h2 className="text-xl font-semibold text-text-primary mb-2">
+              <h2 className="text-xl font-bold text-text-primary mb-2">
                 Aucun concert prévu pour le moment
               </h2>
               <p className="text-text-secondary">

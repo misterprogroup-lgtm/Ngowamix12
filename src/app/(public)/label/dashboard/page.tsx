@@ -122,7 +122,7 @@ export default function LabelDashboard() {
 
       <div className="rounded-xl border border-border">
         <div className="p-6 border-b border-border">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
+          <h2 className="text-lg font-bold flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
             Artistes du label
           </h2>

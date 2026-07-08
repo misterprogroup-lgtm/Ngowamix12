@@ -168,7 +168,7 @@ export default function ChatPage() {
                      activeRoom.type === 'ARTIST' ? <Users className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
                   </div>
                   <div>
-                    <h3 className="font-semibold">{activeRoom.name}</h3>
+                    <h3 className="font-bold">{activeRoom.name}</h3>
                     <p className="text-xs text-text-muted">{activeRoom._count.participants} participant{activeRoom._count.participants !== 1 ? 's' : ''} · {activeRoom._count.messages} message{activeRoom._count.messages !== 1 ? 's' : ''}</p>
                   </div>
                 </div>

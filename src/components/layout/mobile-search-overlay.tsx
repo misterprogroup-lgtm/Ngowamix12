@@ -147,7 +147,7 @@ export function MobileSearchOverlay({
                   <div className="px-4 py-3 space-y-6">
                     {results.artists.length > 0 && (
                       <section>
-                        <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">
+                        <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2">
                           Artistes ({results.artists.length})
                         </h3>
                         <div className="space-y-1">
@@ -179,7 +179,7 @@ export function MobileSearchOverlay({
 
                     {results.albums.length > 0 && (
                       <section>
-                        <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">
+                        <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2">
                           Albums ({results.albums.length})
                         </h3>
                         <div className="space-y-1">
@@ -215,7 +215,7 @@ export function MobileSearchOverlay({
 
                     {results.tracks.length > 0 && (
                       <section>
-                        <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">
+                        <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2">
                           Titres ({results.tracks.length})
                         </h3>
                         <div className="space-y-1">

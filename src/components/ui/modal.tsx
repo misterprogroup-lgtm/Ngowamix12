@@ -40,7 +40,7 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
       >
         {title && (
           <div className="flex items-center justify-between p-4 border-b border-border">
-            <h2 className="text-lg font-semibold">{title}</h2>
+            <h2 className="text-lg font-bold">{title}</h2>
             <button
               onClick={onClose}
               className="text-text-muted hover:text-text-primary transition-colors"

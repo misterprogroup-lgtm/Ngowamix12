@@ -37,7 +37,7 @@ export function ArtistDiscography({ albums, singles, artistName, artistSlug }: A
   if (tabs.length <= 1) {
     return (
       <section>
-        <h2 className="text-lg font-semibold mb-6">Discographie</h2>
+        <h2 className="text-lg font-bold mb-6">Discographie</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
           {items.map((album) => (
             <AlbumCard
@@ -63,7 +63,7 @@ export function ArtistDiscography({ albums, singles, artistName, artistSlug }: A
 
   return (
     <section>
-      <h2 className="text-lg font-semibold mb-4">Discographie</h2>
+      <h2 className="text-lg font-bold mb-4">Discographie</h2>
       <div className="flex gap-1 mb-6 border-b border-border">
         {tabs.map((t) => (
           <button

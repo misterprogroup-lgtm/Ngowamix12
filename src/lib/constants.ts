@@ -1,4 +1,4 @@
-export const PREMIUM_PRICE = parseInt(process.env.PREMIUM_PRICE || '1500', 10);
+export const PREMIUM_PRICE = parseInt(process.env.PREMIUM_PRICE || '5000', 10);
 export const PREMIUM_12M_PRICE = PREMIUM_PRICE * 12;
 export const PREMIUM_12M_MONTHS = 14;
 export const PREMIUM_CURRENCY = process.env.PREMIUM_CURRENCY || 'XOF';
@@ -83,7 +83,7 @@ export const ROUTES = {
   CHAT: '/chat',
   FAMILY_PREMIUM: '/premium/family',
   ARTIST_ROYALTIES: '/artist/royalties',
-  ARTIST_PAYOUT: '/artist/payout',
+  // ARTIST_PAYOUT: '/artist/payout',
   ARTIST_SERVICES: '/artist/services',
   FEED: '/feed',
   MESSAGES: '/messages',

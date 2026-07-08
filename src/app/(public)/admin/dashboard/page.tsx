@@ -154,7 +154,7 @@ export default function AdminDashboard() {
       {/* Notifications */}
       <div className="rounded-xl border border-border p-6 mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
+          <h2 className="text-lg font-bold flex items-center gap-2">
             <Bell className="h-5 w-5" />
             Notifications récentes
           </h2>
@@ -201,7 +201,7 @@ export default function AdminDashboard() {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Recent users */}
         <div className="rounded-xl border border-border p-6">
-          <h2 className="text-lg font-semibold mb-4">Utilisateurs récents</h2>
+          <h2 className="text-lg font-bold mb-4">Utilisateurs récents</h2>
           {data.recentUsers.length === 0 ? (
             <p className="text-text-muted text-sm">Aucun utilisateur</p>
           ) : (
@@ -221,7 +221,7 @@ export default function AdminDashboard() {
 
         {/* Recent transactions */}
         <div className="rounded-xl border border-border p-6">
-          <h2 className="text-lg font-semibold mb-4">Transactions récentes</h2>
+          <h2 className="text-lg font-bold mb-4">Transactions récentes</h2>
           {data.recentTransactions.length === 0 ? (
             <p className="text-text-muted text-sm">Aucune transaction</p>
           ) : (

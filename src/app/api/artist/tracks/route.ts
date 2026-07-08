@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireRole } from '@/lib/auth';
@@ -87,7 +88,8 @@ export async function POST(request: Request) {
       duration = clientDuration;
     } else if (audioFile) {
       const buffer = Buffer.from(await audioFile.arrayBuffer());
-      const filename = `${Date.now()}-${audioFile.name}`;
+      const ext = audioFile.name.split('.').pop() || 'mp3';
+      const filename = `${crypto.randomUUID()}.${ext}`;
 
       const tempPath = getTempAudioPath(filename);
       fs.writeFileSync(tempPath, buffer);

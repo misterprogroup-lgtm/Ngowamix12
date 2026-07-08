@@ -17,14 +17,14 @@ export default function PrivacyPage() {
 
       <div className="prose prose-sm max-w-none text-text-secondary space-y-8">
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">1. Qui sommes-nous</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">1. Qui sommes-nous</h2>
           <p>
             Ngowamix est une plateforme de musique africaine numérique. Nous sommes engagés dans la protection de votre vie privée et la sécurité de vos données personnelles. Cette politique décrit comment nous collectons, utilisons et protégeons vos informations.
           </p>
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">2. Données collectées</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">2. Données collectées</h2>
           <h3 className="text-base font-medium text-text-primary mt-4 mb-2">2.1 Données que vous nous fournissez</h3>
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li>Informations de compte : nom, prénom, adresse email</li>
@@ -44,7 +44,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">3. Utilisation des données</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">3. Utilisation des données</h2>
           <p>Nous utilisons vos données pour :</p>
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li>Créer et gérer votre compte</li>
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">4. Partage des données</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">4. Partage des données</h2>
           <p>
             Nous ne vendons jamais vos données personnelles. Nous pouvons partager certaines informations avec :
           </p>
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">5. Sécurité des données</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">5. Sécurité des données</h2>
           <p>
             Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles pour protéger vos données :
           </p>
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">6. Durée de conservation</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">6. Durée de conservation</h2>
           <p>
             Nous conservons vos données aussi longtemps que votre compte est actif. Après la suppression de votre compte :
           </p>
@@ -97,7 +97,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">7. Vos droits</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">7. Vos droits</h2>
           <p>Conformément à la réglementation applicable, vous disposez des droits suivants :</p>
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li><strong>Droit d'accès</strong> — Obtenir une copie de vos données personnelles</li>
@@ -113,7 +113,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">8. Cookies</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">8. Cookies</h2>
           <p>
             Ngowamix utilise des cookies et technologies similaires pour :
           </p>
@@ -128,14 +128,14 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">9. Modification de cette politique</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">9. Modification de cette politique</h2>
           <p>
             Nous pouvons modifier cette politique de confidentialité à tout moment. Les modifications seront publiées sur cette page avec une date de mise à jour révisée. Nous vous informerons des changements substantiels par notification sur la plateforme ou par email.
           </p>
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold text-text-primary mb-3">10. Contact</h2>
+          <h2 className="text-xl font-bold text-text-primary mb-3">10. Contact</h2>
           <p>
             Pour toute question concernant cette politique de confidentialité ou vos données personnelles :
           </p>

@@ -32,7 +32,7 @@ export default function AboutPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                   <item.icon className="h-5 w-5 text-primary" />
                 </div>
-                <h2 className="text-lg font-semibold">{item.title}</h2>
+                <h2 className="text-lg font-bold">{item.title}</h2>
               </div>
               <p className="text-text-secondary leading-relaxed">{item.text}</p>
             </div>

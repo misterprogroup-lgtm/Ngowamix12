@@ -263,10 +263,10 @@ export type FamilyGroupOrderByWithRelationInput = {
 
 export type FamilyGroupWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  ownerId?: string
   AND?: Prisma.FamilyGroupWhereInput | Prisma.FamilyGroupWhereInput[]
   OR?: Prisma.FamilyGroupWhereInput[]
   NOT?: Prisma.FamilyGroupWhereInput | Prisma.FamilyGroupWhereInput[]
-  ownerId?: Prisma.StringFilter<"FamilyGroup"> | string
   name?: Prisma.StringFilter<"FamilyGroup"> | string
   maxMembers?: Prisma.IntFilter<"FamilyGroup"> | number
   price?: Prisma.IntFilter<"FamilyGroup"> | number
@@ -275,7 +275,7 @@ export type FamilyGroupWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"FamilyGroup"> | Date | string
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   members?: Prisma.FamilyMemberListRelationFilter
-}, "id">
+}, "id" | "ownerId">
 
 export type FamilyGroupOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

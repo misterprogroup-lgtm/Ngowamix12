@@ -82,7 +82,7 @@ export function ShareModal({ isOpen, onClose, url, title, artistName, coverImage
             </div>
           )}
         </div>
-        <h3 className="font-semibold text-base text-text-primary line-clamp-1">{title}</h3>
+        <h3 className="font-bold text-base text-text-primary line-clamp-1">{title}</h3>
         {artistName && (
           <p className="text-sm text-text-secondary mt-0.5">{artistName}</p>
         )}

@@ -35,7 +35,7 @@ export function FeaturedBanner({ item }: { item: FeaturedItem | null }) {
           />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[#ff9900] mb-1.5">
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-1.5">
             {item.type === 'album' ? 'Album à la une' : 'Titre à la une'}
           </p>
           <h2 className="text-xl md:text-2xl font-bold text-white truncate mb-1">
@@ -46,14 +46,14 @@ export function FeaturedBanner({ item }: { item: FeaturedItem | null }) {
           </p>
           <Link
             href={href}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#ff9900] text-black text-sm font-bold hover:bg-[#e68a00] transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-black text-sm font-bold hover:bg-primary-hover transition-colors"
           >
             <Play className="h-4 w-4 fill-current" />
             Écouter
           </Link>
         </div>
       </div>
-      <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff9900] opacity-[0.03] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary opacity-[0.03] rounded-full blur-3xl pointer-events-none" />
     </div>
   );
 }

@@ -107,7 +107,7 @@ export function Header() {
 
           <Link
             href={ROUTES.PREMIUM}
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-[#ff990033] bg-[#ff990011] text-[#ff9900] text-[11px] font-bold px-3 py-1.5 h-auto hover:bg-[#ff990022] transition-colors"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 text-primary text-[11px] font-bold px-3 py-1.5 h-auto hover:bg-primary/15 transition-colors"
           >
             <Crown className="h-3 w-3" />
             Premium
@@ -121,7 +121,7 @@ export function Header() {
                 placeholder="Rechercher artistes, titres, albums..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-10 pl-10 pr-4 rounded-full border border-[#ffffff12] bg-[#141414] text-sm text-white placeholder:text-[#555] focus:outline-none focus:border-[#ff9900] focus:ring-1 focus:ring-[#ff9900] transition-colors"
+                className="w-full h-10 pl-10 pr-4 rounded-full border border-[#ffffff12] bg-[#141414] text-sm text-white placeholder:text-[#555] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
               />
             </div>
           </form>
@@ -135,7 +135,7 @@ export function Header() {
                     className="flex items-center gap-2 pl-2 pr-1.5 py-1.5 rounded-lg hover:bg-[#ffffff0a] transition-colors"
                   >
                     {user.isPremium && (
-                      <Crown className="h-3.5 w-3.5 text-[#ff9900]" />
+                      <Crown className="h-3.5 w-3.5 text-primary" />
                     )}
                     {(() => {
                       const avatar = user.artist?.avatar || user.avatar;
@@ -170,7 +170,7 @@ export function Header() {
                           <div className="min-w-0">
                             <p className="text-sm font-semibold text-white truncate flex items-center gap-1.5">
                               {user.displayName || user.email?.split('@')[0]}
-                              {user.isPremium && <Crown className="h-3.5 w-3.5 text-[#ff9900] shrink-0" />}
+                              {user.isPremium && <Crown className="h-3.5 w-3.5 text-primary shrink-0" />}
                             </p>
                             <p className="text-xs text-[#777] truncate">{user.email}</p>
                           </div>
@@ -247,7 +247,7 @@ export function Header() {
                 </div>
 
                 <Link href="/artist/upload">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-1.5 text-[#ff9900] hover:text-white hover:bg-[#ff9900] rounded-full border border-[#ff990033] hover:border-[#ff9900] transition-all text-xs font-bold px-3.5">
+                  <Button variant="ghost" size="sm" className="flex items-center gap-1.5 text-primary hover:text-white hover:bg-primary rounded-full border border-primary/20 hover:border-primary transition-all text-xs font-bold px-3.5">
                     <Upload className="h-3.5 w-3.5" />
                     UPLOADER
                   </Button>
@@ -310,10 +310,10 @@ export function Header() {
                     onClick={() => setShowMobileMenu(false)}
                     className={cn(
                       'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                      isActive(link.href) ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                      isActive(link.href) ? 'text-primary bg-primary/10' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
                     )}
                   >
-                    <link.icon className={cn('h-4 w-4', isActive(link.href) && 'text-[#ff9900]')} />
+                    <link.icon className={cn('h-4 w-4', isActive(link.href) && 'text-primary')} />
                     {link.label}
                   </Link>
                 ))}
@@ -330,7 +330,7 @@ export function Header() {
                     onClick={() => setShowMobileMenu(false)}
                     className={cn(
                       'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                      isActive(link.href) ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                      isActive(link.href) ? 'text-primary bg-primary/10' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
                     )}
                   >
                     {link.badge ? (
@@ -377,7 +377,7 @@ export function Header() {
                             onClick={() => setShowMobileMenu(false)}
                             className={cn(
                               'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ml-4',
-                              pathname === link.href ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                              pathname === link.href ? 'text-primary bg-primary/10' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
                             )}
                           >
                             <link.icon className="h-4 w-4" />
@@ -403,7 +403,7 @@ export function Header() {
                             onClick={() => setShowMobileMenu(false)}
                             className={cn(
                               'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ml-4',
-                              pathname === link.href ? 'text-[#ff9900] bg-[#ff990011]' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                              pathname === link.href ? 'text-primary bg-primary/10' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
                             )}
                           >
                             <link.icon className="h-4 w-4" />
@@ -442,7 +442,7 @@ export function Header() {
                   <Link
                     href={ROUTES.LOGIN}
                     onClick={() => setShowMobileMenu(false)}
-                    className="flex items-center justify-center w-full px-4 py-3 rounded-lg bg-[#ff9900] text-white text-sm font-bold hover:bg-[#e68a00] transition-colors"
+                    className="flex items-center justify-center w-full px-4 py-3 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary-hover transition-colors"
                   >
                     Connexion
                   </Link>
@@ -459,7 +459,7 @@ export function Header() {
               <Link
                 href="/artist/upload"
                 onClick={() => setShowMobileMenu(false)}
-                className="flex items-center justify-center gap-2 mx-3 mt-3 py-3 rounded-xl bg-[#ff9900] text-white text-sm font-bold hover:bg-[#e68a00] transition-all shadow-lg shadow-[#ff9900]/20"
+                className="flex items-center justify-center gap-2 mx-3 mt-3 py-3 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-hover transition-all shadow-lg shadow-primary/20"
               >
                 <Upload className="h-4 w-4" />
                 UPLOADER VOTRE MUSIQUE

@@ -81,8 +81,8 @@ export function GenreFilter({
               onClick={() => setSelected(g.value)}
               className={`shrink-0 rounded-full text-sm font-bold px-5 py-2 transition-colors ${
                 selected === g.value
-                  ? 'bg-[#ff9900] text-black'
-                  : 'border border-[#ffffff15] text-[#ccc] hover:border-[#ff990033] hover:text-white'
+                  ? 'bg-primary text-black'
+                  : 'border border-[#ffffff15] text-[#ccc] hover:border-primary/20 hover:text-white'
               }`}
             >
               {g.label}

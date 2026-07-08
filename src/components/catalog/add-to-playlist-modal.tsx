@@ -63,7 +63,7 @@ export function AddToPlaylistModal({ isOpen, onClose, trackId }: AddToPlaylistMo
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-text-primary">Ajouter à une playlist</h3>
+            <h3 className="text-lg font-bold text-text-primary">Ajouter à une playlist</h3>
             <button onClick={onClose} className="text-text-muted hover:text-text-primary">
               <X className="h-5 w-5" />
             </button>
@@ -83,7 +83,7 @@ export function AddToPlaylistModal({ isOpen, onClose, trackId }: AddToPlaylistMo
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-text-primary">Ajouter à une playlist</h3>
+          <h3 className="text-lg font-bold text-text-primary">Ajouter à une playlist</h3>
           <button onClick={onClose} className="text-text-muted hover:text-text-primary">
             <X className="h-5 w-5" />
           </button>

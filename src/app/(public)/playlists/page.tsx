@@ -137,7 +137,7 @@ export default function PlaylistsPage() {
                         <ListMusic className="h-7 w-7 text-primary" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold text-text-primary truncate">{playlist.name}</h3>
+                        <h3 className="font-bold text-text-primary truncate">{playlist.name}</h3>
                         <p className="text-sm text-text-muted">
                           {'_count' in playlist ? (playlist as Playlist & { _count: { tracks: number } })._count.tracks : playlist.trackCount ?? 0} titre{('_count' in playlist ? (playlist as Playlist & { _count: { tracks: number } })._count.tracks : playlist.trackCount ?? 0) !== 1 ? 's' : ''}
                         </p>
@@ -174,7 +174,7 @@ export default function PlaylistsPage() {
                     <ListMusic className="h-7 w-7 text-primary" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-semibold text-text-primary truncate">{playlist.name}</h3>
+                    <h3 className="font-bold text-text-primary truncate">{playlist.name}</h3>
                     <p className="text-sm text-text-muted">
                       {'_count' in playlist ? (playlist as Playlist & { _count: { tracks: number } })._count.tracks : playlist.trackCount ?? 0} titre{('_count' in playlist ? (playlist as Playlist & { _count: { tracks: number } })._count.tracks : playlist.trackCount ?? 0) !== 1 ? 's' : ''}
                     </p>

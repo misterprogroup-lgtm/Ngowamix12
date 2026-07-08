@@ -83,10 +83,18 @@ export async function PUT(request: Request) {
     const album = await db.album.update({
       where: { id: albumId },
       data: { status: status as never },
-      include: { artist: { select: { name: true } } },
+      include: { artist: { select: { name: true, userId: true } } },
     });
 
     if (status === 'PUBLISHED') {
+      await db.activity.create({
+        data: {
+          userId: album.artist.userId,
+          type: 'NEW_ALBUM',
+          albumId,
+        },
+      });
+
       const listeners = await db.user.findMany({
         where: { role: 'LISTENER' },
         select: { id: true },

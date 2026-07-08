@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
 import { useAuthStore } from '@/store/auth-store';
 import { ROUTES } from '@/lib/constants';
+import { GoogleSignInButton } from '@/components/auth/google-signin-button';
 import { Mail, ArrowLeft, RefreshCw } from 'lucide-react';
 import type { User } from '@/types';
 
@@ -124,8 +125,8 @@ export function RegisterForm() {
       return;
     }
 
-    if (password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères');
+    if (password.length < 8) {
+      setError('Le mot de passe doit contenir au moins 8 caractères');
       return;
     }
 
@@ -258,6 +259,17 @@ export function RegisterForm() {
         </div>
       )}
 
+      <GoogleSignInButton mode="signup" />
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-text-muted">ou</span>
+        </div>
+      </div>
+
       <Select
         label="Type de compte"
         value={accountType}
@@ -301,6 +313,7 @@ export function RegisterForm() {
           placeholder="Votre nom de scène"
           value={artistName}
           onChange={(e) => setArtistName(e.target.value)}
+          required
         />
       )}
 
@@ -310,6 +323,7 @@ export function RegisterForm() {
           placeholder="Nom de votre label"
           value={labelName}
           onChange={(e) => setLabelName(e.target.value)}
+          required
         />
       )}
 
@@ -326,10 +340,11 @@ export function RegisterForm() {
       <Input
         type="password"
         label="Mot de passe"
-        placeholder="Min. 6 caractères"
+        placeholder="Min. 8 caractères"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        minLength={8}
         autoComplete="new-password"
       />
 

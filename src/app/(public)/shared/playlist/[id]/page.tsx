@@ -70,7 +70,7 @@ export default function SharedPlaylistPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
         <Music className="h-16 w-16 text-text-muted mb-4" />
-        <h1 className="text-xl font-semibold text-text-primary mb-2">
+        <h1 className="text-xl font-bold text-text-primary mb-2">
           {error || 'Playlist introuvable'}
         </h1>
         <p className="text-sm text-text-secondary mb-6 text-center">

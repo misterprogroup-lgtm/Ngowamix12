@@ -95,7 +95,7 @@ export default async function UserDashboard() {
       </div>
 
       {/* Social Features */}
-      <h2 className="text-lg font-semibold mb-3">Social</h2>
+      <h2 className="text-lg font-bold mb-3">Social</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <Link href={ROUTES.FEED} className="rounded-xl border border-border p-4 hover:border-primary/30 transition-colors group">
           <Repeat2 className="h-6 w-6 text-accent mb-3 group-hover:scale-110 transition-transform" />
@@ -121,7 +121,7 @@ export default async function UserDashboard() {
 
       {/* Recent Activity */}
       <div className="rounded-xl border border-border p-6">
-        <h2 className="text-lg font-semibold mb-4">Activité récente</h2>
+        <h2 className="text-lg font-bold mb-4">Activité récente</h2>
         <div className="text-center py-8 text-text-muted">
           <Music className="h-12 w-12 mx-auto mb-3 opacity-50" />
           <p>Vos écoutes récentes apparaîtront ici</p>

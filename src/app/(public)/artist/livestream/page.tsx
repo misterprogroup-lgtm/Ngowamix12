@@ -112,7 +112,7 @@ export default function ArtistLivestreamPage() {
 
       {showCreate && (
         <div className="mb-6 p-5 rounded-2xl bg-surface border border-border space-y-4">
-          <h3 className="font-semibold">Créer un nouveau live</h3>
+          <h3 className="font-bold">Créer un nouveau live</h3>
           <input
             type="text"
             value={title}
@@ -173,7 +173,7 @@ export default function ArtistLivestreamPage() {
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold">{stream.title}</h3>
+                    <h3 className="font-bold">{stream.title}</h3>
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                       stream.status === 'LIVE' ? 'bg-red-600/20 text-red-500' :
                       stream.status === 'ENDED' ? 'bg-text-muted/10 text-text-muted' :
@@ -235,12 +235,12 @@ export default function ArtistLivestreamPage() {
       <div className="mt-8 p-5 rounded-2xl bg-surface border border-border">
         <div className="flex items-center gap-2 mb-3">
           <Monitor className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">Diffuser en vidéo (gratuit)</h3>
+          <h3 className="font-bold">Diffuser en vidéo (gratuit)</h3>
         </div>
 
         <div className="space-y-4">
           <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
-            <h4 className="font-semibold text-sm mb-2">YouTube Live (recommandé)</h4>
+            <h4 className="font-bold text-sm mb-2">YouTube Live (recommandé)</h4>
             <p className="text-sm text-text-secondary mb-3">
               100% gratuit. Va sur <strong>YouTube Studio → Créer → Passer en direct</strong>, copie ta clé de diffusion, et configure OBS avec.
             </p>
@@ -262,7 +262,7 @@ export default function ArtistLivestreamPage() {
           </div>
 
           <div className="p-4 rounded-xl bg-surface-hover border border-border">
-            <h4 className="font-semibold text-sm mb-2">Owncast (auto-hébergé)</h4>
+            <h4 className="font-bold text-sm mb-2">Owncast (auto-hébergé)</h4>
             <p className="text-sm text-text-secondary mb-2">
               Installe Owncast sur un VPS (~5$/mois) pour un contrôle total.
             </p>

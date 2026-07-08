@@ -1,5 +1,6 @@
+import { Suspense } from 'react';
 import { LoginForm } from '@/components/auth/login-form';
-import { Music } from 'lucide-react';
+import { Music, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   return (
@@ -13,7 +14,9 @@ export default function LoginPage() {
           Accédez à votre espace personnel
         </p>
       </div>
-      <LoginForm />
+      <Suspense fallback={<div className="flex justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+        <LoginForm />
+      </Suspense>
     </div>
   );
 }

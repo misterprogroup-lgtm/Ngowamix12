@@ -36,7 +36,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ff9900]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
                 <Music className="h-[18px] w-[18px] text-white" />
               </div>
               <span className="text-lg font-black text-white">{APP_NAME}</span>
@@ -49,7 +49,7 @@ export function Footer() {
               <div className="flex flex-col gap-2">
                 <a
                   href="#"
-                  className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#141414] border border-[#ffffff12] text-white hover:border-[#ff990066] hover:bg-[#1a1a1a] transition-all group"
+                  className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#141414] border border-[#ffffff12] text-white hover:border-primary/40 hover:bg-[#1a1a1a] transition-all group"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -58,13 +58,13 @@ export function Footer() {
                   </svg>
                   <div>
                     <p className="text-[10px] text-[#888] leading-tight">Télécharger sur</p>
-                    <p className="text-sm font-bold text-white group-hover:text-[#ff9900] transition-colors">App Store</p>
+                    <p className="text-sm font-bold text-white group-hover:text-primary transition-colors">App Store</p>
                   </div>
                   <ExternalLink className="h-3 w-3 text-[#555] ml-auto shrink-0" />
                 </a>
                 <a
                   href="#"
-                  className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#141414] border border-[#ffffff12] text-white hover:border-[#ff990066] hover:bg-[#1a1a1a] transition-all group"
+                  className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#141414] border border-[#ffffff12] text-white hover:border-primary/40 hover:bg-[#1a1a1a] transition-all group"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -73,7 +73,7 @@ export function Footer() {
                   </svg>
                   <div>
                     <p className="text-[10px] text-[#888] leading-tight">Disponible sur</p>
-                    <p className="text-sm font-bold text-white group-hover:text-[#ff9900] transition-colors">Google Play</p>
+                    <p className="text-sm font-bold text-white group-hover:text-primary transition-colors">Google Play</p>
                   </div>
                   <ExternalLink className="h-3 w-3 text-[#555] ml-auto shrink-0" />
                 </a>
@@ -91,7 +91,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-[#777] hover:text-[#ff9900] transition-colors"
+                      className="text-sm text-[#777] hover:text-primary transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -111,7 +111,7 @@ export function Footer() {
               href="https://facebook.com/ngowamix"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#555] hover:text-[#ff9900] transition-colors"
+              className="text-[#555] hover:text-primary transition-colors"
               aria-label="Facebook"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -122,7 +122,7 @@ export function Footer() {
               href="https://instagram.com/ngowamix"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#555] hover:text-[#ff9900] transition-colors"
+              className="text-[#555] hover:text-primary transition-colors"
               aria-label="Instagram"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -133,7 +133,7 @@ export function Footer() {
               href="https://twitter.com/ngowamix"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#555] hover:text-[#ff9900] transition-colors"
+              className="text-[#555] hover:text-primary transition-colors"
               aria-label="Twitter"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -141,8 +141,8 @@ export function Footer() {
               </svg>
             </a>
             <span className="text-[#333]">|</span>
-            <Link href="/terms" className="text-sm text-[#555] hover:text-[#ff9900] transition-colors">CGU</Link>
-            <Link href="/privacy" className="text-sm text-[#555] hover:text-[#ff9900] transition-colors">Confidentialité</Link>
+            <Link href="/terms" className="text-sm text-[#555] hover:text-primary transition-colors">CGU</Link>
+            <Link href="/privacy" className="text-sm text-[#555] hover:text-primary transition-colors">Confidentialité</Link>
           </div>
         </div>
       </div>

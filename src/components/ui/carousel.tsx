@@ -41,7 +41,7 @@ export function Carousel({ children, gap = 16, className = '' }: CarouselProps) 
       {showLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-[#ff9900] text-black flex items-center justify-center shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:bg-[#e68a00]"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-primary text-black flex items-center justify-center shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:bg-primary-hover"
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
@@ -56,7 +56,7 @@ export function Carousel({ children, gap = 16, className = '' }: CarouselProps) 
       {showRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-[#ff9900] text-black flex items-center justify-center shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:bg-[#e68a00]"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-primary text-black flex items-center justify-center shadow-lg opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:bg-primary-hover"
         >
           <ChevronRight className="h-5 w-5" />
         </button>

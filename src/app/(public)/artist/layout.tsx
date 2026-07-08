@@ -55,7 +55,7 @@ export default function ArtistLayout({ children }: { children: React.ReactNode }
           )}
         </div>
 
-        <div className="flex gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           <nav className="hidden lg:flex flex-col w-64 shrink-0">
             <div className="space-y-1 sticky top-24">
               <h2 className="text-xs font-bold tracking-[0.15em] text-text-muted uppercase px-3 mb-3">

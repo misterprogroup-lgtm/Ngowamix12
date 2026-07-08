@@ -89,7 +89,7 @@ export default function LivestreamPage() {
                     )}
                   </div>
                   <div className="min-w-0">
-                    <h3 className="font-semibold truncate group-hover:text-primary transition-colors">{stream.title}</h3>
+                    <h3 className="font-bold truncate group-hover:text-primary transition-colors">{stream.title}</h3>
                     <p className="text-sm text-text-muted">{stream.artist.name}</p>
                   </div>
                 </div>

@@ -9,9 +9,9 @@ const uploadOptions = [
     icon: Music,
     title: 'Nouvel album / Single',
     description: 'Créez un album, un single ou un EP et ajoutez vos morceaux.',
-    gradient: 'from-[#ff9900]/20 via-[#ff9900]/5 to-transparent',
-    border: 'border-[#ff9900]/20 hover:border-[#ff9900]/50',
-    iconBg: 'bg-[#ff9900]/10 text-[#ff9900]',
+    gradient: 'from-primary/20 via-primary/5 to-transparent',
+    border: 'border-primary/20 hover:border-primary/50',
+    iconBg: 'bg-primary/10 text-primary',
   },
   {
     href: '/artist/catalog?tab=concerts',
@@ -65,7 +65,7 @@ export default function ArtistUploadPage() {
                       <h2 className="text-lg md:text-xl font-bold text-white">
                         {option.title}
                       </h2>
-                      <ArrowRight className="h-5 w-5 text-white group-hover:text-[#ff9900] transition-colors shrink-0" />
+                      <ArrowRight className="h-5 w-5 text-white group-hover:text-primary transition-colors shrink-0" />
                     </div>
                     <p className="text-sm text-white mt-1.5 leading-relaxed">
                       {option.description}

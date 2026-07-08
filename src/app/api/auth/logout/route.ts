@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
+import { clearSessionCookie } from '@/lib/auth';
 
 export async function POST() {
-  const response = NextResponse.json({ message: 'Déconnexion réussie' });
-  response.cookies.set('ngowamix_session', '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 0,
-    path: '/',
-  });
-  return response;
+  await clearSessionCookie();
+  return NextResponse.json({ message: 'Déconnexion réussie' });
 }

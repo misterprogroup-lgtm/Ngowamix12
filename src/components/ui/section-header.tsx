@@ -15,7 +15,7 @@ export function SectionHeader({ title, href = '/explore', linkLabel = 'VOIR TOUT
       </h2>
       <Link
         href={href}
-        className="flex items-center gap-1 text-sm font-medium text-[#888] hover:text-[#ff9900] transition-colors duration-300"
+        className="flex items-center gap-1 text-sm font-medium text-[#888] hover:text-primary transition-colors duration-300"
       >
         {linkLabel}
         <ArrowRight className="h-3.5 w-3.5" />

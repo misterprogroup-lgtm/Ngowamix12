@@ -9,9 +9,11 @@ import { GenreFilter } from '@/components/home/genre-filter';
 
 import { ArtistCTA } from '@/components/home/artist-cta';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: `${APP_NAME} - Streaming musical africain gratuit`,
-  description: 'Écoutez et découvrez la musique africaine francophone. Streaming gratuit, abonnement Premium à 1500 FCFA/mois et achat d\'albums.',
+  description: `Écoutez et découvrez la musique africaine francophone. Streaming gratuit, abonnement Premium à ${PREMIUM_PRICE} ${PREMIUM_CURRENCY}/mois et achat d'albums.`,
   alternates: { canonical: '/' },
   openGraph: {
     title: `${APP_NAME} - Streaming musical africain gratuit`,
@@ -70,14 +72,17 @@ async function getFeaturedArtists() {
   try {
     const artists = await db.artist.findMany({
       take: 6,
-      include: { user: true },
+      include: {
+        user: true,
+        _count: { select: { favorites: true } },
+      },
     });
     return artists.map((a) => ({
       id: a.id,
       avatar: a.avatar,
       name: a.name,
       slug: a.slug,
-      followers: '0',
+      followers: a._count.favorites.toString(),
     }));
   } catch {
     return [];
@@ -129,7 +134,7 @@ export default async function HomePage() {
     <div className="pb-8">
       <h1 className="sr-only">{APP_NAME} - Streaming musical africain</h1>
 
-      <div className="mx-8 pt-4 mb-8">
+      <div className="mx-4 md:mx-8 pt-4 mb-8">
         <HeroCarousel />
       </div>
 
@@ -140,11 +145,11 @@ export default async function HomePage() {
         recent={recentTracks}
       />
 
-      <div className="mx-8 mb-8">
-        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#ff990022] via-[#0b0b0b] to-[#0b0b0b] border border-[#ffffff08] p-8 md:p-12">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-[#ff9900] opacity-[0.04] rounded-full blur-3xl" />
+      <div className="mx-4 md:mx-8 mb-8">
+        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-primary/15 via-[#0b0b0b] to-[#0b0b0b] border border-[#ffffff08] p-8 md:p-12">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-primary opacity-[0.04] rounded-full blur-3xl" />
           <div className="max-w-2xl relative z-10">
-            <div className="w-12 h-12 rounded-xl bg-[#ff9900] flex items-center justify-center mb-5">
+            <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-5">
               <Crown className="h-6 w-6 text-white" />
             </div>
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
@@ -152,15 +157,15 @@ export default async function HomePage() {
             </h2>
             <ul className="space-y-3 mb-8">
               <li className="flex items-center gap-3 text-[#888]">
-                <Headphones className="h-5 w-5 text-[#ff9900] shrink-0" />
+                <Headphones className="h-5 w-5 text-primary shrink-0" />
                 Écoute sans publicité
               </li>
               <li className="flex items-center gap-3 text-[#888]">
-                <Download className="h-5 w-5 text-[#ff9900] shrink-0" />
+                <Download className="h-5 w-5 text-primary shrink-0" />
                 Téléchargements illimités
               </li>
               <li className="flex items-center gap-3 text-[#888]">
-                <Crown className="h-5 w-5 text-[#ff9900] shrink-0" />
+                <Crown className="h-5 w-5 text-primary shrink-0" />
                 Qualité audio supérieure
               </li>
             </ul>

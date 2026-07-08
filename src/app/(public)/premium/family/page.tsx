@@ -129,7 +129,7 @@ export default function FamilyPremiumPage() {
           </div>
 
           <div className="rounded-2xl bg-surface border border-border p-6">
-            <h3 className="font-semibold mb-4">Inviter un membre</h3>
+            <h3 className="font-bold mb-4">Inviter un membre</h3>
             <div className="flex gap-2">
               <input
                 type="email"
@@ -152,7 +152,7 @@ export default function FamilyPremiumPage() {
 
           <div className="rounded-2xl bg-surface border border-border overflow-hidden">
             <div className="p-4 border-b border-border">
-              <h3 className="font-semibold">Membres ({memberCount})</h3>
+              <h3 className="font-bold">Membres ({memberCount})</h3>
             </div>
             <div className="divide-y divide-border">
               {group.members?.map((member: any) => (

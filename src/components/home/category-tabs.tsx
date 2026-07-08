@@ -24,7 +24,7 @@ export function CategoryTabs() {
           href={cat.href}
           className={cn(
             'shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border',
-            'bg-transparent text-[#888] border-[#ffffff15] hover:border-[#ff990066] hover:text-[#ff9900] hover:bg-[#ff990011]'
+            'bg-transparent text-[#888] border-[#ffffff15] hover:border-primary/40 hover:text-primary hover:bg-primary/10'
           )}
         >
           {cat.label}

@@ -49,7 +49,7 @@ export default function ContactPage() {
                   <item.icon className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold">{item.title}</h2>
+                  <h2 className="text-lg font-bold">{item.title}</h2>
                   <p className="text-sm text-text-secondary">{item.desc}</p>
                 </div>
               </div>

@@ -19,7 +19,7 @@ export async function GET() {
     const codes = await db.promoCode.findMany({
       orderBy: { createdAt: 'desc' },
     });
-    return NextResponse.json(codes);
+    return NextResponse.json({ codes });
   } catch (error) {
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });

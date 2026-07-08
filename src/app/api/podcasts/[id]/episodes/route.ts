@@ -7,7 +7,19 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireAuth();
+    const user = await requireAuth(request);
+
+    const podcast = await db.podcast.findUnique({
+      where: { id: (await params).id },
+      select: { userId: true },
+    });
+    if (!podcast) {
+      return NextResponse.json({ error: 'Podcast non trouvé' }, { status: 404 });
+    }
+    if (podcast.userId !== user.sub) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
+    }
+
     const { id } = await params;
     const body = await request.json();
     const { title, description, audioFile, duration, fileSize, episodeNumber, isPublished } = body;

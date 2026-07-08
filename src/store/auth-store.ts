@@ -28,9 +28,11 @@ export const useAuthStore = create<AuthState>()(
             if (data.user) {
               set({ user: data.user, isLoading: false });
             }
+          } else {
+            set({ user: null, token: null, isLoading: false });
           }
         } catch {
-          // No session
+          set({ user: null, token: null, isLoading: false });
         }
       },
       logout: async () => {
@@ -47,6 +49,9 @@ export const useAuthStore = create<AuthState>()(
         }
       },
     }),
-    { name: 'ngowamix-auth' }
+    {
+      name: 'ngowamix-auth',
+      partialize: (state) => ({ user: state.user }),
+    }
   )
 );

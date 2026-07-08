@@ -13,7 +13,7 @@ const artistProtectedRoutes = ['/artist/dashboard', '/artist/catalog', '/artist/
 const labelProtectedRoutes = ['/label'];
 const authRoutes = ['/login', '/register'];
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value;
   const pathname = request.nextUrl.pathname;
 

@@ -84,7 +84,7 @@ export default function ArtistReferralPage() {
       </h1>
 
       <div className="rounded-xl border border-border p-6 mb-6">
-        <h2 className="text-lg font-semibold mb-4">Votre code de parrainage</h2>
+        <h2 className="text-lg font-bold mb-4">Votre code de parrainage</h2>
         <p className="text-sm text-text-secondary mb-4">
           Partagez ce code avec vos fans. Quand un fan l&apos;utilise lors de son inscription puis s&apos;abonne au Premium, vous gagnez <strong>10%</strong> du montant de son abonnement.
         </p>
@@ -141,7 +141,7 @@ export default function ArtistReferralPage() {
       </div>
 
       <div className="rounded-xl border border-border p-6">
-        <h3 className="font-semibold mb-2">Comment ça marche ?</h3>
+        <h3 className="font-bold mb-2">Comment ça marche ?</h3>
         <ol className="space-y-2 text-sm text-text-secondary list-decimal list-inside">
           <li>Créez votre code de parrainage personnalisé</li>
           <li>Partagez-le avec vos fans (sur vos réseaux, en concert, etc.)</li>

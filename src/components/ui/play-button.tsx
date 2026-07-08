@@ -24,7 +24,7 @@ export function PlayButton({ size = 'md', className, onClick }: PlayButtonProps)
     <button
       onClick={onClick}
       className={cn(
-        'rounded-full bg-[#ff9900] text-white shadow-lg shadow-[#ff9900]/30 flex items-center justify-center transition-all duration-300 hover:bg-[#e68a00] hover:shadow-[#ff9900]/40 active:scale-95',
+        'rounded-full bg-primary text-white shadow-lg shadow-primary/30 flex items-center justify-center transition-all duration-300 hover:bg-primary-hover hover:shadow-primary/40 active:scale-95',
         sizeMap[size],
         className
       )}

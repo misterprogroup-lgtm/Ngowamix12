@@ -24,7 +24,7 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json(conversations);
+  return NextResponse.json({ conversations });
 }
 
 export async function POST(req: NextRequest) {
@@ -46,11 +46,11 @@ export async function POST(req: NextRequest) {
     where: { user1Id_user2Id: { user1Id, user2Id } },
   });
 
-  if (existing) return NextResponse.json(existing);
+  if (existing) return NextResponse.json({ conversation: existing });
 
   const conversation = await db.conversation.create({
     data: { user1Id, user2Id },
   });
 
-  return NextResponse.json(conversation);
+  return NextResponse.json({ conversation });
 }
