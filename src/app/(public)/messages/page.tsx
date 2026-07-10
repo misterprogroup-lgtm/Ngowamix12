@@ -16,9 +16,7 @@ export default async function MessagesPage() {
       <div className="container mx-auto px-4 py-8 pb-24 max-w-2xl text-center">
         <Mail className="h-12 w-12 mx-auto mb-3 opacity-50 text-text-muted" />
         <p className="text-text-muted">Connectez-vous pour voir vos messages</p>
-        <Link href={ROUTES.LOGIN}>
-          <button className="mt-4 px-4 py-2 bg-primary text-white rounded-lg">Connexion</button>
-        </Link>
+        <Link href={ROUTES.LOGIN} className="inline-block mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors">Connexion</Link>
       </div>
     );
   }

@@ -24,6 +24,8 @@ export function MessageArtistButton({ artistUserId }: MessageArtistButtonProps) 
       if (res.ok) {
         const conv = await res.json();
         router.push(`/messages/${conv.id}`);
+      } else if (res.status === 401) {
+        router.push('/login');
       }
     } catch {
     } finally {

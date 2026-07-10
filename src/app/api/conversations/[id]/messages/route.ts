@@ -75,12 +75,17 @@ export async function POST(
 
   const otherUserId = conversation.user1Id === user.sub ? conversation.user2Id : conversation.user1Id;
 
+  const sender = await db.user.findUnique({
+    where: { id: user.sub },
+    select: { displayName: true },
+  });
+
   await db.notification.create({
     data: {
       userId: otherUserId,
       type: 'DIRECT_MESSAGE',
       title: 'Nouveau message',
-      message: `${user.email.split('@')[0]}: ${content.trim().slice(0, 100)}`,
+      message: `${sender?.displayName || 'Quelqu\'un'}: ${content.trim().slice(0, 100)}`,
       referenceId: conversation.id,
       referenceType: 'conversation',
     },

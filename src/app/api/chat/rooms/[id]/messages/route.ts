@@ -4,6 +4,9 @@ import { getMessages, sendMessage } from '@/lib/chat';
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const user = await getCurrentUser();
+    if (!user) return NextResponse.json({ error: 'Non connecté' }, { status: 401 });
+
     const { id } = await params;
     const { searchParams } = new URL(request.url);
     const limit = Math.min(parseInt(searchParams.get('limit') || '50', 10), 100);

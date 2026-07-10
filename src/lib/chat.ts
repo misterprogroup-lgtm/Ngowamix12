@@ -66,6 +66,7 @@ export async function getMessages(roomId: string, limit = 50, before?: string) {
 }
 
 export async function sendMessage(roomId: string, userId: string, content: string) {
+  if (content.length > 2000) throw new Error('Message trop long');
   const [message] = await db.$transaction([
     db.chatMessage.create({
       data: { roomId, userId, content },

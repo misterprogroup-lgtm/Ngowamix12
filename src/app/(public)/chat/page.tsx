@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { MessageCircle, Send, Users, Hash, Loader2, LogIn, LogOut } from 'lucide-react';
 import { SafeImage } from '@/components/ui/safe-image';
+import { maybeProxyAvatar } from '@/lib/utils';
 
 interface ChatRoomItem {
   id: string;
@@ -31,6 +32,7 @@ export default function ChatPage() {
   const [sending, setSending] = useState(false);
   const [joinedRooms, setJoinedRooms] = useState<Set<string>>(new Set());
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch('/api/chat/rooms')
@@ -49,8 +51,8 @@ export default function ChatPage() {
   const fetchMessages = useCallback(() => {
     if (!activeRoom) return;
     fetch(`/api/chat/rooms/${activeRoom.id}/messages`)
-      .then((r) => r.json())
-      .then((data) => setMessages(data.messages || []));
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data) setMessages(data.messages || []); });
   }, [activeRoom]);
 
   useEffect(() => { if (activeRoom) fetchMessages(); }, [activeRoom, fetchMessages]);
@@ -59,7 +61,12 @@ export default function ChatPage() {
     const interval = setInterval(fetchMessages, 5000);
     return () => clearInterval(interval);
   }, [activeRoom, fetchMessages]);
-  useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  useEffect(() => {
+    const el = chatEndRef.current?.parentElement;
+    if (el && el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   const joinRoom = async (roomId: string) => {
     const res = await fetch(`/api/chat/rooms/${roomId}`, {
@@ -94,20 +101,34 @@ export default function ChatPage() {
   };
 
   const handleSend = async () => {
-    if (!newMessage.trim() || sending || !activeRoom) return;
+    const text = newMessage.trim();
+    if (!text || sending || !activeRoom) return;
     setSending(true);
+    const placeholder: ChatMessageItem = {
+      id: `pending-${Date.now()}`,
+      content: text,
+      createdAt: new Date().toISOString(),
+      user: { id: '', displayName: 'Vous', avatar: null, role: '' },
+    };
+    setMessages((prev) => [...prev, placeholder]);
+    setNewMessage('');
     try {
       const res = await fetch(`/api/chat/rooms/${activeRoom.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: newMessage.trim() }),
+        body: JSON.stringify({ content: text }),
       });
       if (res.ok) {
-        setNewMessage('');
-        fetchMessages();
+        const data = await res.json();
+        setMessages((prev) => prev.map((m) => m.id === placeholder.id ? data.message : m));
+      } else {
+        setMessages((prev) => prev.filter((m) => m.id !== placeholder.id));
       }
+    } catch {
+      setMessages((prev) => prev.filter((m) => m.id !== placeholder.id));
     } finally {
       setSending(false);
+      inputRef.current?.focus();
     }
   };
 
@@ -189,7 +210,7 @@ export default function ChatPage() {
                     <div key={msg.id} className="flex items-start gap-3">
                       <div className="h-8 w-8 rounded-full bg-primary/10 overflow-hidden shrink-0 mt-0.5">
                         {msg.user.avatar ? (
-                          <SafeImage src={msg.user.avatar} alt="" width={32} height={32} className="object-cover" />
+                          <SafeImage src={maybeProxyAvatar(msg.user.avatar) ?? ''} alt="" width={32} height={32} className="object-cover" />
                         ) : (
                           <div className="flex h-full items-center justify-center text-xs font-bold text-primary">
                             {msg.user.displayName?.[0] || '?'}
@@ -214,10 +235,12 @@ export default function ChatPage() {
                 className="p-4 border-t border-border flex gap-2"
               >
                 <input
+                  ref={inputRef}
                   type="text"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Écris un message..."
+                  maxLength={2000}
                   className="flex-1 px-3 py-2 rounded-lg bg-surface-hover border border-border text-sm text-text-primary placeholder:text-text-muted focus:outline-hidden focus:ring-2 focus:ring-primary"
                 />
                 <button
