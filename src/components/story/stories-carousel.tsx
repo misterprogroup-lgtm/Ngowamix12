@@ -160,30 +160,35 @@ export function StoriesCarousel() {
   }
 
   const handleFileSelect = async (file: File) => {
-    let processedFile = file;
-    if (file.type.startsWith('image/')) {
-      const maxSize = 5 * 1024 * 1024;
-      if (file.size > maxSize) {
-        try {
-          processedFile = await compressImage(file);
-        } catch {
-          processedFile = file;
+    try {
+      let processedFile = file;
+      if (file.type.startsWith('image/')) {
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+          try {
+            processedFile = await compressImage(file);
+          } catch {
+            processedFile = file;
+          }
+        }
+      } else if (file.type.startsWith('video/')) {
+        const maxVideoSize = 50 * 1024 * 1024;
+        if (file.size > maxVideoSize) {
+          setUploadError('Video too large (max 50MB)');
+          return;
         }
       }
-    } else if (file.type.startsWith('video/')) {
-      const maxVideoSize = 50 * 1024 * 1024;
-      if (file.size > maxVideoSize) {
-        setUploadError('Video too large (max 50MB)');
-        return;
-      }
+      const type = processedFile.type.startsWith('video/') ? 'VIDEO' : 'IMAGE';
+      setPendingType(type);
+      setPendingFile(processedFile);
+      setPendingPreview(URL.createObjectURL(processedFile));
+      setCaption('');
+      setUploadError('');
+      setShowPicker(false);
+    } catch {
+      setShowPicker(false);
+      setUploadError('Unable to preview this file');
     }
-    const type = processedFile.type.startsWith('video/') ? 'VIDEO' : 'IMAGE';
-    setPendingType(type);
-    setPendingFile(processedFile);
-    setPendingPreview(URL.createObjectURL(processedFile));
-    setCaption('');
-    setUploadError('');
-    setShowPicker(false);
   };
 
   const handleGallery = () => galleryRef.current?.click();
@@ -426,9 +431,9 @@ export function StoriesCarousel() {
 
       {/* Preview & publish overlay */}
       {pendingPreview && (
-        <div className="fixed inset-0 z-[110] bg-black flex flex-col">
+        <div className="fixed inset-0 z-[110] bg-black flex flex-col overflow-hidden">
           {/* Top bar */}
-          <div className="flex items-center justify-between p-3 z-10">
+          <div className="flex items-center justify-between p-3 z-10 shrink-0">
             <button onClick={() => {
               if (pendingPreview) URL.revokeObjectURL(pendingPreview);
               setPendingPreview(null);
@@ -443,11 +448,11 @@ export function StoriesCarousel() {
           </div>
 
           {/* Media preview */}
-          <div className="flex-1 flex items-center justify-center relative">
+          <div className="flex-1 flex items-center justify-center relative min-h-0">
             {pendingType === 'VIDEO' ? (
-              <video src={pendingPreview} className="max-h-full max-w-full object-contain" autoPlay muted loop playsInline />
+              <video src={pendingPreview} className="max-h-full max-w-full object-contain h-full w-full" autoPlay muted loop playsInline />
             ) : (
-              <img src={pendingPreview} alt="" className="max-h-full max-w-full object-contain" />
+              <img src={pendingPreview} alt="" className="max-h-full max-w-full object-contain h-full w-full" />
             )}
           </div>
 
