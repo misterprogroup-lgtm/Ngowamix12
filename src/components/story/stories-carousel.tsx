@@ -207,8 +207,12 @@ export function StoriesCarousel() {
       const { url, pathname } = await new Promise<{ url: string; pathname: string }>((resolve, reject) => {
         xhr.onload = () => {
           if (xhr.status === 200) {
-            const data = JSON.parse(xhr.responseText);
-            resolve(data);
+            try {
+              const data = JSON.parse(xhr.responseText);
+              resolve(data);
+            } catch {
+              reject(new Error('Invalid server response'));
+            }
           } else {
             try {
               const data = JSON.parse(xhr.responseText);
@@ -219,11 +223,11 @@ export function StoriesCarousel() {
           }
         };
         xhr.onerror = () => reject(new Error('Network error'));
+        xhr.ontimeout = () => reject(new Error('Upload timed out'));
+        xhr.timeout = 60000;
         xhr.open('POST', '/api/upload-story');
         xhr.send(formData);
       });
-
-      setUploadProgress(100);
 
       const res = await fetch('/api/stories', {
         method: 'POST',
@@ -236,15 +240,21 @@ export function StoriesCarousel() {
         throw new Error(errData.error || 'Failed to publish story');
       }
 
+      // Close overlay immediately on success
       if (pendingPreview) URL.revokeObjectURL(pendingPreview);
       setPendingFile(null);
       setPendingPreview(null);
       setPendingType(null);
       setCaption('');
 
-      const storiesRes = await fetch('/api/stories');
-      const storiesData = await storiesRes.json();
-      setGroups(storiesData.groups || []);
+      // Best-effort refresh
+      try {
+        const storiesRes = await fetch('/api/stories');
+        const storiesData = await storiesRes.json();
+        setGroups(storiesData.groups || []);
+      } catch {
+        // ignore refresh failure
+      }
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Erreur publication');
     } finally {
@@ -467,23 +477,21 @@ export function StoriesCarousel() {
 
           {/* Upload progress bar */}
           {uploading && (
-            <div className="h-1 bg-white/20">
+            <div className="h-1 bg-white/20 shrink-0">
               <div className="h-full bg-[#FF8800] transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
             </div>
           )}
 
           {/* Error message */}
           {uploadError && (
-            <div className="px-4 pb-4">
-              <div className="bg-red-500/20 border border-red-500/40 rounded-xl px-4 py-3 flex items-center gap-2">
-                <span className="text-red-300 text-sm flex-1">{uploadError}</span>
-                <button
-                  onClick={publishStory}
-                  className="text-sm font-semibold text-red-300 hover:text-red-200 underline"
-                >
-                  Retry
-                </button>
-              </div>
+            <div className="bg-red-500/90 px-4 py-3 flex items-center gap-2 shrink-0">
+              <span className="text-white text-sm flex-1 font-medium">{uploadError}</span>
+              <button
+                onClick={publishStory}
+                className="text-sm font-bold text-white hover:text-white/80 underline whitespace-nowrap"
+              >
+                Retry
+              </button>
             </div>
           )}
         </div>
