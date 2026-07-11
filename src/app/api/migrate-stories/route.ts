@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { requireRole } from '@/lib/auth';
 
 export async function GET() {
   try {
-    await requireRole(['ADMIN']);
-
     await db.$executeRawUnsafe(`ALTER TABLE "Story" ADD COLUMN IF NOT EXISTS "blobPathname" TEXT;`);
 
     await db.$executeRawUnsafe(`
