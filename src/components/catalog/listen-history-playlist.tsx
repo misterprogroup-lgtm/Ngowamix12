@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SafeImage } from '@/components/ui/safe-image';
-import { Play, Pause, Music, Headphones, Plus } from 'lucide-react';
+import { Headphones, Plus } from 'lucide-react';
 import { usePlayerStore } from '@/store/player-store';
-import { formatDuration } from '@/lib/utils';
+import { MusicList } from '@/components/track/music-list';
 import type { Track } from '@/types';
 import { AddToPlaylistModal } from '@/components/catalog/add-to-playlist-modal';
 
@@ -49,45 +48,23 @@ export function ListenHistoryPlaylist() {
           <p className="text-sm text-text-secondary">{tracks.length} titre{tracks.length > 1 ? 's' : ''}</p>
         </div>
       </div>
-      <div className="space-y-1">
-        {tracks.map((track) => (
-          <button
-            key={track.id}
-            onClick={() => handlePlay(track)}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg hover:bg-surface-hover transition-colors group text-left"
-          >
-            <div className="relative h-10 w-10 rounded-md bg-surface-hover overflow-hidden shrink-0">
-              {track.album?.coverImage ? (
-                <SafeImage src={track.album.coverImage} alt="" fill className="object-cover" sizes="40px" fallback={<Music className="h-5 w-5 text-text-muted" />} />
-              ) : (
-                <Music className="h-5 w-5 text-text-muted" />
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-text-primary truncate group-hover:text-primary transition-colors">
-                {track.title}
-              </p>
-              <p className="text-xs text-text-secondary truncate">
-                {track.album?.artist?.name}
-              </p>
-            </div>
-            <button
-              onClick={(e) => { e.stopPropagation(); setPlaylistPickerTrack(track.id); }}
-              className="p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:text-primary text-text-muted shrink-0"
-            >
-              <Plus className="h-4 w-4" />
-            </button>
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              {isTrackPlaying(track.id) ? (
-                <Pause className="h-4 w-4 text-primary" fill="currentColor" />
-              ) : (
-                <Play className="h-4 w-4 text-primary ml-0.5" fill="currentColor" />
-              )}
-            </div>
-            <span className="text-xs text-text-muted shrink-0">{formatDuration(track.duration)}</span>
-          </button>
-        ))}
-      </div>
+      <MusicList
+        items={tracks.map((track) => ({
+          id: track.id,
+          title: track.title,
+          artist: track.album?.artist?.name || 'Artiste inconnu',
+          cover: track.album?.coverImage || null,
+          duration: track.duration,
+          artistSlug: track.album?.artist?.slug,
+        }))}
+        currentId={currentTrack?.id}
+        isPlaying={isPlaying}
+        onPlay={(trackId) => {
+          const track = tracks.find((t) => t.id === trackId);
+          if (track) handlePlay(track);
+        }}
+        onMenu={(trackId) => setPlaylistPickerTrack(trackId)}
+      />
       <AddToPlaylistModal
         isOpen={!!playlistPickerTrack}
         onClose={() => setPlaylistPickerTrack(null)}
