@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   Plus, Music, Play, ShoppingBag, TrendingUp, Wallet,
-  Sparkles, Radio, Gift, ArrowRight,
+  Sparkles, Radio, Gift, Image, ArrowRight,
 } from 'lucide-react';
 import { StatsCard } from '@/components/ui/stats-card';
 import { Button } from '@/components/ui/button';
@@ -166,6 +166,19 @@ export default function ArtistDashboard() {
               <p className="text-xs text-text-muted">Lancer un direct</p>
             </div>
             <ArrowRight className="h-4 w-4 text-text-muted group-hover:text-accent transition-colors shrink-0" />
+          </Link>
+          <Link
+            href="/artist/stories"
+            className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-primary/30 transition-colors group"
+          >
+            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <Image className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium">Stories</p>
+              <p className="text-xs text-text-muted">Moments éphémères</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-text-muted group-hover:text-primary transition-colors shrink-0" />
           </Link>
           <Link
             href={ROUTES.ARTIST_REFERRAL}

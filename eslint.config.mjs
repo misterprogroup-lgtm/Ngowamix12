@@ -15,6 +15,7 @@ const eslintConfig = [
     rules: {
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "@next/next/no-img-element": "off",
+      "react/button-has-type": "error",
     },
   },
 ];

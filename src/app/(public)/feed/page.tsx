@@ -1,9 +1,16 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ROUTES } from '@/lib/constants';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { Music, Repeat2, Heart, UserPlus, Disc3 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+
+export const metadata: Metadata = {
+  title: 'Fil d\'actualité',
+  description: 'Suivez les dernières activités de vos artistes préférés sur Ngowamix : nouveaux morceaux, albums, et interactions.',
+  alternates: { canonical: '/feed' },
+};
 
 export const dynamic = 'force-dynamic';
 

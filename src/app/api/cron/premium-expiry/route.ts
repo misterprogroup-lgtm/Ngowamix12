@@ -31,7 +31,7 @@ export async function GET(request: Request) {
       },
     });
 
-    for (const user of expiringSoonUsers) {
+    await Promise.allSettled(expiringSoonUsers.map(async (user) => {
       const daysLeft = user.premiumExpiresAt
         ? Math.ceil((user.premiumExpiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
         : 0;
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
       } else {
         console.error(`[PREMIUM_EXPIRY] Échec envoi email`);
       }
-    }
+    }));
 
     const alreadyExpired = await db.user.findMany({
       where: {
@@ -65,26 +65,25 @@ export async function GET(request: Request) {
       },
     });
 
-    for (const user of alreadyExpired) {
-      const name = user.firstName || user.displayName || user.email;
+    await db.user.updateMany({
+      where: { id: { in: alreadyExpired.map(u => u.id) } },
+      data: { isPremium: false, premiumExpiresAt: null },
+    });
 
+    await Promise.allSettled(alreadyExpired.map(async (user) => {
+      const name = user.firstName || user.displayName || user.email;
       const sent = await sendEmail(
         user.email,
         generatePremiumExpiryEmail(name, 0).subject,
         generatePremiumExpiryEmail(name, 0).html,
       );
 
-      await db.user.update({
-        where: { id: user.id },
-        data: { isPremium: false, premiumExpiresAt: null },
-      });
-
       if (sent) {
         console.log(`[PREMIUM_EXPIRED] Email envoyé et abonnement désactivé`);
       } else {
         console.error(`[PREMIUM_EXPIRED] Abonnement désactivé mais échec envoi email`);
       }
-    }
+    }));
 
     return NextResponse.json({
       notified: expiringSoonUsers.length,

@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { hashPassword } from '@/lib/auth';
+import { hashPassword, verifyTokenHash } from '@/lib/auth';
 import { checkRateLimit } from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    const { allowed } = checkRateLimit(`reset-password:${ip}`, { maxRequests: 3, windowMs: 60000 });
+    const { allowed } = await checkRateLimit(`reset-password:${ip}`, { maxRequests: 3, windowMs: 60000 });
     if (!allowed) {
       return NextResponse.json(
         { error: 'Trop de tentatives. Réessayez plus tard.' },
@@ -30,11 +30,20 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = await db.user.findFirst({
-      where: { resetToken: token },
+    const candidates = await db.user.findMany({
+      where: { resetToken: { not: null }, resetTokenExpiry: { gt: new Date() } },
+      select: { id: true, resetToken: true, resetTokenExpiry: true },
     });
 
-    if (!user || !user.resetTokenExpiry || user.resetTokenExpiry < new Date()) {
+    let matchedUser: { id: string } | null = null;
+    for (const candidate of candidates) {
+      if (candidate.resetToken && await verifyTokenHash(token, candidate.resetToken)) {
+        matchedUser = candidate;
+        break;
+      }
+    }
+
+    if (!matchedUser) {
       return NextResponse.json(
         { error: 'Le lien de réinitialisation est invalide ou a expiré.' },
         { status: 400 }
@@ -44,7 +53,7 @@ export async function POST(request: Request) {
     const hashedPassword = await hashPassword(password);
 
     await db.user.update({
-      where: { id: user.id },
+      where: { id: matchedUser.id },
       data: {
         password: hashedPassword,
         resetToken: null,

@@ -92,7 +92,11 @@ export const ModelName = {
   Activity: 'Activity',
   Repost: 'Repost',
   Conversation: 'Conversation',
-  DirectMessage: 'DirectMessage'
+  DirectMessage: 'DirectMessage',
+  RateLimit: 'RateLimit',
+  Story: 'Story',
+  StoryView: 'StoryView',
+  StoryLike: 'StoryLike'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -114,7 +118,6 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  googleId: 'googleId',
   password: 'password',
   firstName: 'firstName',
   lastName: 'lastName',
@@ -768,6 +771,50 @@ export const DirectMessageScalarFieldEnum = {
 } as const
 
 export type DirectMessageScalarFieldEnum = (typeof DirectMessageScalarFieldEnum)[keyof typeof DirectMessageScalarFieldEnum]
+
+
+export const RateLimitScalarFieldEnum = {
+  key: 'key',
+  count: 'count',
+  resetAt: 'resetAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RateLimitScalarFieldEnum = (typeof RateLimitScalarFieldEnum)[keyof typeof RateLimitScalarFieldEnum]
+
+
+export const StoryScalarFieldEnum = {
+  id: 'id',
+  artistId: 'artistId',
+  mediaUrl: 'mediaUrl',
+  blobPathname: 'blobPathname',
+  mediaType: 'mediaType',
+  caption: 'caption',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type StoryScalarFieldEnum = (typeof StoryScalarFieldEnum)[keyof typeof StoryScalarFieldEnum]
+
+
+export const StoryViewScalarFieldEnum = {
+  id: 'id',
+  storyId: 'storyId',
+  userId: 'userId',
+  viewedAt: 'viewedAt'
+} as const
+
+export type StoryViewScalarFieldEnum = (typeof StoryViewScalarFieldEnum)[keyof typeof StoryViewScalarFieldEnum]
+
+
+export const StoryLikeScalarFieldEnum = {
+  id: 'id',
+  storyId: 'storyId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type StoryLikeScalarFieldEnum = (typeof StoryLikeScalarFieldEnum)[keyof typeof StoryLikeScalarFieldEnum]
 
 
 export const SortOrder = {

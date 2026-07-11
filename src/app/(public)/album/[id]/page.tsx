@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { ShareButtons } from '@/components/catalog/share-buttons';
 import { formatDuration, formatPrice } from '@/lib/utils';
 import { getCurrentUser } from '@/lib/auth';
-import { PREMIUM_PRICE } from '@/lib/constants';
+import { PREMIUM_PRICE, APP_BASE_URL } from '@/lib/constants';
 import { db } from '@/lib/db';
 import type { Track } from '@/types';
 
@@ -48,12 +48,10 @@ export async function generateMetadata({ params }: AlbumPageProps): Promise<Meta
   };
 }
 
-const BASE_URL = process.env.APP_URL || 'https://ngowamix.com';
-
 async function getAlbum(id: string) {
   try {
     const res = await fetch(
-      `${BASE_URL}/api/albums/${id}`,
+      `${APP_BASE_URL}/api/albums/${id}`,
       { next: { revalidate: 300 } }
     );
     if (!res.ok) return null;
@@ -67,7 +65,7 @@ async function getAlbum(id: string) {
 async function getAlbumTracks(albumId: string) {
   try {
     const res = await fetch(
-      `${BASE_URL}/api/tracks?albumId=${albumId}&limit=50`,
+      `${APP_BASE_URL}/api/tracks?albumId=${albumId}&limit=50`,
       { next: { revalidate: 300 } }
     );
     const data = await res.json();
@@ -112,7 +110,7 @@ async function checkPurchase(albumId: string) {
     if (!user) return false;
     if (user.role === 'ADMIN') return true;
 
-    const res = await fetch(`${BASE_URL}/api/user/purchases`, {
+    const res = await fetch(`${APP_BASE_URL}/api/user/purchases`, {
       cache: 'no-store',
     });
 
@@ -149,9 +147,9 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Accueil', item: `${BASE_URL}/` },
-              { '@type': 'ListItem', position: 2, name: 'Catalogue', item: `${BASE_URL}/explore` },
-              { '@type': 'ListItem', position: 3, name: album.title, item: `${BASE_URL}/album/${id}` },
+              { '@type': 'ListItem', position: 1, name: 'Accueil', item: `${APP_BASE_URL}/` },
+              { '@type': 'ListItem', position: 2, name: 'Catalogue', item: `${APP_BASE_URL}/explore` },
+              { '@type': 'ListItem', position: 3, name: album.title, item: `${APP_BASE_URL}/album/${id}` },
             ],
           }),
         }}

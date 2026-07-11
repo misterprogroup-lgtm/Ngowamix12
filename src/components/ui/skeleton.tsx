@@ -7,7 +7,7 @@ export function Skeleton({
   return (
     <div
       className={cn(
-        'animate-pulse rounded-lg bg-surface-hover',
+        'rounded-xl bg-surface-hover animate-pulse',
         className
       )}
       {...props}

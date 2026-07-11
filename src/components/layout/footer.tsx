@@ -31,7 +31,7 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#ffffff08] bg-[#0a0a0a]" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+    <footer className="border-t border-border/20 bg-background" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="mx-auto max-w-7xl px-4 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
           <div className="sm:col-span-2 md:col-span-1">
@@ -41,15 +41,15 @@ export function Footer() {
               </div>
               <span className="text-lg font-black text-white">{APP_NAME}</span>
             </Link>
-            <p className="text-sm text-[#777] leading-relaxed max-w-xs mb-6">
+            <p className="text-sm text-text-muted leading-relaxed max-w-xs mb-6">
               La plateforme qui libère les artistes. Écoutez, découvrez et soutenez la musique africaine francophone.
             </p>
             <div className="space-y-2.5">
-              <p className="text-[11px] font-bold text-[#555] uppercase tracking-wider">Télécharger l'application</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">Télécharger l'application</p>
               <div className="flex flex-col gap-2">
                 <a
                   href="#"
-                  className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#141414] border border-[#ffffff12] text-white hover:border-primary/40 hover:bg-[#1a1a1a] transition-all group"
+                  className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-surface border border-border/40 text-white hover:border-primary/40 hover:bg-surface-hover transition-all group"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -57,14 +57,14 @@ export function Footer() {
                     <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
                   </svg>
                   <div>
-                    <p className="text-[10px] text-[#888] leading-tight">Télécharger sur</p>
+                    <p className="text-[10px] text-text-muted leading-tight">Télécharger sur</p>
                     <p className="text-sm font-bold text-white group-hover:text-primary transition-colors">App Store</p>
                   </div>
-                  <ExternalLink className="h-3 w-3 text-[#555] ml-auto shrink-0" />
+                  <ExternalLink className="h-3 w-3 text-text-muted ml-auto shrink-0" />
                 </a>
                 <a
                   href="#"
-                  className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#141414] border border-[#ffffff12] text-white hover:border-primary/40 hover:bg-[#1a1a1a] transition-all group"
+                  className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-surface border border-border/40 text-white hover:border-primary/40 hover:bg-surface-hover transition-all group"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -72,10 +72,10 @@ export function Footer() {
                     <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.807 1.626a1 1 0 010 1.732l-2.807 1.626L15.206 12l2.492-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
                   </svg>
                   <div>
-                    <p className="text-[10px] text-[#888] leading-tight">Disponible sur</p>
+                    <p className="text-[10px] text-text-muted leading-tight">Disponible sur</p>
                     <p className="text-sm font-bold text-white group-hover:text-primary transition-colors">Google Play</p>
                   </div>
-                  <ExternalLink className="h-3 w-3 text-[#555] ml-auto shrink-0" />
+                  <ExternalLink className="h-3 w-3 text-text-muted ml-auto shrink-0" />
                 </a>
               </div>
             </div>
@@ -91,7 +91,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-[#777] hover:text-primary transition-colors"
+                      className="text-sm text-text-muted hover:text-primary transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -102,8 +102,8 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-[#ffffff08] flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-[#555] text-center md:text-left">
+        <div className="mt-12 pt-8 border-t border-border/20 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-text-muted text-center md:text-left">
             &copy; {new Date().getFullYear()} {APP_NAME}. Tous droits réservés.
           </p>
           <div className="flex items-center gap-4">
@@ -111,7 +111,7 @@ export function Footer() {
               href="https://facebook.com/ngowamix"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#555] hover:text-primary transition-colors"
+              className="text-text-muted hover:text-primary transition-colors"
               aria-label="Facebook"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -122,7 +122,7 @@ export function Footer() {
               href="https://instagram.com/ngowamix"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#555] hover:text-primary transition-colors"
+              className="text-text-muted hover:text-primary transition-colors"
               aria-label="Instagram"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -133,17 +133,17 @@ export function Footer() {
               href="https://twitter.com/ngowamix"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#555] hover:text-primary transition-colors"
+              className="text-text-muted hover:text-primary transition-colors"
               aria-label="Twitter"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
             </a>
-            <span className="text-[#333] hidden sm:inline">|</span>
-            <Link href="/terms" className="text-sm text-[#555] hover:text-primary transition-colors">CGU</Link>
-            <span className="text-[#333]">|</span>
-            <Link href="/privacy" className="text-sm text-[#555] hover:text-primary transition-colors">Confidentialité</Link>
+            <span className="text-text-muted/30 hidden sm:inline">|</span>
+            <Link href="/terms" className="text-sm text-text-muted hover:text-primary transition-colors">CGU</Link>
+            <span className="text-text-muted/30">|</span>
+            <Link href="/privacy" className="text-sm text-text-muted hover:text-primary transition-colors">Confidentialité</Link>
           </div>
         </div>
       </div>

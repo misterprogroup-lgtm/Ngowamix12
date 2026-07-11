@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import crypto from 'crypto';
+import { APP_BASE_URL } from '@/lib/constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -35,8 +37,9 @@ export function slugify(text: string): string {
 
 export function getDownloadLink(fileUrl: string, expiresInSeconds: number = 3600): string {
   const expires = Math.floor(Date.now() / 1000) + expiresInSeconds;
-  const signature = btoa(`${fileUrl}${expires}${process.env.JWT_SECRET}`).substring(0, 16);
-  return `${fileUrl}?expires=${expires}&sig=${signature}`;
+  const secret = process.env.DOWNLOAD_SECRET || process.env.JWT_SECRET || '';
+  const hmac = crypto.createHmac('sha256', secret).update(`${fileUrl}${expires}`).digest('hex');
+  return `${fileUrl}?expires=${expires}&sig=${hmac}`;
 }
 
 export function formatDate(date: string | Date): string {
@@ -64,8 +67,7 @@ export function formatFileSize(bytes: number): string {
 export function maybeProxyAvatar(url: string | null | undefined): string | null {
   if (!url) return null;
   if (url.includes('utfs.io') || url.includes('uploadthing.com')) {
-    const baseUrl = process.env.APP_URL || 'https://ngowamix.com';
-    return `${baseUrl}/api/avatar-proxy?url=${encodeURIComponent(url)}`;
+    return `${APP_BASE_URL}/api/avatar-proxy?url=${encodeURIComponent(url)}`;
   }
   return url;
 }

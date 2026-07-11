@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export async function GET(request: Request) {
   try {
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const { allowed } = await checkRateLimit(`albums:${ip}`, { maxRequests: 60, windowMs: 60000 });
+    if (!allowed) return NextResponse.json({ error: 'Trop de requêtes' }, { status: 429 });
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '20', 10);
@@ -43,19 +47,19 @@ export async function GET(request: Request) {
       db.album.count({ where }),
     ]);
 
-    const albumsWithRatings = await Promise.all(
-      albums.map(async (album) => {
-        const stats = await db.review.aggregate({
-          where: { albumId: album.id },
+    const ratings = albums.length > 0
+      ? await db.review.groupBy({
+          by: ['albumId'],
+          where: { albumId: { in: albums.map(a => a.id) } },
           _avg: { rating: true },
-        });
-        return {
-          ...album,
-          averageRating: stats._avg.rating || 0,
-          totalReviews: album._count.reviews,
-        };
-      }),
-    );
+        })
+      : [];
+    const ratingMap = new Map(ratings.map(r => [r.albumId, r._avg.rating || 0]));
+    const albumsWithRatings = albums.map(album => ({
+      ...album,
+      averageRating: ratingMap.get(album.id) || 0,
+      totalReviews: album._count.reviews,
+    }));
 
     return NextResponse.json({
       albums: albumsWithRatings,

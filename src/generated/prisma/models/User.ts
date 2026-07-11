@@ -39,7 +39,6 @@ export type UserSumAggregateOutputType = {
 export type UserMinAggregateOutputType = {
   id: string | null
   email: string | null
-  googleId: string | null
   password: string | null
   firstName: string | null
   lastName: string | null
@@ -71,7 +70,6 @@ export type UserMinAggregateOutputType = {
 export type UserMaxAggregateOutputType = {
   id: string | null
   email: string | null
-  googleId: string | null
   password: string | null
   firstName: string | null
   lastName: string | null
@@ -103,7 +101,6 @@ export type UserMaxAggregateOutputType = {
 export type UserCountAggregateOutputType = {
   id: number
   email: number
-  googleId: number
   password: number
   firstName: number
   lastName: number
@@ -147,7 +144,6 @@ export type UserSumAggregateInputType = {
 export type UserMinAggregateInputType = {
   id?: true
   email?: true
-  googleId?: true
   password?: true
   firstName?: true
   lastName?: true
@@ -179,7 +175,6 @@ export type UserMinAggregateInputType = {
 export type UserMaxAggregateInputType = {
   id?: true
   email?: true
-  googleId?: true
   password?: true
   firstName?: true
   lastName?: true
@@ -211,7 +206,6 @@ export type UserMaxAggregateInputType = {
 export type UserCountAggregateInputType = {
   id?: true
   email?: true
-  googleId?: true
   password?: true
   firstName?: true
   lastName?: true
@@ -330,7 +324,6 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type UserGroupByOutputType = {
   id: string
   email: string
-  googleId: string | null
   password: string
   firstName: string | null
   lastName: string | null
@@ -385,7 +378,6 @@ export type UserWhereInput = {
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  googleId?: Prisma.StringNullableFilter<"User"> | string | null
   password?: Prisma.StringFilter<"User"> | string
   firstName?: Prisma.StringNullableFilter<"User"> | string | null
   lastName?: Prisma.StringNullableFilter<"User"> | string | null
@@ -441,12 +433,13 @@ export type UserWhereInput = {
   conversationsAsUser2?: Prisma.ConversationListRelationFilter
   directMessages?: Prisma.DirectMessageListRelationFilter
   ads?: Prisma.AdListRelationFilter
+  storyViews?: Prisma.StoryViewListRelationFilter
+  storyLikes?: Prisma.StoryLikeListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  googleId?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrder
   firstName?: Prisma.SortOrderInput | Prisma.SortOrder
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -502,12 +495,13 @@ export type UserOrderByWithRelationInput = {
   conversationsAsUser2?: Prisma.ConversationOrderByRelationAggregateInput
   directMessages?: Prisma.DirectMessageOrderByRelationAggregateInput
   ads?: Prisma.AdOrderByRelationAggregateInput
+  storyViews?: Prisma.StoryViewOrderByRelationAggregateInput
+  storyLikes?: Prisma.StoryLikeOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
-  googleId?: string
   resetToken?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
@@ -566,12 +560,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   conversationsAsUser2?: Prisma.ConversationListRelationFilter
   directMessages?: Prisma.DirectMessageListRelationFilter
   ads?: Prisma.AdListRelationFilter
-}, "id" | "email" | "googleId" | "resetToken">
+  storyViews?: Prisma.StoryViewListRelationFilter
+  storyLikes?: Prisma.StoryLikeListRelationFilter
+}, "id" | "email" | "resetToken">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  googleId?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrder
   firstName?: Prisma.SortOrderInput | Prisma.SortOrder
   lastName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -611,7 +606,6 @@ export type UserScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
-  googleId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   firstName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   lastName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -643,7 +637,6 @@ export type UserScalarWhereWithAggregatesInput = {
 export type UserCreateInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -699,12 +692,13 @@ export type UserCreateInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -760,12 +754,13 @@ export type UserUncheckedCreateInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -821,12 +816,13 @@ export type UserUpdateInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -882,12 +878,13 @@ export type UserUncheckedUpdateInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -919,7 +916,6 @@ export type UserCreateManyInput = {
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -951,7 +947,6 @@ export type UserUpdateManyMutationInput = {
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -983,7 +978,6 @@ export type UserUncheckedUpdateManyInput = {
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  googleId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -1020,7 +1014,6 @@ export type UserAvgOrderByAggregateInput = {
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  googleId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -1052,7 +1045,6 @@ export type UserMaxOrderByAggregateInput = {
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  googleId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -1540,10 +1532,37 @@ export type UserUpdateOneRequiredWithoutDirectMessagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDirectMessagesInput, Prisma.UserUpdateWithoutDirectMessagesInput>, Prisma.UserUncheckedUpdateWithoutDirectMessagesInput>
 }
 
+export type UserCreateNestedOneWithoutStoryViewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoryViewsInput, Prisma.UserUncheckedCreateWithoutStoryViewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoryViewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStoryViewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoryViewsInput, Prisma.UserUncheckedCreateWithoutStoryViewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoryViewsInput
+  upsert?: Prisma.UserUpsertWithoutStoryViewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStoryViewsInput, Prisma.UserUpdateWithoutStoryViewsInput>, Prisma.UserUncheckedUpdateWithoutStoryViewsInput>
+}
+
+export type UserCreateNestedOneWithoutStoryLikesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoryLikesInput, Prisma.UserUncheckedCreateWithoutStoryLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoryLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStoryLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoryLikesInput, Prisma.UserUncheckedCreateWithoutStoryLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoryLikesInput
+  upsert?: Prisma.UserUpsertWithoutStoryLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStoryLikesInput, Prisma.UserUpdateWithoutStoryLikesInput>, Prisma.UserUncheckedUpdateWithoutStoryLikesInput>
+}
+
 export type UserCreateWithoutLabelInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -1598,12 +1617,13 @@ export type UserCreateWithoutLabelInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLabelInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -1658,6 +1678,8 @@ export type UserUncheckedCreateWithoutLabelInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLabelInput = {
@@ -1679,7 +1701,6 @@ export type UserUpdateToOneWithWhereWithoutLabelInput = {
 export type UserUpdateWithoutLabelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1734,12 +1755,13 @@ export type UserUpdateWithoutLabelInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLabelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1794,12 +1816,13 @@ export type UserUncheckedUpdateWithoutLabelInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutArtistInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -1854,12 +1877,13 @@ export type UserCreateWithoutArtistInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutArtistInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -1914,6 +1938,8 @@ export type UserUncheckedCreateWithoutArtistInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutArtistInput = {
@@ -1935,7 +1961,6 @@ export type UserUpdateToOneWithWhereWithoutArtistInput = {
 export type UserUpdateWithoutArtistInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1990,12 +2015,13 @@ export type UserUpdateWithoutArtistInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutArtistInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2050,12 +2076,13 @@ export type UserUncheckedUpdateWithoutArtistInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSubscriptionsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -2110,12 +2137,13 @@ export type UserCreateWithoutSubscriptionsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -2170,6 +2198,8 @@ export type UserUncheckedCreateWithoutSubscriptionsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -2191,7 +2221,6 @@ export type UserUpdateToOneWithWhereWithoutSubscriptionsInput = {
 export type UserUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2246,12 +2275,13 @@ export type UserUpdateWithoutSubscriptionsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2306,12 +2336,13 @@ export type UserUncheckedUpdateWithoutSubscriptionsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTransactionsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -2366,12 +2397,13 @@ export type UserCreateWithoutTransactionsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransactionsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -2426,6 +2458,8 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -2447,7 +2481,6 @@ export type UserUpdateToOneWithWhereWithoutTransactionsInput = {
 export type UserUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2502,12 +2535,13 @@ export type UserUpdateWithoutTransactionsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2562,12 +2596,13 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPurchasesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -2622,12 +2657,13 @@ export type UserCreateWithoutPurchasesInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPurchasesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -2682,6 +2718,8 @@ export type UserUncheckedCreateWithoutPurchasesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPurchasesInput = {
@@ -2703,7 +2741,6 @@ export type UserUpdateToOneWithWhereWithoutPurchasesInput = {
 export type UserUpdateWithoutPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2758,12 +2795,13 @@ export type UserUpdateWithoutPurchasesInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2818,12 +2856,13 @@ export type UserUncheckedUpdateWithoutPurchasesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDownloadsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -2878,12 +2917,13 @@ export type UserCreateWithoutDownloadsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDownloadsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -2938,6 +2978,8 @@ export type UserUncheckedCreateWithoutDownloadsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDownloadsInput = {
@@ -2959,7 +3001,6 @@ export type UserUpdateToOneWithWhereWithoutDownloadsInput = {
 export type UserUpdateWithoutDownloadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3014,12 +3055,13 @@ export type UserUpdateWithoutDownloadsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDownloadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3074,12 +3116,13 @@ export type UserUncheckedUpdateWithoutDownloadsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFavoritesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -3134,12 +3177,13 @@ export type UserCreateWithoutFavoritesInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFavoritesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -3194,6 +3238,8 @@ export type UserUncheckedCreateWithoutFavoritesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFavoritesInput = {
@@ -3215,7 +3261,6 @@ export type UserUpdateToOneWithWhereWithoutFavoritesInput = {
 export type UserUpdateWithoutFavoritesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3270,12 +3315,13 @@ export type UserUpdateWithoutFavoritesInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFavoritesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3330,12 +3376,13 @@ export type UserUncheckedUpdateWithoutFavoritesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlaylistsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -3390,12 +3437,13 @@ export type UserCreateWithoutPlaylistsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlaylistsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -3450,6 +3498,8 @@ export type UserUncheckedCreateWithoutPlaylistsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlaylistsInput = {
@@ -3471,7 +3521,6 @@ export type UserUpdateToOneWithWhereWithoutPlaylistsInput = {
 export type UserUpdateWithoutPlaylistsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3526,12 +3575,13 @@ export type UserUpdateWithoutPlaylistsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlaylistsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3586,12 +3636,13 @@ export type UserUncheckedUpdateWithoutPlaylistsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCollaboratedPlaylistsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -3646,12 +3697,13 @@ export type UserCreateWithoutCollaboratedPlaylistsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCollaboratedPlaylistsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -3706,6 +3758,8 @@ export type UserUncheckedCreateWithoutCollaboratedPlaylistsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCollaboratedPlaylistsInput = {
@@ -3727,7 +3781,6 @@ export type UserUpdateToOneWithWhereWithoutCollaboratedPlaylistsInput = {
 export type UserUpdateWithoutCollaboratedPlaylistsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3782,12 +3835,13 @@ export type UserUpdateWithoutCollaboratedPlaylistsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCollaboratedPlaylistsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3842,12 +3896,13 @@ export type UserUncheckedUpdateWithoutCollaboratedPlaylistsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -3902,12 +3957,13 @@ export type UserCreateWithoutNotificationsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -3962,6 +4018,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -3983,7 +4041,6 @@ export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
 export type UserUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4038,12 +4095,13 @@ export type UserUpdateWithoutNotificationsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4098,12 +4156,13 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -4158,12 +4217,13 @@ export type UserCreateWithoutReviewsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -4218,6 +4278,8 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsInput = {
@@ -4239,7 +4301,6 @@ export type UserUpdateToOneWithWhereWithoutReviewsInput = {
 export type UserUpdateWithoutReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4294,12 +4355,13 @@ export type UserUpdateWithoutReviewsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4354,12 +4416,13 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutListenHistoryInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -4414,12 +4477,13 @@ export type UserCreateWithoutListenHistoryInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutListenHistoryInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -4474,6 +4538,8 @@ export type UserUncheckedCreateWithoutListenHistoryInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutListenHistoryInput = {
@@ -4495,7 +4561,6 @@ export type UserUpdateToOneWithWhereWithoutListenHistoryInput = {
 export type UserUpdateWithoutListenHistoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4550,12 +4615,13 @@ export type UserUpdateWithoutListenHistoryInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutListenHistoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4610,12 +4676,13 @@ export type UserUncheckedUpdateWithoutListenHistoryInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPushSubscriptionsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -4670,12 +4737,13 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -4730,6 +4798,8 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -4751,7 +4821,6 @@ export type UserUpdateToOneWithWhereWithoutPushSubscriptionsInput = {
 export type UserUpdateWithoutPushSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4806,12 +4875,13 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4866,12 +4936,13 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReferralCodeInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -4926,12 +4997,13 @@ export type UserCreateWithoutReferralCodeInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferralCodeInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -4986,6 +5058,8 @@ export type UserUncheckedCreateWithoutReferralCodeInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferralCodeInput = {
@@ -5007,7 +5081,6 @@ export type UserUpdateToOneWithWhereWithoutReferralCodeInput = {
 export type UserUpdateWithoutReferralCodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5062,12 +5135,13 @@ export type UserUpdateWithoutReferralCodeInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralCodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5122,12 +5196,13 @@ export type UserUncheckedUpdateWithoutReferralCodeInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPromoCodeUsesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -5182,12 +5257,13 @@ export type UserCreateWithoutPromoCodeUsesInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPromoCodeUsesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -5242,6 +5318,8 @@ export type UserUncheckedCreateWithoutPromoCodeUsesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPromoCodeUsesInput = {
@@ -5263,7 +5341,6 @@ export type UserUpdateToOneWithWhereWithoutPromoCodeUsesInput = {
 export type UserUpdateWithoutPromoCodeUsesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5318,12 +5395,13 @@ export type UserUpdateWithoutPromoCodeUsesInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPromoCodeUsesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5378,12 +5456,13 @@ export type UserUncheckedUpdateWithoutPromoCodeUsesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPodcastsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -5438,12 +5517,13 @@ export type UserCreateWithoutPodcastsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPodcastsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -5498,6 +5578,8 @@ export type UserUncheckedCreateWithoutPodcastsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPodcastsInput = {
@@ -5519,7 +5601,6 @@ export type UserUpdateToOneWithWhereWithoutPodcastsInput = {
 export type UserUpdateWithoutPodcastsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5574,12 +5655,13 @@ export type UserUpdateWithoutPodcastsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPodcastsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5634,12 +5716,13 @@ export type UserUncheckedUpdateWithoutPodcastsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAdsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -5694,12 +5777,13 @@ export type UserCreateWithoutAdsInput = {
   conversationsAsUser1?: Prisma.ConversationCreateNestedManyWithoutUser1Input
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAdsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -5754,6 +5838,8 @@ export type UserUncheckedCreateWithoutAdsInput = {
   conversationsAsUser1?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser1Input
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAdsInput = {
@@ -5775,7 +5861,6 @@ export type UserUpdateToOneWithWhereWithoutAdsInput = {
 export type UserUpdateWithoutAdsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5830,12 +5915,13 @@ export type UserUpdateWithoutAdsInput = {
   conversationsAsUser1?: Prisma.ConversationUpdateManyWithoutUser1NestedInput
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5890,12 +5976,13 @@ export type UserUncheckedUpdateWithoutAdsInput = {
   conversationsAsUser1?: Prisma.ConversationUncheckedUpdateManyWithoutUser1NestedInput
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLiveStreamChatsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -5950,12 +6037,13 @@ export type UserCreateWithoutLiveStreamChatsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLiveStreamChatsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -6010,6 +6098,8 @@ export type UserUncheckedCreateWithoutLiveStreamChatsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLiveStreamChatsInput = {
@@ -6031,7 +6121,6 @@ export type UserUpdateToOneWithWhereWithoutLiveStreamChatsInput = {
 export type UserUpdateWithoutLiveStreamChatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6086,12 +6175,13 @@ export type UserUpdateWithoutLiveStreamChatsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLiveStreamChatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6146,12 +6236,13 @@ export type UserUncheckedUpdateWithoutLiveStreamChatsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLiveStreamViewsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -6206,12 +6297,13 @@ export type UserCreateWithoutLiveStreamViewsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLiveStreamViewsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -6266,6 +6358,8 @@ export type UserUncheckedCreateWithoutLiveStreamViewsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLiveStreamViewsInput = {
@@ -6287,7 +6381,6 @@ export type UserUpdateToOneWithWhereWithoutLiveStreamViewsInput = {
 export type UserUpdateWithoutLiveStreamViewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6342,12 +6435,13 @@ export type UserUpdateWithoutLiveStreamViewsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLiveStreamViewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6402,12 +6496,13 @@ export type UserUncheckedUpdateWithoutLiveStreamViewsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutChatParticipantsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -6462,12 +6557,13 @@ export type UserCreateWithoutChatParticipantsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChatParticipantsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -6522,6 +6618,8 @@ export type UserUncheckedCreateWithoutChatParticipantsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChatParticipantsInput = {
@@ -6543,7 +6641,6 @@ export type UserUpdateToOneWithWhereWithoutChatParticipantsInput = {
 export type UserUpdateWithoutChatParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6598,12 +6695,13 @@ export type UserUpdateWithoutChatParticipantsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatParticipantsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6658,12 +6756,13 @@ export type UserUncheckedUpdateWithoutChatParticipantsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutChatMessagesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -6718,12 +6817,13 @@ export type UserCreateWithoutChatMessagesInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChatMessagesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -6778,6 +6878,8 @@ export type UserUncheckedCreateWithoutChatMessagesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChatMessagesInput = {
@@ -6799,7 +6901,6 @@ export type UserUpdateToOneWithWhereWithoutChatMessagesInput = {
 export type UserUpdateWithoutChatMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6854,12 +6955,13 @@ export type UserUpdateWithoutChatMessagesInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6914,12 +7016,13 @@ export type UserUncheckedUpdateWithoutChatMessagesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFamilyOwnedGroupsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -6974,12 +7077,13 @@ export type UserCreateWithoutFamilyOwnedGroupsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFamilyOwnedGroupsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -7034,6 +7138,8 @@ export type UserUncheckedCreateWithoutFamilyOwnedGroupsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFamilyOwnedGroupsInput = {
@@ -7055,7 +7161,6 @@ export type UserUpdateToOneWithWhereWithoutFamilyOwnedGroupsInput = {
 export type UserUpdateWithoutFamilyOwnedGroupsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7110,12 +7215,13 @@ export type UserUpdateWithoutFamilyOwnedGroupsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFamilyOwnedGroupsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7170,12 +7276,13 @@ export type UserUncheckedUpdateWithoutFamilyOwnedGroupsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFamilyMembershipsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -7230,12 +7337,13 @@ export type UserCreateWithoutFamilyMembershipsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFamilyMembershipsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -7290,6 +7398,8 @@ export type UserUncheckedCreateWithoutFamilyMembershipsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFamilyMembershipsInput = {
@@ -7311,7 +7421,6 @@ export type UserUpdateToOneWithWhereWithoutFamilyMembershipsInput = {
 export type UserUpdateWithoutFamilyMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7366,12 +7475,13 @@ export type UserUpdateWithoutFamilyMembershipsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFamilyMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7426,12 +7536,13 @@ export type UserUncheckedUpdateWithoutFamilyMembershipsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStreamPlaysInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -7486,12 +7597,13 @@ export type UserCreateWithoutStreamPlaysInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStreamPlaysInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -7546,6 +7658,8 @@ export type UserUncheckedCreateWithoutStreamPlaysInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStreamPlaysInput = {
@@ -7567,7 +7681,6 @@ export type UserUpdateToOneWithWhereWithoutStreamPlaysInput = {
 export type UserUpdateWithoutStreamPlaysInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7622,12 +7735,13 @@ export type UserUpdateWithoutStreamPlaysInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStreamPlaysInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7682,12 +7796,13 @@ export type UserUncheckedUpdateWithoutStreamPlaysInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutActivitiesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -7742,12 +7857,13 @@ export type UserCreateWithoutActivitiesInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActivitiesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -7802,6 +7918,8 @@ export type UserUncheckedCreateWithoutActivitiesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -7823,7 +7941,6 @@ export type UserUpdateToOneWithWhereWithoutActivitiesInput = {
 export type UserUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7878,12 +7995,13 @@ export type UserUpdateWithoutActivitiesInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7938,12 +8056,13 @@ export type UserUncheckedUpdateWithoutActivitiesInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRepostsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -7998,12 +8117,13 @@ export type UserCreateWithoutRepostsInput = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRepostsInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -8058,6 +8178,8 @@ export type UserUncheckedCreateWithoutRepostsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRepostsInput = {
@@ -8079,7 +8201,6 @@ export type UserUpdateToOneWithWhereWithoutRepostsInput = {
 export type UserUpdateWithoutRepostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8134,12 +8255,13 @@ export type UserUpdateWithoutRepostsInput = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRepostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8194,12 +8316,13 @@ export type UserUncheckedUpdateWithoutRepostsInput = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationsAsUser1Input = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -8254,12 +8377,13 @@ export type UserCreateWithoutConversationsAsUser1Input = {
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsAsUser1Input = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -8314,6 +8438,8 @@ export type UserUncheckedCreateWithoutConversationsAsUser1Input = {
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsAsUser1Input = {
@@ -8324,7 +8450,6 @@ export type UserCreateOrConnectWithoutConversationsAsUser1Input = {
 export type UserCreateWithoutConversationsAsUser2Input = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -8379,12 +8504,13 @@ export type UserCreateWithoutConversationsAsUser2Input = {
   conversationsAsUser1?: Prisma.ConversationCreateNestedManyWithoutUser1Input
   directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsAsUser2Input = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -8439,6 +8565,8 @@ export type UserUncheckedCreateWithoutConversationsAsUser2Input = {
   conversationsAsUser1?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser1Input
   directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsAsUser2Input = {
@@ -8460,7 +8588,6 @@ export type UserUpdateToOneWithWhereWithoutConversationsAsUser1Input = {
 export type UserUpdateWithoutConversationsAsUser1Input = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8515,12 +8642,13 @@ export type UserUpdateWithoutConversationsAsUser1Input = {
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsAsUser1Input = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8575,6 +8703,8 @@ export type UserUncheckedUpdateWithoutConversationsAsUser1Input = {
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutConversationsAsUser2Input = {
@@ -8591,7 +8721,6 @@ export type UserUpdateToOneWithWhereWithoutConversationsAsUser2Input = {
 export type UserUpdateWithoutConversationsAsUser2Input = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8646,12 +8775,13 @@ export type UserUpdateWithoutConversationsAsUser2Input = {
   conversationsAsUser1?: Prisma.ConversationUpdateManyWithoutUser1NestedInput
   directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsAsUser2Input = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8706,12 +8836,13 @@ export type UserUncheckedUpdateWithoutConversationsAsUser2Input = {
   conversationsAsUser1?: Prisma.ConversationUncheckedUpdateManyWithoutUser1NestedInput
   directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDirectMessagesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -8766,12 +8897,13 @@ export type UserCreateWithoutDirectMessagesInput = {
   conversationsAsUser1?: Prisma.ConversationCreateNestedManyWithoutUser1Input
   conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
   ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDirectMessagesInput = {
   id?: string
   email: string
-  googleId?: string | null
   password: string
   firstName?: string | null
   lastName?: string | null
@@ -8826,6 +8958,8 @@ export type UserUncheckedCreateWithoutDirectMessagesInput = {
   conversationsAsUser1?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser1Input
   conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDirectMessagesInput = {
@@ -8847,7 +8981,6 @@ export type UserUpdateToOneWithWhereWithoutDirectMessagesInput = {
 export type UserUpdateWithoutDirectMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8902,12 +9035,13 @@ export type UserUpdateWithoutDirectMessagesInput = {
   conversationsAsUser1?: Prisma.ConversationUpdateManyWithoutUser1NestedInput
   conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
   ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDirectMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8962,6 +9096,528 @@ export type UserUncheckedUpdateWithoutDirectMessagesInput = {
   conversationsAsUser1?: Prisma.ConversationUncheckedUpdateManyWithoutUser1NestedInput
   conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutStoryViewsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  displayName?: string | null
+  avatar?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  phoneVerificationCode?: string | null
+  phoneVerificationExpiresAt?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationCode?: string | null
+  emailVerificationExpiresAt?: Date | string | null
+  labelName?: string | null
+  role?: $Enums.UserRole
+  isPremium?: boolean
+  premiumExpiresAt?: Date | string | null
+  downloadQuota?: number
+  downloadsUsedThisMonth?: number
+  quotaResetAt?: Date | string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  termsAccepted?: boolean
+  termsAcceptedAt?: Date | string | null
+  referredBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutUserInput
+  downloads?: Prisma.DownloadCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  artist?: Prisma.ArtistCreateNestedOneWithoutUserInput
+  label?: Prisma.LabelCreateNestedOneWithoutUserInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
+  listenHistory?: Prisma.ListenHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  referralCode?: Prisma.ReferralCodeCreateNestedOneWithoutUserInput
+  promoCodeUses?: Prisma.UsedPromoCodeCreateNestedManyWithoutUserInput
+  podcasts?: Prisma.PodcastCreateNestedManyWithoutUserInput
+  playlists?: Prisma.PlaylistCreateNestedManyWithoutUserInput
+  collaboratedPlaylists?: Prisma.PlaylistCollaboratorCreateNestedManyWithoutUserInput
+  liveStreamChats?: Prisma.LiveStreamChatCreateNestedManyWithoutUserInput
+  liveStreamViews?: Prisma.LiveStreamViewCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  familyOwnedGroups?: Prisma.FamilyGroupCreateNestedManyWithoutOwnerInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  streamPlays?: Prisma.StreamPlayCreateNestedManyWithoutUserInput
+  reposts?: Prisma.RepostCreateNestedManyWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  conversationsAsUser1?: Prisma.ConversationCreateNestedManyWithoutUser1Input
+  conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
+  directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
+  ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutStoryViewsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  displayName?: string | null
+  avatar?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  phoneVerificationCode?: string | null
+  phoneVerificationExpiresAt?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationCode?: string | null
+  emailVerificationExpiresAt?: Date | string | null
+  labelName?: string | null
+  role?: $Enums.UserRole
+  isPremium?: boolean
+  premiumExpiresAt?: Date | string | null
+  downloadQuota?: number
+  downloadsUsedThisMonth?: number
+  quotaResetAt?: Date | string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  termsAccepted?: boolean
+  termsAcceptedAt?: Date | string | null
+  referredBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutUserInput
+  downloads?: Prisma.DownloadUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  artist?: Prisma.ArtistUncheckedCreateNestedOneWithoutUserInput
+  label?: Prisma.LabelUncheckedCreateNestedOneWithoutUserInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
+  listenHistory?: Prisma.ListenHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  referralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutUserInput
+  promoCodeUses?: Prisma.UsedPromoCodeUncheckedCreateNestedManyWithoutUserInput
+  podcasts?: Prisma.PodcastUncheckedCreateNestedManyWithoutUserInput
+  playlists?: Prisma.PlaylistUncheckedCreateNestedManyWithoutUserInput
+  collaboratedPlaylists?: Prisma.PlaylistCollaboratorUncheckedCreateNestedManyWithoutUserInput
+  liveStreamChats?: Prisma.LiveStreamChatUncheckedCreateNestedManyWithoutUserInput
+  liveStreamViews?: Prisma.LiveStreamViewUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  familyOwnedGroups?: Prisma.FamilyGroupUncheckedCreateNestedManyWithoutOwnerInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  streamPlays?: Prisma.StreamPlayUncheckedCreateNestedManyWithoutUserInput
+  reposts?: Prisma.RepostUncheckedCreateNestedManyWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  conversationsAsUser1?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser1Input
+  conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
+  directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
+  ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyLikes?: Prisma.StoryLikeUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutStoryViewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStoryViewsInput, Prisma.UserUncheckedCreateWithoutStoryViewsInput>
+}
+
+export type UserUpsertWithoutStoryViewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStoryViewsInput, Prisma.UserUncheckedUpdateWithoutStoryViewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStoryViewsInput, Prisma.UserUncheckedCreateWithoutStoryViewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStoryViewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStoryViewsInput, Prisma.UserUncheckedUpdateWithoutStoryViewsInput>
+}
+
+export type UserUpdateWithoutStoryViewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneVerificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  labelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  downloadQuota?: Prisma.IntFieldUpdateOperationsInput | number
+  downloadsUsedThisMonth?: Prisma.IntFieldUpdateOperationsInput | number
+  quotaResetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAccepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  purchases?: Prisma.PurchaseUpdateManyWithoutUserNestedInput
+  downloads?: Prisma.DownloadUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  artist?: Prisma.ArtistUpdateOneWithoutUserNestedInput
+  label?: Prisma.LabelUpdateOneWithoutUserNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
+  listenHistory?: Prisma.ListenHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  referralCode?: Prisma.ReferralCodeUpdateOneWithoutUserNestedInput
+  promoCodeUses?: Prisma.UsedPromoCodeUpdateManyWithoutUserNestedInput
+  podcasts?: Prisma.PodcastUpdateManyWithoutUserNestedInput
+  playlists?: Prisma.PlaylistUpdateManyWithoutUserNestedInput
+  collaboratedPlaylists?: Prisma.PlaylistCollaboratorUpdateManyWithoutUserNestedInput
+  liveStreamChats?: Prisma.LiveStreamChatUpdateManyWithoutUserNestedInput
+  liveStreamViews?: Prisma.LiveStreamViewUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  familyOwnedGroups?: Prisma.FamilyGroupUpdateManyWithoutOwnerNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  streamPlays?: Prisma.StreamPlayUpdateManyWithoutUserNestedInput
+  reposts?: Prisma.RepostUpdateManyWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  conversationsAsUser1?: Prisma.ConversationUpdateManyWithoutUser1NestedInput
+  conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
+  directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
+  ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStoryViewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneVerificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  labelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  downloadQuota?: Prisma.IntFieldUpdateOperationsInput | number
+  downloadsUsedThisMonth?: Prisma.IntFieldUpdateOperationsInput | number
+  quotaResetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAccepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutUserNestedInput
+  downloads?: Prisma.DownloadUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  artist?: Prisma.ArtistUncheckedUpdateOneWithoutUserNestedInput
+  label?: Prisma.LabelUncheckedUpdateOneWithoutUserNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
+  listenHistory?: Prisma.ListenHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  referralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutUserNestedInput
+  promoCodeUses?: Prisma.UsedPromoCodeUncheckedUpdateManyWithoutUserNestedInput
+  podcasts?: Prisma.PodcastUncheckedUpdateManyWithoutUserNestedInput
+  playlists?: Prisma.PlaylistUncheckedUpdateManyWithoutUserNestedInput
+  collaboratedPlaylists?: Prisma.PlaylistCollaboratorUncheckedUpdateManyWithoutUserNestedInput
+  liveStreamChats?: Prisma.LiveStreamChatUncheckedUpdateManyWithoutUserNestedInput
+  liveStreamViews?: Prisma.LiveStreamViewUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  familyOwnedGroups?: Prisma.FamilyGroupUncheckedUpdateManyWithoutOwnerNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  streamPlays?: Prisma.StreamPlayUncheckedUpdateManyWithoutUserNestedInput
+  reposts?: Prisma.RepostUncheckedUpdateManyWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  conversationsAsUser1?: Prisma.ConversationUncheckedUpdateManyWithoutUser1NestedInput
+  conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
+  directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
+  ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyLikes?: Prisma.StoryLikeUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutStoryLikesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  displayName?: string | null
+  avatar?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  phoneVerificationCode?: string | null
+  phoneVerificationExpiresAt?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationCode?: string | null
+  emailVerificationExpiresAt?: Date | string | null
+  labelName?: string | null
+  role?: $Enums.UserRole
+  isPremium?: boolean
+  premiumExpiresAt?: Date | string | null
+  downloadQuota?: number
+  downloadsUsedThisMonth?: number
+  quotaResetAt?: Date | string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  termsAccepted?: boolean
+  termsAcceptedAt?: Date | string | null
+  referredBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutUserInput
+  downloads?: Prisma.DownloadCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  artist?: Prisma.ArtistCreateNestedOneWithoutUserInput
+  label?: Prisma.LabelCreateNestedOneWithoutUserInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
+  listenHistory?: Prisma.ListenHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  referralCode?: Prisma.ReferralCodeCreateNestedOneWithoutUserInput
+  promoCodeUses?: Prisma.UsedPromoCodeCreateNestedManyWithoutUserInput
+  podcasts?: Prisma.PodcastCreateNestedManyWithoutUserInput
+  playlists?: Prisma.PlaylistCreateNestedManyWithoutUserInput
+  collaboratedPlaylists?: Prisma.PlaylistCollaboratorCreateNestedManyWithoutUserInput
+  liveStreamChats?: Prisma.LiveStreamChatCreateNestedManyWithoutUserInput
+  liveStreamViews?: Prisma.LiveStreamViewCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantCreateNestedManyWithoutUserInput
+  familyOwnedGroups?: Prisma.FamilyGroupCreateNestedManyWithoutOwnerInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  streamPlays?: Prisma.StreamPlayCreateNestedManyWithoutUserInput
+  reposts?: Prisma.RepostCreateNestedManyWithoutUserInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  conversationsAsUser1?: Prisma.ConversationCreateNestedManyWithoutUser1Input
+  conversationsAsUser2?: Prisma.ConversationCreateNestedManyWithoutUser2Input
+  directMessages?: Prisma.DirectMessageCreateNestedManyWithoutSenderInput
+  ads?: Prisma.AdCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutStoryLikesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  displayName?: string | null
+  avatar?: string | null
+  phone?: string | null
+  phoneVerified?: boolean
+  phoneVerificationCode?: string | null
+  phoneVerificationExpiresAt?: Date | string | null
+  emailVerified?: boolean
+  emailVerificationCode?: string | null
+  emailVerificationExpiresAt?: Date | string | null
+  labelName?: string | null
+  role?: $Enums.UserRole
+  isPremium?: boolean
+  premiumExpiresAt?: Date | string | null
+  downloadQuota?: number
+  downloadsUsedThisMonth?: number
+  quotaResetAt?: Date | string
+  resetToken?: string | null
+  resetTokenExpiry?: Date | string | null
+  termsAccepted?: boolean
+  termsAcceptedAt?: Date | string | null
+  referredBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutUserInput
+  downloads?: Prisma.DownloadUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  artist?: Prisma.ArtistUncheckedCreateNestedOneWithoutUserInput
+  label?: Prisma.LabelUncheckedCreateNestedOneWithoutUserInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
+  listenHistory?: Prisma.ListenHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  referralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutUserInput
+  promoCodeUses?: Prisma.UsedPromoCodeUncheckedCreateNestedManyWithoutUserInput
+  podcasts?: Prisma.PodcastUncheckedCreateNestedManyWithoutUserInput
+  playlists?: Prisma.PlaylistUncheckedCreateNestedManyWithoutUserInput
+  collaboratedPlaylists?: Prisma.PlaylistCollaboratorUncheckedCreateNestedManyWithoutUserInput
+  liveStreamChats?: Prisma.LiveStreamChatUncheckedCreateNestedManyWithoutUserInput
+  liveStreamViews?: Prisma.LiveStreamViewUncheckedCreateNestedManyWithoutUserInput
+  chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutUserInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+  familyOwnedGroups?: Prisma.FamilyGroupUncheckedCreateNestedManyWithoutOwnerInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  streamPlays?: Prisma.StreamPlayUncheckedCreateNestedManyWithoutUserInput
+  reposts?: Prisma.RepostUncheckedCreateNestedManyWithoutUserInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  conversationsAsUser1?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser1Input
+  conversationsAsUser2?: Prisma.ConversationUncheckedCreateNestedManyWithoutUser2Input
+  directMessages?: Prisma.DirectMessageUncheckedCreateNestedManyWithoutSenderInput
+  ads?: Prisma.AdUncheckedCreateNestedManyWithoutUserInput
+  storyViews?: Prisma.StoryViewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutStoryLikesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStoryLikesInput, Prisma.UserUncheckedCreateWithoutStoryLikesInput>
+}
+
+export type UserUpsertWithoutStoryLikesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStoryLikesInput, Prisma.UserUncheckedUpdateWithoutStoryLikesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStoryLikesInput, Prisma.UserUncheckedCreateWithoutStoryLikesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStoryLikesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStoryLikesInput, Prisma.UserUncheckedUpdateWithoutStoryLikesInput>
+}
+
+export type UserUpdateWithoutStoryLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneVerificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  labelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  downloadQuota?: Prisma.IntFieldUpdateOperationsInput | number
+  downloadsUsedThisMonth?: Prisma.IntFieldUpdateOperationsInput | number
+  quotaResetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAccepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  purchases?: Prisma.PurchaseUpdateManyWithoutUserNestedInput
+  downloads?: Prisma.DownloadUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  artist?: Prisma.ArtistUpdateOneWithoutUserNestedInput
+  label?: Prisma.LabelUpdateOneWithoutUserNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
+  listenHistory?: Prisma.ListenHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  referralCode?: Prisma.ReferralCodeUpdateOneWithoutUserNestedInput
+  promoCodeUses?: Prisma.UsedPromoCodeUpdateManyWithoutUserNestedInput
+  podcasts?: Prisma.PodcastUpdateManyWithoutUserNestedInput
+  playlists?: Prisma.PlaylistUpdateManyWithoutUserNestedInput
+  collaboratedPlaylists?: Prisma.PlaylistCollaboratorUpdateManyWithoutUserNestedInput
+  liveStreamChats?: Prisma.LiveStreamChatUpdateManyWithoutUserNestedInput
+  liveStreamViews?: Prisma.LiveStreamViewUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUpdateManyWithoutUserNestedInput
+  familyOwnedGroups?: Prisma.FamilyGroupUpdateManyWithoutOwnerNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  streamPlays?: Prisma.StreamPlayUpdateManyWithoutUserNestedInput
+  reposts?: Prisma.RepostUpdateManyWithoutUserNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  conversationsAsUser1?: Prisma.ConversationUpdateManyWithoutUser1NestedInput
+  conversationsAsUser2?: Prisma.ConversationUpdateManyWithoutUser2NestedInput
+  directMessages?: Prisma.DirectMessageUpdateManyWithoutSenderNestedInput
+  ads?: Prisma.AdUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStoryLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  phoneVerificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneVerificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerificationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerificationExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  labelName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isPremium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  premiumExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  downloadQuota?: Prisma.IntFieldUpdateOperationsInput | number
+  downloadsUsedThisMonth?: Prisma.IntFieldUpdateOperationsInput | number
+  quotaResetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAccepted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  referredBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutUserNestedInput
+  downloads?: Prisma.DownloadUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  artist?: Prisma.ArtistUncheckedUpdateOneWithoutUserNestedInput
+  label?: Prisma.LabelUncheckedUpdateOneWithoutUserNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
+  listenHistory?: Prisma.ListenHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  referralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutUserNestedInput
+  promoCodeUses?: Prisma.UsedPromoCodeUncheckedUpdateManyWithoutUserNestedInput
+  podcasts?: Prisma.PodcastUncheckedUpdateManyWithoutUserNestedInput
+  playlists?: Prisma.PlaylistUncheckedUpdateManyWithoutUserNestedInput
+  collaboratedPlaylists?: Prisma.PlaylistCollaboratorUncheckedUpdateManyWithoutUserNestedInput
+  liveStreamChats?: Prisma.LiveStreamChatUncheckedUpdateManyWithoutUserNestedInput
+  liveStreamViews?: Prisma.LiveStreamViewUncheckedUpdateManyWithoutUserNestedInput
+  chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutUserNestedInput
+  chatParticipants?: Prisma.ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+  familyOwnedGroups?: Prisma.FamilyGroupUncheckedUpdateManyWithoutOwnerNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  streamPlays?: Prisma.StreamPlayUncheckedUpdateManyWithoutUserNestedInput
+  reposts?: Prisma.RepostUncheckedUpdateManyWithoutUserNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  conversationsAsUser1?: Prisma.ConversationUncheckedUpdateManyWithoutUser1NestedInput
+  conversationsAsUser2?: Prisma.ConversationUncheckedUpdateManyWithoutUser2NestedInput
+  directMessages?: Prisma.DirectMessageUncheckedUpdateManyWithoutSenderNestedInput
+  ads?: Prisma.AdUncheckedUpdateManyWithoutUserNestedInput
+  storyViews?: Prisma.StoryViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -8996,6 +9652,8 @@ export type UserCountOutputType = {
   conversationsAsUser2: number
   directMessages: number
   ads: number
+  storyViews: number
+  storyLikes: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -9025,6 +9683,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   conversationsAsUser2?: boolean | UserCountOutputTypeCountConversationsAsUser2Args
   directMessages?: boolean | UserCountOutputTypeCountDirectMessagesArgs
   ads?: boolean | UserCountOutputTypeCountAdsArgs
+  storyViews?: boolean | UserCountOutputTypeCountStoryViewsArgs
+  storyLikes?: boolean | UserCountOutputTypeCountStoryLikesArgs
 }
 
 /**
@@ -9219,11 +9879,24 @@ export type UserCountOutputTypeCountAdsArgs<ExtArgs extends runtime.Types.Extens
   where?: Prisma.AdWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStoryViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StoryViewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStoryLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StoryLikeWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
-  googleId?: boolean
   password?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -9279,13 +9952,14 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   conversationsAsUser2?: boolean | Prisma.User$conversationsAsUser2Args<ExtArgs>
   directMessages?: boolean | Prisma.User$directMessagesArgs<ExtArgs>
   ads?: boolean | Prisma.User$adsArgs<ExtArgs>
+  storyViews?: boolean | Prisma.User$storyViewsArgs<ExtArgs>
+  storyLikes?: boolean | Prisma.User$storyLikesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
-  googleId?: boolean
   password?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -9317,7 +9991,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
-  googleId?: boolean
   password?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -9349,7 +10022,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectScalar = {
   id?: boolean
   email?: boolean
-  googleId?: boolean
   password?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -9378,7 +10050,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "googleId" | "password" | "firstName" | "lastName" | "displayName" | "avatar" | "phone" | "phoneVerified" | "phoneVerificationCode" | "phoneVerificationExpiresAt" | "emailVerified" | "emailVerificationCode" | "emailVerificationExpiresAt" | "labelName" | "role" | "isPremium" | "premiumExpiresAt" | "downloadQuota" | "downloadsUsedThisMonth" | "quotaResetAt" | "resetToken" | "resetTokenExpiry" | "termsAccepted" | "termsAcceptedAt" | "referredBy" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "displayName" | "avatar" | "phone" | "phoneVerified" | "phoneVerificationCode" | "phoneVerificationExpiresAt" | "emailVerified" | "emailVerificationCode" | "emailVerificationExpiresAt" | "labelName" | "role" | "isPremium" | "premiumExpiresAt" | "downloadQuota" | "downloadsUsedThisMonth" | "quotaResetAt" | "resetToken" | "resetTokenExpiry" | "termsAccepted" | "termsAcceptedAt" | "referredBy" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subscriptions?: boolean | Prisma.User$subscriptionsArgs<ExtArgs>
   transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
@@ -9409,6 +10081,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   conversationsAsUser2?: boolean | Prisma.User$conversationsAsUser2Args<ExtArgs>
   directMessages?: boolean | Prisma.User$directMessagesArgs<ExtArgs>
   ads?: boolean | Prisma.User$adsArgs<ExtArgs>
+  storyViews?: boolean | Prisma.User$storyViewsArgs<ExtArgs>
+  storyLikes?: boolean | Prisma.User$storyLikesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -9446,11 +10120,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     conversationsAsUser2: Prisma.$ConversationPayload<ExtArgs>[]
     directMessages: Prisma.$DirectMessagePayload<ExtArgs>[]
     ads: Prisma.$AdPayload<ExtArgs>[]
+    storyViews: Prisma.$StoryViewPayload<ExtArgs>[]
+    storyLikes: Prisma.$StoryLikePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
-    googleId: string | null
     password: string
     firstName: string | null
     lastName: string | null
@@ -9900,6 +10575,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   conversationsAsUser2<T extends Prisma.User$conversationsAsUser2Args<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$conversationsAsUser2Args<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   directMessages<T extends Prisma.User$directMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$directMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DirectMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ads<T extends Prisma.User$adsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$adsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  storyViews<T extends Prisma.User$storyViewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$storyViewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoryViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  storyLikes<T extends Prisma.User$storyLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$storyLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoryLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9931,7 +10608,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
-  readonly googleId: Prisma.FieldRef<"User", 'String'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly firstName: Prisma.FieldRef<"User", 'String'>
   readonly lastName: Prisma.FieldRef<"User", 'String'>
@@ -11029,6 +11705,54 @@ export type User$adsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   take?: number
   skip?: number
   distinct?: Prisma.AdScalarFieldEnum | Prisma.AdScalarFieldEnum[]
+}
+
+/**
+ * User.storyViews
+ */
+export type User$storyViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StoryView
+   */
+  select?: Prisma.StoryViewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StoryView
+   */
+  omit?: Prisma.StoryViewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoryViewInclude<ExtArgs> | null
+  where?: Prisma.StoryViewWhereInput
+  orderBy?: Prisma.StoryViewOrderByWithRelationInput | Prisma.StoryViewOrderByWithRelationInput[]
+  cursor?: Prisma.StoryViewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StoryViewScalarFieldEnum | Prisma.StoryViewScalarFieldEnum[]
+}
+
+/**
+ * User.storyLikes
+ */
+export type User$storyLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StoryLike
+   */
+  select?: Prisma.StoryLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StoryLike
+   */
+  omit?: Prisma.StoryLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoryLikeInclude<ExtArgs> | null
+  where?: Prisma.StoryLikeWhereInput
+  orderBy?: Prisma.StoryLikeOrderByWithRelationInput | Prisma.StoryLikeOrderByWithRelationInput[]
+  cursor?: Prisma.StoryLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StoryLikeScalarFieldEnum | Prisma.StoryLikeScalarFieldEnum[]
 }
 
 /**

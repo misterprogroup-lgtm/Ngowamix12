@@ -227,3 +227,23 @@ export type Conversation = Prisma.ConversationModel
  * 
  */
 export type DirectMessage = Prisma.DirectMessageModel
+/**
+ * Model RateLimit
+ * 
+ */
+export type RateLimit = Prisma.RateLimitModel
+/**
+ * Model Story
+ * 
+ */
+export type Story = Prisma.StoryModel
+/**
+ * Model StoryView
+ * 
+ */
+export type StoryView = Prisma.StoryViewModel
+/**
+ * Model StoryLike
+ * 
+ */
+export type StoryLike = Prisma.StoryLikeModel

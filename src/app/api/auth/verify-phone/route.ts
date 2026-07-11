@@ -11,7 +11,7 @@ const verifySchema = z.object({
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    const { allowed } = checkRateLimit(`verify-phone:${ip}`, { maxRequests: 10, windowMs: 60000 });
+    const { allowed } = await checkRateLimit(`verify-phone:${ip}`, { maxRequests: 10, windowMs: 60000 });
     if (!allowed) {
       return NextResponse.json(
         { error: 'Trop de tentatives. Réessayez plus tard.' },

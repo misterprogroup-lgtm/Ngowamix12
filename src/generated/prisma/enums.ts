@@ -234,3 +234,11 @@ export const ActivityType = {
 } as const
 
 export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType]
+
+
+export const StoryMediaType = {
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO'
+} as const
+
+export type StoryMediaType = (typeof StoryMediaType)[keyof typeof StoryMediaType]

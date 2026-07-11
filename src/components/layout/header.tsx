@@ -53,7 +53,7 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-[#0b0b0b]/90 backdrop-blur-md border-b border-[#ffffff08]">
+      <header className="fixed top-0 left-0 right-0 z-50 h-16 glass">
         <div className="flex items-center h-full px-4 md:px-6 gap-3">
           <Link href={ROUTES.HOME} className="flex items-center gap-2.5 shrink-0 mr-1">
             <span className="text-base font-black text-white tracking-tight">
@@ -72,13 +72,13 @@ export function Header() {
 
           <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto max-sm:hidden">
             <div className="relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555]" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
               <input
                 type="search"
                 placeholder="Rechercher artistes, titres, albums..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-10 pl-10 pr-4 rounded-full border border-[#ffffff12] bg-[#141414] text-sm text-white placeholder:text-[#555] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                className="w-full h-10 pl-10 pr-4 rounded-full border border-border/50 bg-surface text-sm text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
               />
             </div>
           </form>
@@ -89,7 +89,7 @@ export function Header() {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center gap-2 pl-2 pr-1.5 py-1.5 rounded-lg hover:bg-[#ffffff0a] transition-colors"
+                    className="flex items-center gap-2 pl-2 pr-1.5 py-1.5 rounded-lg hover:bg-surface-hover transition-colors"
                   >
                     {user.isPremium && (
                       <Crown className="h-3.5 w-3.5 text-primary" />
@@ -97,30 +97,30 @@ export function Header() {
                     {(() => {
                       const avatar = user.artist?.avatar || user.avatar;
                       return avatar ? (
-                        <SafeImage src={avatar} alt="" width={26} height={26} unoptimized className="h-[26px] w-[26px] rounded-full object-cover ring-2 ring-[#ffffff15]" fallback={<div className="h-[26px] w-[26px] rounded-full bg-[#1f1f1f] flex items-center justify-center"><User className="h-3.5 w-3.5 text-[#666]" /></div>} />
+                        <SafeImage src={avatar} alt="" width={26} height={26} unoptimized className="h-[26px] w-[26px] rounded-full object-cover ring-2 ring-border/30" fallback={<div className="h-[26px] w-[26px] rounded-full bg-surface-hover flex items-center justify-center"><User className="h-3.5 w-3.5 text-text-muted" /></div>} />
                       ) : (
-                        <div className="h-[26px] w-[26px] rounded-full bg-[#1f1f1f] flex items-center justify-center">
-                          <User className="h-3.5 w-3.5 text-[#666]" />
+                        <div className="h-[26px] w-[26px] rounded-full bg-surface-hover flex items-center justify-center">
+                          <User className="h-3.5 w-3.5 text-text-muted" />
                         </div>
                       );
                     })()}
                     <span className="max-w-[100px] truncate text-sm font-medium text-white hidden lg:block">
                       {user.displayName || user.email?.split('@')[0]}
                     </span>
-                    <ChevronDown className={cn('h-3.5 w-3.5 text-[#555] transition-transform shrink-0', showDropdown && 'rotate-180')} />
+                    <ChevronDown className={cn('h-3.5 w-3.5 text-text-muted transition-transform shrink-0', showDropdown && 'rotate-180')} />
                   </button>
 
                   {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-64 rounded-xl border border-[#ffffff15] bg-[#141414] shadow-xl py-2 z-50">
-                      <div className="px-4 py-3 border-b border-[#ffffff0a]">
+                    <div className="absolute right-0 mt-2 w-64 rounded-xl border border-border/30 bg-surface-elevated shadow-xl py-2 z-50">
+                      <div className="px-4 py-3 border-b border-border/30">
                         <div className="flex items-center gap-3">
                           {(() => {
                             const avatar = user.artist?.avatar || user.avatar;
                             return avatar ? (
-                              <SafeImage src={avatar} alt="" width={40} height={40} unoptimized className="h-10 w-10 rounded-full object-cover ring-2 ring-[#ffffff15]" fallback={<div className="h-10 w-10 rounded-full bg-[#1f1f1f]" />} />
+                              <SafeImage src={avatar} alt="" width={40} height={40} unoptimized className="h-10 w-10 rounded-full object-cover ring-2 ring-border/30" fallback={<div className="h-10 w-10 rounded-full bg-surface-hover" />} />
                             ) : (
-                              <div className="h-10 w-10 rounded-full bg-[#1f1f1f] flex items-center justify-center">
-                                <User className="h-5 w-5 text-[#666]" />
+                              <div className="h-10 w-10 rounded-full bg-surface-hover flex items-center justify-center">
+                                <User className="h-5 w-5 text-text-muted" />
                               </div>
                             );
                           })()}
@@ -129,7 +129,7 @@ export function Header() {
                               {user.displayName || user.email?.split('@')[0]}
                               {user.isPremium && <Crown className="h-3.5 w-3.5 text-primary shrink-0" />}
                             </p>
-                            <p className="text-xs text-[#777] truncate">{user.email}</p>
+                            <p className="text-xs text-text-muted truncate">{user.email}</p>
                           </div>
                         </div>
                       </div>
@@ -137,21 +137,21 @@ export function Header() {
                       <Link
                         href={ROUTES.USER_PROFILE}
                         onClick={() => setShowDropdown(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
                       >
                         <Settings className="h-4 w-4" />
                         Mon profil
                       </Link>
 
                       {user.role === 'ADMIN' && (
-                        <div className="border-t border-[#ffffff0a] pt-1 mt-1">
-                          <p className="px-4 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Administration</p>
+                        <div className="border-t border-border/20 pt-1 mt-1">
+                          <p className="px-4 py-1 text-[10px] font-bold text-text-muted uppercase tracking-widest">Administration</p>
                           {adminLinks.map((link) => (
                             <Link
                               key={link.href}
                               href={link.href}
                               onClick={() => setShowDropdown(false)}
-                              className="flex items-center gap-3 px-4 py-2 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                              className="flex items-center gap-3 px-4 py-2 text-sm text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
                             >
                               <link.icon className="h-4 w-4" />
                               {link.label}
@@ -161,14 +161,14 @@ export function Header() {
                       )}
 
                       {(user.role === 'ARTIST' || user.role === 'LABEL') && (
-                        <div className="border-t border-[#ffffff0a] pt-1 mt-1">
-                          <p className="px-4 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Espace Artiste</p>
+                        <div className="border-t border-border/20 pt-1 mt-1">
+                          <p className="px-4 py-1 text-[10px] font-bold text-text-muted uppercase tracking-widest">Espace Artiste</p>
                           {artistLinks.map((link) => (
                             <Link
                               key={link.href}
                               href={link.href}
                               onClick={() => setShowDropdown(false)}
-                              className="flex items-center gap-3 px-4 py-2 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                              className="flex items-center gap-3 px-4 py-2 text-sm text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
                             >
                               <link.icon className="h-4 w-4" />
                               {link.label}
@@ -178,11 +178,11 @@ export function Header() {
                       )}
 
                       {user.role === 'LISTENER' && (
-                        <div className="border-t border-[#ffffff0a] mt-1">
+                        <div className="border-t border-border/20 mt-1">
                           <Link
                             href={ROUTES.USER_DASHBOARD}
                             onClick={() => setShowDropdown(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
                           >
                             <LayoutDashboard className="h-4 w-4" />
                             Mon tableau de bord
@@ -190,10 +190,10 @@ export function Header() {
                         </div>
                       )}
 
-                      <div className="border-t border-[#ffffff0a] mt-1 pt-1">
+                      <div className="border-t border-border/20 mt-1 pt-1">
                         <button
                           onClick={handleLogout}
-                          className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-400 hover:bg-[#ffffff0a] transition-colors"
+                          className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-400 hover:bg-surface-hover transition-colors"
                         >
                           <LogOut className="h-4 w-4" />
                           Se déconnecter
@@ -213,7 +213,7 @@ export function Header() {
             ) : (
               <>
                 <Link href={ROUTES.LOGIN}>
-                  <Button variant="ghost" size="sm" className="text-[#ccc] hover:text-white text-sm">
+                  <Button variant="ghost" size="sm" className="text-text-secondary hover:text-white text-sm">
                     Connexion
                   </Button>
                 </Link>
@@ -230,7 +230,7 @@ export function Header() {
 
       <button
         onClick={() => setShowMobileMenu(true)}
-        className="md:hidden fixed top-3 right-3 z-55 p-3 text-[#999] hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+        className="md:hidden fixed top-3 right-3 z-55 p-3 text-text-secondary hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
         aria-label="Menu"
       >
         <Menu className="h-5 w-5" />
@@ -243,19 +243,19 @@ export function Header() {
           aria-modal="true"
           aria-label="Menu de navigation"
         >
-          <div className="absolute inset-0 bg-black/60" onClick={() => setShowMobileMenu(false)} />
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowMobileMenu(false)} />
           <div
-            className="absolute right-0 top-0 bottom-0 w-80 bg-[#0b0b0b] border-l border-[#ffffff0a] shadow-2xl flex flex-col animate-slideRight"
+            className="absolute right-0 top-0 bottom-0 w-80 bg-background/95 backdrop-blur-xl border-l border-border/20 shadow-2xl flex flex-col animate-slideRight"
             style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)', paddingTop: 'env(safe-area-inset-top, 0px)' }}
           >
-            <div className="flex items-center justify-between px-5 h-16 border-b border-[#ffffff0a]">
+            <div className="flex items-center justify-between px-5 h-16 border-b border-border/30">
               <div className="flex items-center gap-2.5">
                 <Image src="/logo-icon.png" alt={APP_NAME} width={28} height={28} className="h-7 w-7" />
                 <span className="font-bold text-white text-base">{APP_NAME}</span>
               </div>
               <button
                 onClick={() => setShowMobileMenu(false)}
-                className="p-3 text-[#999] hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-3 text-text-secondary hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Fermer le menu"
               >
                 <X className="h-5 w-5" />
@@ -268,7 +268,7 @@ export function Header() {
               )}
 
               <div className="space-y-0.5">
-                <p className="px-3 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Navigation</p>
+                <p className="px-3 py-1 text-[10px] font-bold text-text-muted uppercase tracking-widest">Navigation</p>
                 {headerNav.map((link) => (
                   <Link
                     key={link.href}
@@ -276,7 +276,7 @@ export function Header() {
                     onClick={() => setShowMobileMenu(false)}
                     className={cn(
                       'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                      isActive(link.href) ? 'text-primary bg-primary/10' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                      isActive(link.href) ? 'text-primary bg-primary/10' : 'text-text-secondary hover:text-white hover:bg-surface-hover'
                     )}
                   >
                     <link.icon className={cn('h-4 w-4', isActive(link.href) && 'text-primary')} />
@@ -285,10 +285,10 @@ export function Header() {
                 ))}
               </div>
 
-              <div className="border-t border-[#ffffff0a] my-3 mx-3" />
+              <div className="border-t border-border/20 my-3 mx-3" />
 
               <div className="space-y-0.5">
-                <p className="px-3 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Découvrir</p>
+                <p className="px-3 py-1 text-[10px] font-bold text-text-muted uppercase tracking-widest">Découvrir</p>
                 {discoverLinks.map((link) => (
                   <Link
                     key={link.href}
@@ -296,7 +296,7 @@ export function Header() {
                     onClick={() => setShowMobileMenu(false)}
                     className={cn(
                       'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                      isActive(link.href) ? 'text-primary bg-primary/10' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                      isActive(link.href) ? 'text-primary bg-primary/10' : 'text-text-secondary hover:text-white hover:bg-surface-hover'
                     )}
                   >
                     {link.badge ? (
@@ -314,14 +314,14 @@ export function Header() {
 
               {user && (
                 <>
-                  <div className="border-t border-[#ffffff0a] my-3 mx-3" />
+                  <div className="border-t border-border/20 my-3 mx-3" />
 
                   <div className="space-y-0.5">
-                    <p className="px-3 py-1 text-[10px] font-bold text-[#555] uppercase tracking-widest">Compte</p>
+                    <p className="px-3 py-1 text-[10px] font-bold text-text-muted uppercase tracking-widest">Compte</p>
                     <Link
                       href={ROUTES.USER_PROFILE}
                       onClick={() => setShowMobileMenu(false)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
                     >
                       <Settings className="h-4 w-4" />
                       Mon profil
@@ -331,7 +331,7 @@ export function Header() {
                       <>
                         <button
                           onClick={() => setMobileSection(mobileSection === 'admin' ? null : 'admin')}
-                          className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-[#666] uppercase tracking-wider hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                          className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-text-muted uppercase tracking-wider hover:text-white hover:bg-surface-hover transition-colors"
                         >
                           <span>Administration</span>
                           <ChevronRight className={cn('h-3.5 w-3.5 transition-transform', mobileSection === 'admin' && 'rotate-90')} />
@@ -343,7 +343,7 @@ export function Header() {
                             onClick={() => setShowMobileMenu(false)}
                             className={cn(
                               'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ml-4',
-                              pathname === link.href ? 'text-primary bg-primary/10' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                              pathname === link.href ? 'text-primary bg-primary/10' : 'text-text-secondary hover:text-white hover:bg-surface-hover'
                             )}
                           >
                             <link.icon className="h-4 w-4" />
@@ -357,7 +357,7 @@ export function Header() {
                       <>
                         <button
                           onClick={() => setMobileSection(mobileSection === 'artist' ? null : 'artist')}
-                          className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-[#666] uppercase tracking-wider hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                          className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-sm font-semibold text-text-muted uppercase tracking-wider hover:text-white hover:bg-surface-hover transition-colors"
                         >
                           <span>Espace Artiste</span>
                           <ChevronRight className={cn('h-3.5 w-3.5 transition-transform', mobileSection === 'artist' && 'rotate-90')} />
@@ -369,7 +369,7 @@ export function Header() {
                             onClick={() => setShowMobileMenu(false)}
                             className={cn(
                               'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ml-4',
-                              pathname === link.href ? 'text-primary bg-primary/10' : 'text-[#999] hover:text-white hover:bg-[#ffffff0a]'
+                              pathname === link.href ? 'text-primary bg-primary/10' : 'text-text-secondary hover:text-white hover:bg-surface-hover'
                             )}
                           >
                             <link.icon className="h-4 w-4" />
@@ -383,18 +383,18 @@ export function Header() {
                       <Link
                         href={ROUTES.USER_DASHBOARD}
                         onClick={() => setShowMobileMenu(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
                       >
                         <LayoutDashboard className="h-4 w-4" />
                         Mon tableau de bord
                       </Link>
                     )}
 
-                    <div className="border-t border-[#ffffff0a] my-2 mx-3" />
+                    <div className="border-t border-border/20 my-2 mx-3" />
 
                     <button
                       onClick={() => { setShowMobileMenu(false); handleLogout(); }}
-                      className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-[#ffffff0a] transition-colors"
+                      className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-surface-hover transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
                       Se déconnecter
@@ -404,7 +404,7 @@ export function Header() {
               )}
 
               {!user && (
-                <div className="border-t border-[#ffffff0a] my-3 mx-3 pt-3 space-y-2">
+                <div className="border-t border-border/20 my-3 mx-3 pt-3 space-y-2">
                   <Link
                     href={ROUTES.LOGIN}
                     onClick={() => setShowMobileMenu(false)}
@@ -415,7 +415,7 @@ export function Header() {
                   <Link
                     href={ROUTES.REGISTER}
                     onClick={() => setShowMobileMenu(false)}
-                    className="flex items-center justify-center w-full px-4 py-3 rounded-lg border border-[#ffffff15] text-sm font-medium text-[#999] hover:text-white hover:bg-[#ffffff0a] transition-colors"
+                    className="flex items-center justify-center w-full px-4 py-3 rounded-lg border border-border/40 text-sm font-medium text-text-secondary hover:text-white hover:bg-surface-hover transition-colors"
                   >
                     Inscription
                   </Link>

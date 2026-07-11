@@ -7,7 +7,7 @@ import { generateVerificationCode, sendVerificationCode } from '@/lib/sms';
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    const { allowed } = checkRateLimit(`send-verification:${ip}`, { maxRequests: 3, windowMs: 60000 });
+    const { allowed } = await checkRateLimit(`send-verification:${ip}`, { maxRequests: 3, windowMs: 60000 });
     if (!allowed) {
       return NextResponse.json(
         { error: 'Trop de tentatives. Réessayez plus tard.' },

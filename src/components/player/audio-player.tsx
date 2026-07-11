@@ -249,7 +249,7 @@ export function AudioPlayer() {
       <audio ref={audioRef} preload="metadata" />
       {(currentTrack || isAdPlaying) && (
         <div className={cn(
-            'fixed left-0 right-0 z-40 border-t border-border bg-background transition-all duration-300',
+            'fixed left-0 right-0 z-40 border-t border-border/50 bg-background/90 backdrop-blur-xl transition-all duration-300',
             'bottom-16 md:bottom-0',
             isExpanded ? 'h-64 md:h-72' : 'h-16 md:h-20',
             error && 'border-error/30',
@@ -275,7 +275,7 @@ export function AudioPlayer() {
             onClick={() => setIsExpanded(!isExpanded)}
             className="flex items-center gap-3 min-w-0 flex-1 md:flex-none md:w-72"
           >
-            <div className="relative h-10 w-10 md:h-14 md:w-14 shrink-0 rounded-full overflow-hidden bg-surface-hover shadow-md shadow-black/10 ring-2 ring-border">
+            <div className="relative h-10 w-10 md:h-14 md:w-14 shrink-0 rounded-full overflow-hidden bg-surface-hover shadow-lg shadow-black/20 ring-2 ring-border/50">
               {isAdPlaying ? (
                 <div className="flex h-full items-center justify-center bg-primary/20">
                   <Megaphone className="h-5 w-5 text-primary" />
@@ -365,12 +365,10 @@ export function AudioPlayer() {
               <button
                 onClick={togglePlay}
                 className={cn(
-                  'flex h-10 w-10 items-center justify-center rounded-full transition-colors',
+                  'flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg',
                   error
-                    ? 'bg-error/20 text-error hover:bg-error/30'
-                    : isAdPlaying
-                    ? 'bg-primary text-white hover:bg-primary-hover'
-                    : 'bg-primary text-white hover:bg-primary-hover'
+                    ? 'bg-error/20 text-error hover:bg-error/30 shadow-error/20'
+                    : 'bg-linear-to-r from-primary to-accent text-white shadow-primary/30'
                 )}
               >
                 {error ? (
@@ -450,7 +448,7 @@ export function AudioPlayer() {
               step="0.01"
               value={volume}
               onChange={(e) => setVolume(parseFloat(e.target.value))}
-              className="flex-1 h-1 accent-primary cursor-pointer"
+              className="flex-1 h-1 accent-primary cursor-pointer rounded-full bg-surface-hover appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:shadow-black/40 [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-150 [&::-webkit-slider-thumb]:hover:scale-125"
             />
           </div>
         </div>
@@ -520,8 +518,8 @@ export function AudioPlayer() {
                   <button
                     onClick={togglePlay}
                     className={cn(
-                      'flex h-14 w-14 items-center justify-center rounded-full transition-all duration-200 hover:scale-105 active:scale-95',
-                      error ? 'bg-error/20 text-error' : 'bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20'
+                      'flex h-14 w-14 items-center justify-center rounded-full transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg',
+                      error ? 'bg-error/20 text-error shadow-error/20' : 'bg-linear-to-r from-primary to-accent text-white shadow-primary/30'
                     )}
                   >
                     {error ? (

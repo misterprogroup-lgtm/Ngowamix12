@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { SafeImage } from '@/components/ui/safe-image';
 import Link from 'next/link';
 import { Play, Music, BadgeCheck, User } from 'lucide-react';
@@ -18,7 +18,7 @@ interface ArtistCardProps {
   className?: string;
 }
 
-export function ArtistCard({
+export const ArtistCard = memo(function ArtistCard({
   id,
   name,
   slug,
@@ -106,4 +106,4 @@ export function ArtistCard({
       )}
     </div>
   );
-}
+});

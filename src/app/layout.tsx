@@ -23,7 +23,7 @@ const openSans = Open_Sans({
   display: 'swap',
 });
 
-const appUrl = process.env.APP_URL || 'https://ngowamix.com';
+import { APP_BASE_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   other: {
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   description: 'Écoutez et découvrez la musique africaine. Streaming gratuit, abonnement premium et achat d\'albums.',
   keywords: ['musique africaine', 'streaming', 'afrobeats', 'amapiano', 'coupé-décalé', 'musique afrique'],
   manifest: '/manifest.json',
-  metadataBase: new URL(appUrl),
+  metadataBase: new URL(APP_BASE_URL),
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    url: 'https://ngowamix.com',
+    url: APP_BASE_URL,
     siteName: 'Ngowamix',
     title: 'Ngowamix - Streaming musical africain',
     description: 'La plateforme de streaming musical dédiée à la musique africaine francophone.',
@@ -134,8 +134,8 @@ export default function RootLayout({
               '@context': 'https://schema.org',
               '@type': 'Organization',
               name: 'Ngowamix',
-              url: appUrl,
-              logo: `${appUrl}/logo-icon.png`,
+              url: APP_BASE_URL,
+              logo: `${APP_BASE_URL}/logo-icon.png`,
               sameAs: [
                 'https://facebook.com/ngowamix',
                 'https://instagram.com/ngowamix',

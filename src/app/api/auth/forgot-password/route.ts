@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { sendEmail, generateResetEmail } from '@/lib/email';
+import { hashToken } from '@/lib/auth';
+import { APP_BASE_URL } from '@/lib/constants';
 import crypto from 'crypto';
 import { checkRateLimit } from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    const { allowed } = checkRateLimit(`forgot-password:${ip}`, { maxRequests: 3, windowMs: 60000 });
+    const { allowed } = await checkRateLimit(`forgot-password:${ip}`, { maxRequests: 3, windowMs: 60000 });
     if (!allowed) {
       return NextResponse.json(
         { error: 'Trop de tentatives. Réessayez plus tard.' },
@@ -33,15 +35,15 @@ export async function POST(request: Request) {
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = await hashToken(resetToken);
     const resetTokenExpiry = new Date(Date.now() + 3600000);
 
     await db.user.update({
       where: { id: user.id },
-      data: { resetToken, resetTokenExpiry },
+      data: { resetToken: hashedToken, resetTokenExpiry },
     });
 
-    const baseUrl = process.env.APP_URL || 'https://ngowamix.com';
-    const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
+    const resetLink = `${APP_BASE_URL}/reset-password?token=${resetToken}`;
     const name = user.firstName || user.displayName || user.email;
 
     const sent = await sendEmail(

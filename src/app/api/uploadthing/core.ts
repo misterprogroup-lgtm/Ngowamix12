@@ -17,6 +17,9 @@ export const ourFileRouter = {
 
   adAudio: f({ audio: { maxFileSize: '16MB', maxFileCount: 1 } })
     .onUploadComplete(async ({ file }) => ({ url: file.url })),
+
+  storyMedia: f({ image: { maxFileSize: '8MB', maxFileCount: 1 }, video: { maxFileSize: '32MB', maxFileCount: 1 } })
+    .onUploadComplete(async ({ file }) => ({ url: file.url })),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

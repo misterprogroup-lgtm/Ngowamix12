@@ -22,6 +22,7 @@ export async function GET(request: Request) {
 
     const userData = await db.user.findUnique({
       where: { id: user.sub },
+      select: { id: true, role: true, isPremium: true, downloadsUsedThisMonth: true },
     });
 
     if (!userData) {

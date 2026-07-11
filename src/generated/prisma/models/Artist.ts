@@ -371,6 +371,7 @@ export type ArtistWhereInput = {
   payoutRequests?: Prisma.PayoutRequestListRelationFilter
   chatRooms?: Prisma.ChatRoomListRelationFilter
   activities?: Prisma.ActivityListRelationFilter
+  stories?: Prisma.StoryListRelationFilter
 }
 
 export type ArtistOrderByWithRelationInput = {
@@ -408,6 +409,7 @@ export type ArtistOrderByWithRelationInput = {
   payoutRequests?: Prisma.PayoutRequestOrderByRelationAggregateInput
   chatRooms?: Prisma.ChatRoomOrderByRelationAggregateInput
   activities?: Prisma.ActivityOrderByRelationAggregateInput
+  stories?: Prisma.StoryOrderByRelationAggregateInput
 }
 
 export type ArtistWhereUniqueInput = Prisma.AtLeast<{
@@ -448,6 +450,7 @@ export type ArtistWhereUniqueInput = Prisma.AtLeast<{
   payoutRequests?: Prisma.PayoutRequestListRelationFilter
   chatRooms?: Prisma.ChatRoomListRelationFilter
   activities?: Prisma.ActivityListRelationFilter
+  stories?: Prisma.StoryListRelationFilter
 }, "id" | "userId" | "name" | "slug">
 
 export type ArtistOrderByWithAggregationInput = {
@@ -543,6 +546,7 @@ export type ArtistCreateInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateInput = {
@@ -578,6 +582,7 @@ export type ArtistUncheckedCreateInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUpdateInput = {
@@ -613,6 +618,7 @@ export type ArtistUpdateInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateInput = {
@@ -648,6 +654,7 @@ export type ArtistUncheckedUpdateInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateManyInput = {
@@ -1042,6 +1049,20 @@ export type ArtistUpdateOneWithoutActivitiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ArtistUpdateToOneWithWhereWithoutActivitiesInput, Prisma.ArtistUpdateWithoutActivitiesInput>, Prisma.ArtistUncheckedUpdateWithoutActivitiesInput>
 }
 
+export type ArtistCreateNestedOneWithoutStoriesInput = {
+  create?: Prisma.XOR<Prisma.ArtistCreateWithoutStoriesInput, Prisma.ArtistUncheckedCreateWithoutStoriesInput>
+  connectOrCreate?: Prisma.ArtistCreateOrConnectWithoutStoriesInput
+  connect?: Prisma.ArtistWhereUniqueInput
+}
+
+export type ArtistUpdateOneRequiredWithoutStoriesNestedInput = {
+  create?: Prisma.XOR<Prisma.ArtistCreateWithoutStoriesInput, Prisma.ArtistUncheckedCreateWithoutStoriesInput>
+  connectOrCreate?: Prisma.ArtistCreateOrConnectWithoutStoriesInput
+  upsert?: Prisma.ArtistUpsertWithoutStoriesInput
+  connect?: Prisma.ArtistWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ArtistUpdateToOneWithWhereWithoutStoriesInput, Prisma.ArtistUpdateWithoutStoriesInput>, Prisma.ArtistUncheckedUpdateWithoutStoriesInput>
+}
+
 export type ArtistCreateWithoutUserInput = {
   id?: string
   name: string
@@ -1074,6 +1095,7 @@ export type ArtistCreateWithoutUserInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutUserInput = {
@@ -1108,6 +1130,7 @@ export type ArtistUncheckedCreateWithoutUserInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutUserInput = {
@@ -1158,6 +1181,7 @@ export type ArtistUpdateWithoutUserInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutUserInput = {
@@ -1192,6 +1216,7 @@ export type ArtistUncheckedUpdateWithoutUserInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateWithoutLabelInput = {
@@ -1226,6 +1251,7 @@ export type ArtistCreateWithoutLabelInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutLabelInput = {
@@ -1260,6 +1286,7 @@ export type ArtistUncheckedCreateWithoutLabelInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutLabelInput = {
@@ -1349,6 +1376,7 @@ export type ArtistCreateWithoutAlbumsInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutAlbumsInput = {
@@ -1383,6 +1411,7 @@ export type ArtistUncheckedCreateWithoutAlbumsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutAlbumsInput = {
@@ -1433,6 +1462,7 @@ export type ArtistUpdateWithoutAlbumsInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutAlbumsInput = {
@@ -1467,6 +1497,7 @@ export type ArtistUncheckedUpdateWithoutAlbumsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateWithoutFavoritesInput = {
@@ -1501,6 +1532,7 @@ export type ArtistCreateWithoutFavoritesInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutFavoritesInput = {
@@ -1535,6 +1567,7 @@ export type ArtistUncheckedCreateWithoutFavoritesInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutFavoritesInput = {
@@ -1585,6 +1618,7 @@ export type ArtistUpdateWithoutFavoritesInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutFavoritesInput = {
@@ -1619,6 +1653,7 @@ export type ArtistUncheckedUpdateWithoutFavoritesInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateWithoutConcertsInput = {
@@ -1653,6 +1688,7 @@ export type ArtistCreateWithoutConcertsInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutConcertsInput = {
@@ -1687,6 +1723,7 @@ export type ArtistUncheckedCreateWithoutConcertsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutConcertsInput = {
@@ -1737,6 +1774,7 @@ export type ArtistUpdateWithoutConcertsInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutConcertsInput = {
@@ -1771,6 +1809,7 @@ export type ArtistUncheckedUpdateWithoutConcertsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateWithoutCommissionsInput = {
@@ -1805,6 +1844,7 @@ export type ArtistCreateWithoutCommissionsInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutCommissionsInput = {
@@ -1839,6 +1879,7 @@ export type ArtistUncheckedCreateWithoutCommissionsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutCommissionsInput = {
@@ -1889,6 +1930,7 @@ export type ArtistUpdateWithoutCommissionsInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutCommissionsInput = {
@@ -1923,6 +1965,7 @@ export type ArtistUncheckedUpdateWithoutCommissionsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateWithoutLiveStreamsInput = {
@@ -1957,6 +2000,7 @@ export type ArtistCreateWithoutLiveStreamsInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutLiveStreamsInput = {
@@ -1991,6 +2035,7 @@ export type ArtistUncheckedCreateWithoutLiveStreamsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutLiveStreamsInput = {
@@ -2041,6 +2086,7 @@ export type ArtistUpdateWithoutLiveStreamsInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutLiveStreamsInput = {
@@ -2075,6 +2121,7 @@ export type ArtistUncheckedUpdateWithoutLiveStreamsInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateWithoutChatRoomsInput = {
@@ -2109,6 +2156,7 @@ export type ArtistCreateWithoutChatRoomsInput = {
   streamPlays?: Prisma.StreamPlayCreateNestedManyWithoutArtistInput
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutChatRoomsInput = {
@@ -2143,6 +2191,7 @@ export type ArtistUncheckedCreateWithoutChatRoomsInput = {
   streamPlays?: Prisma.StreamPlayUncheckedCreateNestedManyWithoutArtistInput
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutChatRoomsInput = {
@@ -2193,6 +2242,7 @@ export type ArtistUpdateWithoutChatRoomsInput = {
   streamPlays?: Prisma.StreamPlayUpdateManyWithoutArtistNestedInput
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutChatRoomsInput = {
@@ -2227,6 +2277,7 @@ export type ArtistUncheckedUpdateWithoutChatRoomsInput = {
   streamPlays?: Prisma.StreamPlayUncheckedUpdateManyWithoutArtistNestedInput
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateWithoutStreamPlaysInput = {
@@ -2261,6 +2312,7 @@ export type ArtistCreateWithoutStreamPlaysInput = {
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutStreamPlaysInput = {
@@ -2295,6 +2347,7 @@ export type ArtistUncheckedCreateWithoutStreamPlaysInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutStreamPlaysInput = {
@@ -2345,6 +2398,7 @@ export type ArtistUpdateWithoutStreamPlaysInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutStreamPlaysInput = {
@@ -2379,6 +2433,7 @@ export type ArtistUncheckedUpdateWithoutStreamPlaysInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateWithoutPayoutRequestsInput = {
@@ -2413,6 +2468,7 @@ export type ArtistCreateWithoutPayoutRequestsInput = {
   streamPlays?: Prisma.StreamPlayCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutPayoutRequestsInput = {
@@ -2447,6 +2503,7 @@ export type ArtistUncheckedCreateWithoutPayoutRequestsInput = {
   streamPlays?: Prisma.StreamPlayUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutPayoutRequestsInput = {
@@ -2497,6 +2554,7 @@ export type ArtistUpdateWithoutPayoutRequestsInput = {
   streamPlays?: Prisma.StreamPlayUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutPayoutRequestsInput = {
@@ -2531,6 +2589,7 @@ export type ArtistUncheckedUpdateWithoutPayoutRequestsInput = {
   streamPlays?: Prisma.StreamPlayUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateWithoutActivitiesInput = {
@@ -2565,6 +2624,7 @@ export type ArtistCreateWithoutActivitiesInput = {
   streamPlays?: Prisma.StreamPlayCreateNestedManyWithoutArtistInput
   payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistUncheckedCreateWithoutActivitiesInput = {
@@ -2599,6 +2659,7 @@ export type ArtistUncheckedCreateWithoutActivitiesInput = {
   streamPlays?: Prisma.StreamPlayUncheckedCreateNestedManyWithoutArtistInput
   payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
   chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
+  stories?: Prisma.StoryUncheckedCreateNestedManyWithoutArtistInput
 }
 
 export type ArtistCreateOrConnectWithoutActivitiesInput = {
@@ -2649,6 +2710,7 @@ export type ArtistUpdateWithoutActivitiesInput = {
   streamPlays?: Prisma.StreamPlayUpdateManyWithoutArtistNestedInput
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutActivitiesInput = {
@@ -2683,6 +2745,163 @@ export type ArtistUncheckedUpdateWithoutActivitiesInput = {
   streamPlays?: Prisma.StreamPlayUncheckedUpdateManyWithoutArtistNestedInput
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
+}
+
+export type ArtistCreateWithoutStoriesInput = {
+  id?: string
+  name: string
+  slug: string
+  bio?: string | null
+  avatar?: string | null
+  coverImage?: string | null
+  country?: string | null
+  genres: string
+  socialLinks?: string | null
+  isVerified?: boolean
+  verificationStatus?: $Enums.VerificationStatus
+  verificationRequestedAt?: Date | string | null
+  balance?: number
+  payoutMethod?: string | null
+  payoutPhone?: string | null
+  payoutAccountName?: string | null
+  payoutBankName?: string | null
+  payoutBankAccount?: string | null
+  streamServerUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutArtistInput
+  label?: Prisma.LabelCreateNestedOneWithoutArtistsInput
+  albums?: Prisma.AlbumCreateNestedManyWithoutArtistInput
+  concerts?: Prisma.ConcertCreateNestedManyWithoutArtistInput
+  commissions?: Prisma.CommissionCreateNestedManyWithoutArtistInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutArtistInput
+  liveStreams?: Prisma.LiveStreamCreateNestedManyWithoutArtistInput
+  streamPlays?: Prisma.StreamPlayCreateNestedManyWithoutArtistInput
+  payoutRequests?: Prisma.PayoutRequestCreateNestedManyWithoutArtistInput
+  chatRooms?: Prisma.ChatRoomCreateNestedManyWithoutArtistInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutArtistInput
+}
+
+export type ArtistUncheckedCreateWithoutStoriesInput = {
+  id?: string
+  userId: string
+  name: string
+  slug: string
+  bio?: string | null
+  avatar?: string | null
+  coverImage?: string | null
+  country?: string | null
+  genres: string
+  socialLinks?: string | null
+  isVerified?: boolean
+  verificationStatus?: $Enums.VerificationStatus
+  verificationRequestedAt?: Date | string | null
+  balance?: number
+  payoutMethod?: string | null
+  payoutPhone?: string | null
+  payoutAccountName?: string | null
+  payoutBankName?: string | null
+  payoutBankAccount?: string | null
+  streamServerUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  labelId?: string | null
+  albums?: Prisma.AlbumUncheckedCreateNestedManyWithoutArtistInput
+  concerts?: Prisma.ConcertUncheckedCreateNestedManyWithoutArtistInput
+  commissions?: Prisma.CommissionUncheckedCreateNestedManyWithoutArtistInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutArtistInput
+  liveStreams?: Prisma.LiveStreamUncheckedCreateNestedManyWithoutArtistInput
+  streamPlays?: Prisma.StreamPlayUncheckedCreateNestedManyWithoutArtistInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedCreateNestedManyWithoutArtistInput
+  chatRooms?: Prisma.ChatRoomUncheckedCreateNestedManyWithoutArtistInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutArtistInput
+}
+
+export type ArtistCreateOrConnectWithoutStoriesInput = {
+  where: Prisma.ArtistWhereUniqueInput
+  create: Prisma.XOR<Prisma.ArtistCreateWithoutStoriesInput, Prisma.ArtistUncheckedCreateWithoutStoriesInput>
+}
+
+export type ArtistUpsertWithoutStoriesInput = {
+  update: Prisma.XOR<Prisma.ArtistUpdateWithoutStoriesInput, Prisma.ArtistUncheckedUpdateWithoutStoriesInput>
+  create: Prisma.XOR<Prisma.ArtistCreateWithoutStoriesInput, Prisma.ArtistUncheckedCreateWithoutStoriesInput>
+  where?: Prisma.ArtistWhereInput
+}
+
+export type ArtistUpdateToOneWithWhereWithoutStoriesInput = {
+  where?: Prisma.ArtistWhereInput
+  data: Prisma.XOR<Prisma.ArtistUpdateWithoutStoriesInput, Prisma.ArtistUncheckedUpdateWithoutStoriesInput>
+}
+
+export type ArtistUpdateWithoutStoriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genres?: Prisma.StringFieldUpdateOperationsInput | string
+  socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  verificationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  payoutMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutBankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutBankAccount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  streamServerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutArtistNestedInput
+  label?: Prisma.LabelUpdateOneWithoutArtistsNestedInput
+  albums?: Prisma.AlbumUpdateManyWithoutArtistNestedInput
+  concerts?: Prisma.ConcertUpdateManyWithoutArtistNestedInput
+  commissions?: Prisma.CommissionUpdateManyWithoutArtistNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutArtistNestedInput
+  liveStreams?: Prisma.LiveStreamUpdateManyWithoutArtistNestedInput
+  streamPlays?: Prisma.StreamPlayUpdateManyWithoutArtistNestedInput
+  payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
+  chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+}
+
+export type ArtistUncheckedUpdateWithoutStoriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genres?: Prisma.StringFieldUpdateOperationsInput | string
+  socialLinks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verificationStatus?: Prisma.EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+  verificationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  payoutMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutBankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutBankAccount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  streamServerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  labelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  albums?: Prisma.AlbumUncheckedUpdateManyWithoutArtistNestedInput
+  concerts?: Prisma.ConcertUncheckedUpdateManyWithoutArtistNestedInput
+  commissions?: Prisma.CommissionUncheckedUpdateManyWithoutArtistNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutArtistNestedInput
+  liveStreams?: Prisma.LiveStreamUncheckedUpdateManyWithoutArtistNestedInput
+  streamPlays?: Prisma.StreamPlayUncheckedUpdateManyWithoutArtistNestedInput
+  payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
+  chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistCreateManyLabelInput = {
@@ -2742,6 +2961,7 @@ export type ArtistUpdateWithoutLabelInput = {
   payoutRequests?: Prisma.PayoutRequestUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateWithoutLabelInput = {
@@ -2776,6 +2996,7 @@ export type ArtistUncheckedUpdateWithoutLabelInput = {
   payoutRequests?: Prisma.PayoutRequestUncheckedUpdateManyWithoutArtistNestedInput
   chatRooms?: Prisma.ChatRoomUncheckedUpdateManyWithoutArtistNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutArtistNestedInput
+  stories?: Prisma.StoryUncheckedUpdateManyWithoutArtistNestedInput
 }
 
 export type ArtistUncheckedUpdateManyWithoutLabelInput = {
@@ -2818,6 +3039,7 @@ export type ArtistCountOutputType = {
   payoutRequests: number
   chatRooms: number
   activities: number
+  stories: number
 }
 
 export type ArtistCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2830,6 +3052,7 @@ export type ArtistCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   payoutRequests?: boolean | ArtistCountOutputTypeCountPayoutRequestsArgs
   chatRooms?: boolean | ArtistCountOutputTypeCountChatRoomsArgs
   activities?: boolean | ArtistCountOutputTypeCountActivitiesArgs
+  stories?: boolean | ArtistCountOutputTypeCountStoriesArgs
 }
 
 /**
@@ -2905,6 +3128,13 @@ export type ArtistCountOutputTypeCountActivitiesArgs<ExtArgs extends runtime.Typ
   where?: Prisma.ActivityWhereInput
 }
 
+/**
+ * ArtistCountOutputType without action
+ */
+export type ArtistCountOutputTypeCountStoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StoryWhereInput
+}
+
 
 export type ArtistSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2941,6 +3171,7 @@ export type ArtistSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   payoutRequests?: boolean | Prisma.Artist$payoutRequestsArgs<ExtArgs>
   chatRooms?: boolean | Prisma.Artist$chatRoomsArgs<ExtArgs>
   activities?: boolean | Prisma.Artist$activitiesArgs<ExtArgs>
+  stories?: boolean | Prisma.Artist$storiesArgs<ExtArgs>
   _count?: boolean | Prisma.ArtistCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["artist"]>
 
@@ -3039,6 +3270,7 @@ export type ArtistInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   payoutRequests?: boolean | Prisma.Artist$payoutRequestsArgs<ExtArgs>
   chatRooms?: boolean | Prisma.Artist$chatRoomsArgs<ExtArgs>
   activities?: boolean | Prisma.Artist$activitiesArgs<ExtArgs>
+  stories?: boolean | Prisma.Artist$storiesArgs<ExtArgs>
   _count?: boolean | Prisma.ArtistCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ArtistIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3064,6 +3296,7 @@ export type $ArtistPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     payoutRequests: Prisma.$PayoutRequestPayload<ExtArgs>[]
     chatRooms: Prisma.$ChatRoomPayload<ExtArgs>[]
     activities: Prisma.$ActivityPayload<ExtArgs>[]
+    stories: Prisma.$StoryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3494,6 +3727,7 @@ export interface Prisma__ArtistClient<T, Null = never, ExtArgs extends runtime.T
   payoutRequests<T extends Prisma.Artist$payoutRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Artist$payoutRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayoutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   chatRooms<T extends Prisma.Artist$chatRoomsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Artist$chatRoomsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activities<T extends Prisma.Artist$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Artist$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stories<T extends Prisma.Artist$storiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Artist$storiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4179,6 +4413,30 @@ export type Artist$activitiesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ActivityScalarFieldEnum | Prisma.ActivityScalarFieldEnum[]
+}
+
+/**
+ * Artist.stories
+ */
+export type Artist$storiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Story
+   */
+  select?: Prisma.StorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Story
+   */
+  omit?: Prisma.StoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoryInclude<ExtArgs> | null
+  where?: Prisma.StoryWhereInput
+  orderBy?: Prisma.StoryOrderByWithRelationInput | Prisma.StoryOrderByWithRelationInput[]
+  cursor?: Prisma.StoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StoryScalarFieldEnum | Prisma.StoryScalarFieldEnum[]
 }
 
 /**

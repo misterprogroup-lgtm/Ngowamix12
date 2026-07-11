@@ -11,7 +11,7 @@ function generateOTP(): string {
 export async function POST() {
   try {
     const ip = 'resend-otp'; // rate limit par utilisateur via le JWT
-    const { allowed } = checkRateLimit(ip, { maxRequests: 5, windowMs: 60000 });
+    const { allowed } = await checkRateLimit(ip, { maxRequests: 5, windowMs: 60000 });
     if (!allowed) {
       return NextResponse.json(
         { error: 'Trop de tentatives. Réessayez plus tard.' },

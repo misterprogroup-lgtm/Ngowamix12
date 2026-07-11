@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TicketReservation } from '@/components/catalog/ticket-reservation';
 import { db } from '@/lib/db';
+import { APP_BASE_URL } from '@/lib/constants';
 
 export const dynamic = 'force-dynamic';
 
@@ -77,9 +78,9 @@ export default async function ConcertDetailPage({ params }: { params: Promise<{ 
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://ngowamix.com/' },
-              { '@type': 'ListItem', position: 2, name: 'Concerts', item: 'https://ngowamix.com/tickets' },
-              { '@type': 'ListItem', position: 3, name: concert.title, item: `https://ngowamix.com/tickets/${id}` },
+              { '@type': 'ListItem', position: 1, name: 'Accueil', item: `${APP_BASE_URL}/` },
+              { '@type': 'ListItem', position: 2, name: 'Concerts', item: `${APP_BASE_URL}/tickets` },
+              { '@type': 'ListItem', position: 3, name: concert.title, item: `${APP_BASE_URL}/tickets/${id}` },
             ],
           }),
         }}

@@ -26,7 +26,7 @@ export function TrendingSongs({ tracks }: { tracks: TrendingSong[] }) {
           key={song.id}
           href={`/track/${song.id}`}
           className="group block w-2/5 sm:w-1/4 shrink-0 snap-start px-1.5">
-          <div className="relative aspect-square rounded-lg overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-200 group-hover:border-primary/20">
+          <div className="relative aspect-square overflow-hidden bg-surface border border-border/20 transition-all duration-200 group-hover:border-primary/20">
             <SafeImage
               src={song.cover || ''}
               alt={song.title}
@@ -34,7 +34,7 @@ export function TrendingSongs({ tracks }: { tracks: TrendingSong[] }) {
               sizes="185px"
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               fallback={
-                <div className="flex h-full items-center justify-center text-[#555]">
+                <div className="flex h-full items-center justify-center text-text-muted">
                   <Music className="h-10 w-10" />
                 </div>
               }
@@ -49,7 +49,7 @@ export function TrendingSongs({ tracks }: { tracks: TrendingSong[] }) {
               <p className="text-sm font-semibold text-white truncate group-hover:text-primary transition-colors duration-200">
                 {song.title}
               </p>
-              <p className="text-xs text-[#777] truncate">{song.artist}</p>
+              <p className="text-xs text-text-muted truncate">{song.artist}</p>
             </div>
         </Link>
       ))}

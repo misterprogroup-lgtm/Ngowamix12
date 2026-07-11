@@ -20,7 +20,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="hidden md:flex sticky top-16 w-72 h-[calc(100vh-4rem)] shrink-0 flex-col bg-[#0d0d0d] z-40">
+    <aside className="hidden md:flex sticky top-16 w-72 h-[calc(100vh-4rem)] shrink-0 flex-col bg-surface z-40 border-r border-border/30">
       <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-5 flex flex-col gap-6 scrollbar-hide">
 
         <div className="space-y-0.5">
@@ -33,10 +33,10 @@ export function Sidebar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-3 rounded-lg text-base font-bold transition-all duration-200',
+                  'flex items-center gap-3 px-3 py-3 rounded-lg text-base font-bold transition-all duration-200 relative',
                   isActive(link.href)
-                    ? 'bg-[#222] text-white'
-                    : 'text-white hover:bg-[#ffffff08]'
+                    ? 'text-white before:absolute before:left-0 before:top-1/4 before:h-1/2 before:w-[3px] before:rounded-full before:bg-primary'
+                    : 'text-white hover:bg-surface-hover'
                 )}
               >
                 <link.icon className={cn(
@@ -59,10 +59,10 @@ export function Sidebar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-3 rounded-lg text-base font-bold transition-all duration-200',
+                  'flex items-center gap-3 px-3 py-3 rounded-lg text-base font-bold transition-all duration-200 relative',
                   isActive(link.href)
-                    ? 'bg-[#222] text-white'
-                    : 'text-white hover:bg-[#ffffff08]'
+                    ? 'text-white before:absolute before:left-0 before:top-1/4 before:h-1/2 before:w-[3px] before:rounded-full before:bg-primary'
+                    : 'text-white hover:bg-surface-hover'
                 )}
               >
                 {link.badge ? (
@@ -95,10 +95,10 @@ export function Sidebar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-3 rounded-lg text-base font-bold transition-all duration-200',
+                  'flex items-center gap-3 px-3 py-3 rounded-lg text-base font-bold transition-all duration-200 relative',
                   isActive(link.href)
-                    ? 'bg-[#222] text-white'
-                    : 'text-white hover:bg-[#ffffff08]'
+                    ? 'text-white before:absolute before:left-0 before:top-1/4 before:h-1/2 before:w-[3px] before:rounded-full before:bg-primary'
+                    : 'text-white hover:bg-surface-hover'
                 )}
               >
                 <link.icon className={cn(
@@ -112,10 +112,10 @@ export function Sidebar() {
         </div>
       </div>
 
-      <div className="px-5 py-4 border-t border-[#ffffff08]">
+      <div className="px-5 py-4 border-t border-border/20">
         <Link
           href="/artist/upload"
-          className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-primary text-white text-base font-bold hover:bg-primary-hover transition-all duration-200 shadow-lg shadow-primary/20"
+          className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-linear-to-r from-primary to-accent text-white text-base font-bold hover:opacity-90 transition-all duration-200 shadow-lg shadow-primary/20"
         >
           <Upload className="h-5 w-5" />
           UPLOADER

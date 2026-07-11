@@ -6,7 +6,7 @@ import { usePlayerStore } from '@/store/player-store';
 import { useAuthStore } from '@/store/auth-store';
 import { formatDuration, cn } from '@/lib/utils';
 import type { Track } from '@/types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { ShareModal } from '@/components/catalog/share-modal';
 import { AddToPlaylistModal } from '@/components/catalog/add-to-playlist-modal';
 import { RepostButton } from '@/components/repost/repost-button';
@@ -27,7 +27,7 @@ interface TrackRowProps {
   onToggleFavorite?: (trackId: string) => void;
 }
 
-export function TrackRow({
+export const TrackRow = memo(function TrackRow({
   track,
   index,
   isPlaying: _isPlaying,
@@ -175,4 +175,4 @@ export function TrackRow({
       />
     </div>
   );
-}
+});

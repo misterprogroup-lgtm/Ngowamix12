@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { initPaymentPage, generateDepositId } from '@/lib/pawapay';
 import { z } from 'zod';
+import { APP_BASE_URL } from '@/lib/constants';
 
 const paymentSchema = z.object({
   amount: z.number().positive(),
@@ -142,14 +143,13 @@ export async function POST(request: Request) {
       },
     });
 
-    const baseUrl = process.env.APP_URL || 'https://ngowamix.com';
     const returnUrl = type === 'SUBSCRIPTION'
-      ? `${baseUrl}/premium?transactionId=${transaction.id}`
+      ? `${APP_BASE_URL}/premium?transactionId=${transaction.id}`
       : type === 'TICKET_PURCHASE'
-        ? `${baseUrl}/tickets/success?transactionId=${transaction.id}`
+        ? `${APP_BASE_URL}/tickets/success?transactionId=${transaction.id}`
         : type === 'TIP'
-          ? `${baseUrl}/purchase/success?transactionId=${transaction.id}`
-          : `${baseUrl}/purchase/success?transactionId=${transaction.id}`;
+          ? `${APP_BASE_URL}/purchase/success?transactionId=${transaction.id}`
+          : `${APP_BASE_URL}/purchase/success?transactionId=${transaction.id}`;
 
     const pawapayResult = await initPaymentPage({
       depositId,

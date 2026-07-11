@@ -3,12 +3,11 @@ import { SafeImage } from '@/components/ui/safe-image';
 import Link from 'next/link';
 import { Music, User } from 'lucide-react';
 import { EpisodeList } from '@/components/catalog/episode-list';
-
-const BASE_URL = process.env.APP_URL || 'https://ngowamix.com';
+import { APP_BASE_URL } from '@/lib/constants';
 
 async function getPodcast(id: string) {
   try {
-    const res = await fetch(`${BASE_URL}/api/podcasts/${id}`, { next: { revalidate: 60 } });
+    const res = await fetch(`${APP_BASE_URL}/api/podcasts/${id}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const data = await res.json();
     return data.podcast;
@@ -68,9 +67,9 @@ export default async function PodcastDetailPage({ params }: PageProps) {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://ngowamix.com/' },
-              { '@type': 'ListItem', position: 2, name: 'Podcasts', item: 'https://ngowamix.com/podcasts' },
-              { '@type': 'ListItem', position: 3, name: podcast.title, item: `https://ngowamix.com/podcasts/${id}` },
+              { '@type': 'ListItem', position: 1, name: 'Accueil', item: `${APP_BASE_URL}/` },
+              { '@type': 'ListItem', position: 2, name: 'Podcasts', item: `${APP_BASE_URL}/podcasts` },
+              { '@type': 'ListItem', position: 3, name: podcast.title, item: `${APP_BASE_URL}/podcasts/${id}` },
             ],
           }),
         }}

@@ -8,7 +8,9 @@
   --color-background: hsl(var(--background));
   --color-surface: hsl(var(--surface));
   --color-surface-hover: hsl(var(--surface-hover));
+  --color-surface-elevated: hsl(var(--surface-elevated));
   --color-border: hsl(var(--border));
+  --color-border-light: hsl(var(--border-light));
   --color-text-primary: hsl(var(--text-primary));
   --color-text-secondary: hsl(var(--text-secondary));
   --color-text-muted: hsl(var(--text-muted));
@@ -18,9 +20,11 @@
   --color-primary-config: var(--config-primary);
   --color-accent: hsl(var(--accent));
   --color-accent-hover: hsl(var(--accent-hover));
+  --color-accent-glow: var(--accent-glow);
   --color-success: hsl(var(--success));
   --color-warning: hsl(var(--warning));
   --color-error: hsl(var(--error));
+  --color-info: hsl(var(--info));
 
   --font-sans: var(--font-open-sans), "Open Sans", system-ui, sans-serif;
 
@@ -33,8 +37,8 @@
 
   --background-image-premium-gradient: linear-gradient(
     135deg,
-    #ff9900,
-    #ffc300
+    #ff8800,
+    #a855f7
   );
 
   --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -43,100 +47,57 @@
   --animate-slideRight: slideRight 0.3s ease-out;
   --animate-fadeIn: fadeIn 0.2s ease-out;
   --animate-scaleIn: scaleIn 0.3s ease-out;
+  --animate-shimmer: shimmer 2s infinite linear;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
 
   @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
   }
   @keyframes slideUp {
-    0% {
-      transform: translateY(100%);
-    }
-    100% {
-      transform: translateY(0);
-    }
+    0% { transform: translateY(100%); }
+    100% { transform: translateY(0); }
   }
   @keyframes slideDown {
-    0% {
-      transform: translateY(-20px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
+    0% { transform: translateY(-20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
   }
   @keyframes slideRight {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(0);
-    }
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(0); }
   }
   @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+    0% { opacity: 0; }
+    100% { opacity: 1; }
   }
   @keyframes spin-slow {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
   @keyframes wave {
-    0%, 100% {
-      transform: scaleY(0.3);
-    }
-    50% {
-      transform: scaleY(1);
-    }
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
   }
   @keyframes pop {
-    0% {
-      transform: scale(1);
-    }
-    30% {
-      transform: scale(1.3);
-    }
-    60% {
-      transform: scale(0.9);
-    }
-    100% {
-      transform: scale(1);
-    }
+    0% { transform: scale(1); }
+    30% { transform: scale(1.3); }
+    60% { transform: scale(0.9); }
+    100% { transform: scale(1); }
   }
   @keyframes scaleIn {
-    0% {
-      transform: scale(0.95);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
+    0% { transform: scale(0.95); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes glow {
+    0% { box-shadow: 0 0 20px hsl(var(--primary) / 0.15); }
+    100% { box-shadow: 0 0 40px hsl(var(--primary) / 0.3); }
   }
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -156,12 +117,24 @@
   @apply bg-linear-to-r from-primary to-accent bg-clip-text text-transparent;
 }
 
-@utility spotify-card {
-  @apply rounded-xl bg-surface hover:bg-surface-hover transition-all duration-200;
+@utility card {
+  @apply rounded-xl bg-surface border border-border/50 transition-all duration-300;
 }
 
-@utility spotify-card-elevated {
-  @apply rounded-xl bg-surface hover:bg-surface-hover hover:shadow-lg hover:shadow-black/10 transition-all duration-200;
+@utility card-hover {
+  @apply card hover:bg-surface-hover hover:border-border-light hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20;
+}
+
+@utility card-elevated {
+  @apply rounded-xl bg-surface-elevated border border-border/40 shadow-md shadow-black/10;
+}
+
+@utility glass {
+  @apply bg-background/80 backdrop-blur-xl border border-border/30;
+}
+
+@utility text-gradient-premium {
+  @apply bg-linear-to-r from-primary via-accent to-primary bg-clip-text text-transparent;
 }
 
 @layer base {
@@ -169,37 +142,45 @@
     --background: 0 0% 100%;
     --surface: 0 0% 96%;
     --surface-hover: 0 0% 92%;
+    --surface-elevated: 0 0% 93%;
     --border: 0 0% 85%;
+    --border-light: 0 0% 78%;
     --text-primary: 0 0% 10%;
     --text-secondary: 0 0% 40%;
     --text-muted: 0 0% 55%;
-    --primary: 36 100% 50%;
-    --primary-hover: 36 100% 45%;
-    --primary-glow: rgba(255, 153, 0, 0.3);
-    --accent: 36 100% 50%;
-    --accent-hover: 36 100% 45%;
+    --primary: 32 100% 50%;
+    --primary-hover: 24 100% 45%;
+    --primary-glow: rgba(255, 136, 0, 0.25);
+    --accent: 262 83% 66%;
+    --accent-hover: 262 80% 58%;
+    --accent-glow: rgba(168, 85, 247, 0.2);
     --success: 152 65% 41%;
-    --warning: 36 100% 50%;
+    --warning: 45 93% 47%;
     --error: 0 72% 56%;
-    --config-primary: #ff9900;
+    --info: 217 91% 60%;
+    --config-primary: #ff8800;
   }
 
   .dark {
-    --background: 0 0% 4%;
-    --surface: 0 0% 8%;
-    --surface-hover: 0 0% 12%;
-    --border: 0 0% 16%;
-    --text-primary: 0 0% 100%;
-    --text-secondary: 0 0% 65%;
+    --background: 0 0% 3%;
+    --surface: 0 0% 7%;
+    --surface-hover: 0 0% 11%;
+    --surface-elevated: 0 0% 9%;
+    --border: 0 0% 14%;
+    --border-light: 0 0% 20%;
+    --text-primary: 0 0% 95%;
+    --text-secondary: 0 0% 63%;
     --text-muted: 0 0% 45%;
-    --primary: 36 100% 50%;
-    --primary-hover: 36 100% 45%;
-    --primary-glow: rgba(255, 153, 0, 0.3);
-    --accent: 36 100% 50%;
-    --accent-hover: 36 100% 45%;
+    --primary: 32 100% 50%;
+    --primary-hover: 24 100% 45%;
+    --primary-glow: rgba(255, 136, 0, 0.25);
+    --accent: 262 83% 66%;
+    --accent-hover: 262 80% 58%;
+    --accent-glow: rgba(168, 85, 247, 0.2);
     --success: 152 65% 41%;
-    --warning: 36 100% 50%;
+    --warning: 45 93% 47%;
     --error: 0 72% 56%;
+    --info: 217 91% 60%;
   }
 
   * {
@@ -216,8 +197,8 @@
   }
 
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -225,11 +206,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-surface-hover rounded-full;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-text-muted;
+    @apply bg-surface-hover rounded-full hover:bg-text-muted transition-colors;
   }
 
   .btn-primary-config {
@@ -250,19 +227,26 @@
     -webkit-appearance: none;
     appearance: none;
     height: 4px;
-    background: #2a2a3a;
-    border-radius: 2px;
+    background: hsl(var(--border));
+    border-radius: 999px;
     outline: none;
   }
 
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: #ff9900;
+    background: hsl(var(--primary));
     cursor: pointer;
+    border: 2px solid hsl(var(--background));
+    box-shadow: 0 0 6px hsl(var(--primary) / 0.4);
+    transition: transform 0.15s ease;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
   }
 
   .scrollbar-hide::-webkit-scrollbar {
@@ -280,12 +264,12 @@
   }
 
   input[type="range"]::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: #ff9900;
+    background: hsl(var(--primary));
     cursor: pointer;
-    border: none;
+    border: 2px solid hsl(var(--background));
   }
 
   .animate-spin-slow {

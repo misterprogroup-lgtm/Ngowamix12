@@ -6,24 +6,12 @@ import { cn } from '@/lib/utils';
 
 const HERO_SLIDES = [
   {
-    image: '/images/photo-1.jpg',
+    image: '/images/slide/slide-2.jpg',
     alt: 'Slide 1',
   },
   {
-    image: '/images/photo-2.jpg',
+    image: '/images/slide/slide-3.jpg',
     alt: 'Slide 2',
-  },
-  {
-    image: '/images/photo-3.jpg',
-    alt: 'Slide 3',
-  },
-  {
-    image: '/images/photo-4.jpg',
-    alt: 'Slide 4',
-  },
-  {
-    image: '/images/photo-5.jpg',
-    alt: 'Slide 5',
   },
 ];
 

@@ -13,7 +13,7 @@ const loginSchema = z.object({
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    const { allowed, remaining, resetAt } = checkRateLimit(`login:${ip}`);
+    const { allowed, remaining, resetAt } = await checkRateLimit(`login:${ip}`);
     if (!allowed) {
       return NextResponse.json(
         { error: 'Trop de tentatives. Réessayez plus tard.', remaining, resetAt },

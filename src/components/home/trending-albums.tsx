@@ -21,7 +21,7 @@ export function TrendingAlbums({ albums }: { albums: TrendingAlbum[] }) {
           key={album.id}
           href={`/album/${album.id}`}
           className="group w-2/5 sm:w-1/4 shrink-0 snap-start px-1.5">
-          <div className="relative aspect-square rounded-[10px] overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-300 group-hover:scale-[1.03] group-hover:border-primary/20 group-hover:shadow-lg group-hover:shadow-black/30">
+          <div className="relative aspect-square overflow-hidden bg-surface border border-border/20 transition-all duration-300 group-hover:scale-[1.03] group-hover:border-primary/20 group-hover:shadow-lg group-hover:shadow-black/30">
             <SafeImage
               src={album.cover || ''}
               alt={album.title}
@@ -29,7 +29,7 @@ export function TrendingAlbums({ albums }: { albums: TrendingAlbum[] }) {
               sizes="250px"
               className="object-cover transition-transform duration-500 group-hover:scale-110"
               fallback={
-                <div className="flex h-full items-center justify-center text-[#666]">
+                <div className="flex h-full items-center justify-center text-text-muted">
                   <Music className="h-10 w-10" />
                 </div>
               }
@@ -41,7 +41,7 @@ export function TrendingAlbums({ albums }: { albums: TrendingAlbum[] }) {
             </div>
           </div>
           <div className="mt-3 space-y-0.5 px-0.5">
-            <p className="text-xs text-[#999] font-medium truncate">{album.artist}</p>
+            <p className="text-xs text-text-muted font-medium truncate">{album.artist}</p>
             <p className="text-sm font-bold text-white truncate group-hover:text-primary transition-colors duration-300">
               {album.title}
             </p>

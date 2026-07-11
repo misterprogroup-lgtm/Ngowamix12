@@ -10,6 +10,7 @@ import {
   Radio,
   Wallet,
   Gift,
+  Image,
   ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -22,6 +23,7 @@ const navLinks = [
   { href: '/artist/livestream', label: 'Livestream', icon: Radio },
   { href: '/artist/royalties', label: 'Royalties', icon: Wallet },
   { href: '/artist/referral', label: 'Parrainage', icon: Gift },
+  { href: '/artist/stories', label: 'Stories', icon: Image },
 ];
 
 export default function ArtistLayout({ children }: { children: React.ReactNode }) {

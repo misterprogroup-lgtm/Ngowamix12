@@ -1,38 +1,37 @@
-const ipRequests = new Map<string, { count: number; resetAt: number }>();
-
-const CLEANUP_INTERVAL = 60_000;
-let lastCleanup = Date.now();
-
-function cleanup(): void {
-  const now = Date.now();
-  if (now - lastCleanup < CLEANUP_INTERVAL) return;
-  lastCleanup = now;
-  for (const [key, record] of ipRequests) {
-    if (now > record.resetAt) {
-      ipRequests.delete(key);
-    }
-  }
-}
+import { db } from '@/lib/db';
 
 export interface RateLimitConfig {
   maxRequests: number;
   windowMs: number;
 }
 
-export function checkRateLimit(
-  ip: string,
+export async function checkRateLimit(
+  key: string,
   config: RateLimitConfig = { maxRequests: 5, windowMs: 60000 }
-): { allowed: boolean; remaining: number; resetAt: number } {
-  cleanup();
-  const now = Date.now();
-  const record = ipRequests.get(ip);
+): Promise<{ allowed: boolean; remaining: number; resetAt: number }> {
+  try {
+    const now = new Date();
+    const resetAt = new Date(now.getTime() + config.windowMs);
 
-  if (!record || now > record.resetAt) {
-    ipRequests.set(ip, { count: 1, resetAt: now + config.windowMs });
-    return { allowed: true, remaining: config.maxRequests - 1, resetAt: now + config.windowMs };
+    const record = await db.rateLimit.findUnique({ where: { key } });
+
+    if (!record || record.resetAt < now) {
+      await db.rateLimit.upsert({
+        where: { key },
+        create: { key, count: 1, resetAt },
+        update: { count: 1, resetAt },
+      });
+      return { allowed: true, remaining: config.maxRequests - 1, resetAt: resetAt.getTime() };
+    }
+
+    await db.rateLimit.update({
+      where: { key },
+      data: { count: { increment: 1 } },
+    });
+
+    const remaining = Math.max(0, config.maxRequests - (record.count + 1));
+    return { allowed: record.count < config.maxRequests, remaining, resetAt: record.resetAt.getTime() };
+  } catch {
+    return { allowed: true, remaining: config.maxRequests, resetAt: Date.now() + config.windowMs };
   }
-
-  record.count += 1;
-  const remaining = Math.max(0, config.maxRequests - record.count);
-  return { allowed: record.count <= config.maxRequests, remaining, resetAt: record.resetAt };
 }

@@ -21,7 +21,7 @@ export function RecentlyAdded({ songs }: { songs: RecentlyAddedSong[] }) {
           key={song.id}
           href={`/track/${song.id}`}
           className="group w-2/5 sm:w-1/4 shrink-0 snap-start px-1.5">
-          <div className="relative aspect-square rounded-[10px] overflow-hidden bg-[#141414] border border-[#ffffff08] transition-all duration-300 group-hover:border-primary/20 group-hover:shadow-md group-hover:shadow-black/20">
+          <div className="relative aspect-square overflow-hidden bg-surface border border-border/20 transition-all duration-300 group-hover:border-primary/20 group-hover:shadow-md group-hover:shadow-black/20">
             <SafeImage
               src={song.cover || ''}
               alt={song.title}
@@ -29,7 +29,7 @@ export function RecentlyAdded({ songs }: { songs: RecentlyAddedSong[] }) {
               sizes="185px"
               className="object-cover transition-transform duration-500 group-hover:scale-110"
               fallback={
-                <div className="flex h-full items-center justify-center text-[#666]">
+                <div className="flex h-full items-center justify-center text-text-muted">
                   <Music className="h-8 w-8" />
                 </div>
               }
@@ -41,7 +41,7 @@ export function RecentlyAdded({ songs }: { songs: RecentlyAddedSong[] }) {
             </div>
           </div>
           <div className="mt-2.5 space-y-0.5 px-0.5">
-            <p className="text-xs text-[#999] truncate">{song.artist}</p>
+            <p className="text-xs text-text-muted truncate">{song.artist}</p>
             <p className="text-sm font-bold text-white truncate group-hover:text-primary transition-colors duration-300">
               {song.title}
             </p>

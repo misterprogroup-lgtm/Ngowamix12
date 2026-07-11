@@ -593,6 +593,23 @@ export type EnumActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumActivityTypeFilter<$PrismaModel>
 }
 
+export type EnumStoryMediaTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.StoryMediaType | Prisma.EnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.StoryMediaType[] | Prisma.ListEnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StoryMediaType[] | Prisma.ListEnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStoryMediaTypeFilter<$PrismaModel> | $Enums.StoryMediaType
+}
+
+export type EnumStoryMediaTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StoryMediaType | Prisma.EnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.StoryMediaType[] | Prisma.ListEnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StoryMediaType[] | Prisma.ListEnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStoryMediaTypeWithAggregatesFilter<$PrismaModel> | $Enums.StoryMediaType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStoryMediaTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStoryMediaTypeFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -1183,6 +1200,23 @@ export type NestedEnumActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumActivityTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumActivityTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumStoryMediaTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.StoryMediaType | Prisma.EnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.StoryMediaType[] | Prisma.ListEnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StoryMediaType[] | Prisma.ListEnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStoryMediaTypeFilter<$PrismaModel> | $Enums.StoryMediaType
+}
+
+export type NestedEnumStoryMediaTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StoryMediaType | Prisma.EnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.StoryMediaType[] | Prisma.ListEnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StoryMediaType[] | Prisma.ListEnumStoryMediaTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStoryMediaTypeWithAggregatesFilter<$PrismaModel> | $Enums.StoryMediaType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStoryMediaTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStoryMediaTypeFilter<$PrismaModel>
 }
 
 

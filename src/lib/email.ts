@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { logger } from '@/lib/logger';
+import { APP_BASE_URL } from '@/lib/constants';
 
 let client: Resend | null = null;
 
@@ -129,7 +130,7 @@ export async function sendTicketEmail(params: {
   const qrRows = qrCodes.map((code, i) => `
     <tr>
       <td style="padding: 12px 0; border-bottom: 1px solid #2a2a35; text-align: center;">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(`https://ngowamix.com/ticket/${code}`)}" alt="QR Code" style="width: 120px; height: 120px;" />
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(`${APP_BASE_URL}/ticket/${code}`)}" alt="QR Code" style="width: 120px; height: 120px;" />
         <p style="color: #a0a0b0; font-size: 12px; margin-top: 4px;">Billet #${i + 1}</p>
         <p style="color: #606070; font-size: 10px; word-break: break-all;">${code}</p>
       </td>
@@ -207,11 +208,11 @@ export function generatePremiumExpiryEmail(
           <li>Contenu exclusif Premium</li>
         </ul>
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${process.env.APP_URL || 'https://ngowamix.com'}/premium" style="background: #FF8C00; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+          <a href="${APP_BASE_URL}/premium" style="background: #FF8C00; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
             Renouveler mon abonnement
           </a>
         </div>
-        <p style="color: #a0a0b0; font-size: 14px;">ou rendez-vous dans votre <a href="${process.env.APP_URL || 'https://ngowamix.com'}/user/subscription" style="color: #FF8C00;">espace abonnement</a>.</p>
+        <p style="color: #a0a0b0; font-size: 14px;">ou rendez-vous dans votre <a href="${APP_BASE_URL}/user/subscription" style="color: #FF8C00;">espace abonnement</a>.</p>
       `
     : `
         <p style="font-size: 18px;">Bonjour ${name},</p>
@@ -225,7 +226,7 @@ export function generatePremiumExpiryEmail(
         </ul>
         <p>Mais vous pouvez réactiver votre abonnement à tout moment !</p>
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${process.env.APP_URL || 'https://ngowamix.com'}/premium" style="background: #FF8C00; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+          <a href="${APP_BASE_URL}/premium" style="background: #FF8C00; color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
             Réactiver mon abonnement
           </a>
         </div>

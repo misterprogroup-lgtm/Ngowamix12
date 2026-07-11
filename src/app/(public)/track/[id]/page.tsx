@@ -4,15 +4,13 @@ import { SafeImage } from '@/components/ui/safe-image';
 import Link from 'next/link';
 import { Clock, Headphones, Music, BadgeCheck, ListMusic } from 'lucide-react';
 import { db } from '@/lib/db';
-import { APP_NAME } from '@/lib/constants';
+import { APP_NAME, APP_BASE_URL } from '@/lib/constants';
 import { formatDuration, formatNumber } from '@/lib/utils';
 import { TrackActions } from '@/components/track/track-actions';
 import { TrackList } from '@/components/catalog/track-list';
 import { PremiumLockOverlay } from '@/components/premium/premium-lock-overlay';
 import { AnimateOnView } from '@/components/ui/animate-on-view';
 import type { Track } from '@/types';
-
-const BASE_URL = process.env.APP_URL || 'https://ngowamix.com';
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -37,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       type: 'music.song',
-      url: `${BASE_URL}/track/${id}`,
+      url: `${APP_BASE_URL}/track/${id}`,
       images: track.album.coverImage ? [{ url: track.album.coverImage, width: 300, height: 300 }] : [],
       siteName: APP_NAME,
     },
@@ -107,17 +105,17 @@ export default async function TrackPage({ params }: PageProps) {
             '@type': 'MusicRecording',
             name: track.title,
             duration: `PT${Math.floor(track.duration / 60)}M${track.duration % 60}S`,
-            url: `${BASE_URL}/track/${id}`,
+            url: `${APP_BASE_URL}/track/${id}`,
             image: track.album.coverImage,
             byArtist: {
               '@type': 'MusicGroup',
               name: track.album.artist.name,
-              url: `${BASE_URL}/artist/${track.album.artist.slug}`,
+              url: `${APP_BASE_URL}/artist/${track.album.artist.slug}`,
             },
             inAlbum: {
               '@type': track.album.type === 'SINGLE' ? 'MusicSingle' : track.album.type === 'EP' ? 'EPRelease' : 'MusicAlbum',
               name: track.album.title,
-              url: `${BASE_URL}/album/${track.album.id}`,
+              url: `${APP_BASE_URL}/album/${track.album.id}`,
               image: track.album.coverImage,
             },
             position: track.trackNumber,
@@ -132,10 +130,10 @@ export default async function TrackPage({ params }: PageProps) {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Accueil', item: `${BASE_URL}/` },
-              { '@type': 'ListItem', position: 2, name: 'Catalogue', item: `${BASE_URL}/explore` },
-              { '@type': 'ListItem', position: 3, name: track.album.title, item: `${BASE_URL}/album/${track.album.id}` },
-              { '@type': 'ListItem', position: 4, name: track.title, item: `${BASE_URL}/track/${id}` },
+              { '@type': 'ListItem', position: 1, name: 'Accueil', item: `${APP_BASE_URL}/` },
+              { '@type': 'ListItem', position: 2, name: 'Catalogue', item: `${APP_BASE_URL}/explore` },
+              { '@type': 'ListItem', position: 3, name: track.album.title, item: `${APP_BASE_URL}/album/${track.album.id}` },
+              { '@type': 'ListItem', position: 4, name: track.title, item: `${APP_BASE_URL}/track/${id}` },
             ],
           }),
         }}

@@ -8,7 +8,7 @@ import crypto from 'crypto';
 async function fulfillTransaction(transactionId: string, userId: string) {
   const transaction = await db.transaction.findUnique({
     where: { id: transactionId },
-    include: { user: true },
+    include: { user: { select: { id: true, email: true, displayName: true, firstName: true, isPremium: true, premiumExpiresAt: true, role: true } } },
   });
 
   if (!transaction || transaction.status === 'PAID' || transaction.userId !== userId) return false;

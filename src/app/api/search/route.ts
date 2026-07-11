@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export async function GET(request: Request) {
   try {
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const { allowed } = await checkRateLimit(`search:${ip}`, { maxRequests: 60, windowMs: 60000 });
+    if (!allowed) return NextResponse.json({ error: 'Trop de requêtes' }, { status: 429 });
+
     const { searchParams } = new URL(request.url);
     const q = searchParams.get('q') || '';
     const limit = parseInt(searchParams.get('limit') || '10', 10);

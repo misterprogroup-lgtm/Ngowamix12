@@ -42,9 +42,9 @@ export function AlbumCard({
   const typeLabel = type === 'SINGLE' ? 'Single' : type === 'EP' ? 'EP' : '';
 
   return (
-    <div className={cn('group', className)}>
+    <div className={cn('group transition-all duration-300 hover:-translate-y-1', className)}>
       <Link href={`/album/${id}`} className="relative block">
-        <div className="relative aspect-square overflow-hidden rounded-xl bg-surface-hover shadow-md shadow-black/5">
+        <div className="relative aspect-square overflow-hidden bg-surface-hover shadow-md shadow-black/5">
           {coverImage ? (
             <SafeImage
               src={coverImage}

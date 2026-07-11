@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { db } from '@/lib/db';
-import { APP_NAME, PREMIUM_PRICE, PREMIUM_CURRENCY } from '@/lib/constants';
+import { APP_NAME, APP_BASE_URL, PREMIUM_PRICE, PREMIUM_CURRENCY } from '@/lib/constants';
 import { HeroCarousel } from '@/components/home/hero-carousel';
 import { GenreFilter } from '@/components/home/genre-filter';
 import { ArtistCTA } from '@/components/home/artist-cta';
+import { StoriesCarousel } from '@/components/story/stories-carousel';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -132,8 +134,12 @@ export default async function HomePage() {
     <div className="pb-8">
       <h1 className="sr-only">{APP_NAME} - Streaming musical africain</h1>
 
-      <div className="mx-4 md:mx-8 pt-4 mb-8">
+      <div className="pt-4 mb-4">
         <HeroCarousel />
+      </div>
+
+      <div className="mb-8">
+        <StoriesCarousel />
       </div>
 
       <GenreFilter
@@ -154,11 +160,11 @@ export default async function HomePage() {
             '@context': 'https://schema.org',
             '@type': 'WebSite',
             name: APP_NAME,
-            url: process.env.APP_URL || 'https://ngowamix.com',
+            url: APP_BASE_URL,
             description: 'Plateforme de streaming musical africain',
             potentialAction: {
               '@type': 'SearchAction',
-              target: `${process.env.APP_URL || 'https://ngowamix.com'}/search?q={search_term_string}`,
+              target: `${APP_BASE_URL}/search?q={search_term_string}`,
               'query-input': 'required name=search_term_string',
             },
           }),

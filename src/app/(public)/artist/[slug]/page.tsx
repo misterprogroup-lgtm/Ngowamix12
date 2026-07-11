@@ -13,7 +13,7 @@ import { MessageArtistButton } from '@/components/messages/message-artist-button
 import { AnimateOnView } from '@/components/ui/animate-on-view';
 import { ArtistDiscography } from '@/components/artist/artist-discography';
 import { formatNumber } from '@/lib/utils';
-import { APP_NAME } from '@/lib/constants';
+import { APP_NAME, APP_BASE_URL } from '@/lib/constants';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 
@@ -66,15 +66,19 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
     orderBy: { createdAt: 'desc' },
   });
 
-  const albumsWithRatings = await Promise.all(
-    albums.map(async (album) => {
-      const stats = await db.review.aggregate({
-        where: { albumId: album.id },
+  const ratings = albums.length > 0
+    ? await db.review.groupBy({
+        by: ['albumId'],
+        where: { albumId: { in: albums.map(a => a.id) } },
         _avg: { rating: true },
-      });
-      return { ...album, averageRating: stats._avg.rating || 0, totalReviews: album._count.reviews };
-    }),
-  );
+      })
+    : [];
+  const ratingMap = new Map(ratings.map(r => [r.albumId, r._avg.rating || 0]));
+  const albumsWithRatings = albums.map(album => ({
+    ...album,
+    averageRating: ratingMap.get(album.id) || 0,
+    totalReviews: album._count.reviews,
+  }));
 
   const topTracks = await db.track.findMany({
     where: { album: { artistId: artist.id, status: 'PUBLISHED' } },
@@ -120,9 +124,9 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://ngowamix.com/' },
-              { '@type': 'ListItem', position: 2, name: 'Artistes', item: 'https://ngowamix.com/explore' },
-              { '@type': 'ListItem', position: 3, name: artist.name, item: `https://ngowamix.com/artist/${slug}` },
+              { '@type': 'ListItem', position: 1, name: 'Accueil', item: `${APP_BASE_URL}/` },
+              { '@type': 'ListItem', position: 2, name: 'Artistes', item: `${APP_BASE_URL}/explore` },
+              { '@type': 'ListItem', position: 3, name: artist.name, item: `${APP_BASE_URL}/artist/${slug}` },
             ],
           }),
         }}

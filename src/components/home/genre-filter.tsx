@@ -82,7 +82,7 @@ export function GenreFilter({
               className={`shrink-0 rounded-full text-sm font-bold px-5 py-2.5 transition-colors ${
                 selected === g.value
                   ? 'bg-primary text-black'
-                  : 'border border-[#ffffff15] text-[#ccc] hover:border-primary/20 hover:text-white'
+                  : 'border border-border/20 text-text-muted hover:border-primary/20 hover:text-white'
               }`}
               aria-pressed={selected === g.value}
             >
@@ -96,7 +96,7 @@ export function GenreFilter({
         {filteredTracks.length > 0 ? (
           <TrendingSongs tracks={filteredTracks} />
         ) : (
-          <div className="text-center py-12 text-[#666]">
+          <div className="text-center py-12 text-text-muted">
             <p className="text-base font-medium">Aucun titre de ce genre</p>
           </div>
         )}
@@ -106,7 +106,7 @@ export function GenreFilter({
         {filteredAlbums.length > 0 ? (
           <TrendingAlbums albums={filteredAlbums} />
         ) : (
-          <div className="text-center py-12 text-[#666]">
+          <div className="text-center py-12 text-text-muted">
             <p className="text-base font-medium">Aucun album de ce genre</p>
           </div>
         )}
@@ -120,7 +120,7 @@ export function GenreFilter({
         {filteredRecent.length > 0 ? (
           <RecentlyAdded songs={filteredRecent} />
         ) : (
-          <div className="text-center py-12 text-[#666]">
+          <div className="text-center py-12 text-text-muted">
             <p className="text-base font-medium">Aucun titre récent de ce genre</p>
           </div>
         )}

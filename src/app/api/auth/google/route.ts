@@ -23,7 +23,7 @@ function generatePassword(): string {
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    const { allowed } = checkRateLimit(`google:${ip}`, { maxRequests: 5, windowMs: 60000 });
+    const { allowed } = await checkRateLimit(`google:${ip}`, { maxRequests: 5, windowMs: 60000 });
     if (!allowed) {
       return NextResponse.json(
         { error: 'Trop de tentatives. Réessayez plus tard.' },

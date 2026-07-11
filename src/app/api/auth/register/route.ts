@@ -5,9 +5,10 @@ import { slugify } from '@/lib/utils';
 import { sendEmail, generateEmailVerificationEmail } from '@/lib/email';
 import { z } from 'zod';
 import { checkRateLimit } from '@/lib/rate-limit';
+import crypto from 'crypto';
 
 function generateOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return String(crypto.randomInt(100000, 999999));
 }
 
 const registerSchema = z.object({
@@ -28,7 +29,7 @@ const registerSchema = z.object({
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    const { allowed } = checkRateLimit(`register:${ip}`, { maxRequests: 3, windowMs: 60000 });
+    const { allowed } = await checkRateLimit(`register:${ip}`, { maxRequests: 3, windowMs: 60000 });
     if (!allowed) {
       return NextResponse.json(
         { error: 'Trop de tentatives. Réessayez plus tard.' },

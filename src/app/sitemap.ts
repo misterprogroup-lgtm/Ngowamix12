@@ -1,8 +1,11 @@
 import type { MetadataRoute } from 'next';
 import { db } from '@/lib/db';
 
+import { APP_BASE_URL } from '@/lib/constants';
+
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const appUrl = process.env.APP_URL || 'https://ngowamix.com';
 
   try {
     const [albums, artists, concerts, podcasts, tracks] = await Promise.all([
@@ -19,42 +22,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
 
     const albumUrls = albums.map((a) => ({
-      url: `${appUrl}/album/${a.id}`,
+      url: `${APP_BASE_URL}/album/${a.id}`,
       lastModified: a.updatedAt,
       changeFrequency: 'daily' as const,
       priority: 0.6,
     }));
 
     const artistUrls = artists.map((a) => ({
-      url: `${appUrl}/artist/${a.slug}`,
+      url: `${APP_BASE_URL}/artist/${a.slug}`,
       lastModified: a.updatedAt,
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }));
 
     const concertUrls = concerts.map((c) => ({
-      url: `${appUrl}/tickets/${c.id}`,
+      url: `${APP_BASE_URL}/tickets/${c.id}`,
       lastModified: c.updatedAt,
       changeFrequency: 'daily' as const,
       priority: 0.5,
     }));
 
     const podcastUrls = podcasts.map((p) => ({
-      url: `${appUrl}/podcasts/${p.id}`,
+      url: `${APP_BASE_URL}/podcasts/${p.id}`,
       lastModified: p.updatedAt,
       changeFrequency: 'weekly' as const,
       priority: 0.5,
     }));
 
     const staticUrls = staticPages.map((page) => ({
-      url: `${appUrl}${page}`,
+      url: `${APP_BASE_URL}${page}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     }));
 
     const trackUrls = tracks.map((t) => ({
-      url: `${appUrl}/track/${t.id}`,
+      url: `${APP_BASE_URL}/track/${t.id}`,
       lastModified: t.updatedAt,
       changeFrequency: 'weekly' as const,
       priority: 0.4,

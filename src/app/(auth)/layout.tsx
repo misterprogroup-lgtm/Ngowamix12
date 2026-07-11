@@ -1,3 +1,11 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Authentification',
+  description: 'Connectez-vous ou créez un compte sur Ngowamix pour profiter de la musique africaine en streaming.',
+  robots: { index: false, follow: false },
+};
+
 export default function AuthLayout({
   children,
 }: {

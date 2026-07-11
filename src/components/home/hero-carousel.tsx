@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Crown, Upload, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
 import { APP_NAME, PREMIUM_PRICE, PREMIUM_CURRENCY } from '@/lib/constants';
 
 const slides = [
@@ -11,6 +13,7 @@ const slides = [
     badge: 'Premium',
     badgeColor: 'text-primary border-primary/20 bg-primary/10',
     dotColor: 'bg-primary',
+    backgroundImage: '/images/slide/slide-1.jpg',
     title: (
       <>
         Passez au{' '}
@@ -30,16 +33,17 @@ const slides = [
       </Link>
     ),
     icon: Crown,
-    gradient: 'from-primary/10 via-[#0b0b0b] to-[#0b0b0b]',
+    gradient: 'from-primary/10 via-background to-background',
   },
   {
     badge: 'Artistes',
-    badgeColor: 'text-[#8b5cf6] border-[#8b5cf633] bg-[#8b5cf611]',
-    dotColor: 'bg-[#8b5cf6]',
+    badgeColor: 'text-accent border-accent/20 bg-accent/10',
+    dotColor: 'bg-accent',
+    backgroundImage: '/images/slide/slide-2.jpg',
     title: (
       <>
         Publiez et{' '}
-        <span className="text-[#8b5cf6]">gagnez</span>
+        <span className="text-accent">gagnez</span>
       </>
     ),
     description: 'Uploader votre musique, touchez des royalties et développez votre audience.',
@@ -47,7 +51,7 @@ const slides = [
       <Link href="/artist/upload">
         <Button
           size="lg"
-          className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white rounded-full font-bold px-7 h-[52px] text-sm shadow-lg shadow-[#8b5cf6]/25 hover:shadow-[#8b5cf6]/40 transition-all duration-300"
+          className="bg-accent hover:bg-accent/90 text-white rounded-full font-bold px-7 h-[52px] text-sm shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-all duration-300"
         >
           <Upload className="h-5 w-5" />
           Commencer maintenant
@@ -55,7 +59,7 @@ const slides = [
       </Link>
     ),
     icon: DollarSign,
-    gradient: 'from-[#8b5cf611] via-[#0b0b0b] to-[#0b0b0b]',
+    gradient: 'from-accent/10 via-background to-background',
   },
 ];
 
@@ -108,13 +112,32 @@ export function HeroCarousel() {
     <section
       ref={sectionRef}
       tabIndex={0}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-br border border-[#ffffff08] min-h-[340px] md:min-h-[360px] focus:outline-none focus:ring-2 focus:ring-primary/50"
-      style={{ backgroundImage: `linear-gradient(to bottom right, ${slide.gradient})` }}
+      className="relative overflow-hidden min-h-[340px] md:min-h-[360px] focus:outline-none focus:ring-2 focus:ring-primary/50"
       role="region"
       aria-roledescription="carousel"
       aria-label="Promotions"
     >
-      <div className="absolute top-0 right-0 w-72 h-72 bg-white opacity-[0.02] rounded-full blur-3xl" />
+      {/* Background image */}
+      {slides.map((s, i) => (
+        <div
+          key={i}
+          className={cn(
+            'absolute inset-0 transition-opacity duration-700',
+            i === current ? 'opacity-100 z-0' : 'opacity-0 z-[-1]'
+          )}
+        >
+          <Image
+            src={s.backgroundImage}
+            alt=""
+            fill
+            className="object-cover"
+            priority={i === 0}
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/60 to-background/30" />
+        </div>
+      ))}
+      <div className="absolute top-0 right-0 w-72 h-72 bg-white opacity-[0.03] rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-white opacity-[0.02] rounded-full blur-3xl" />
 
       <button
@@ -147,7 +170,7 @@ export function HeroCarousel() {
             {slide.title}
           </h1>
 
-          <p className="text-sm md:text-base text-[#ccc] leading-relaxed max-w-md">
+          <p className="text-sm md:text-base text-white leading-relaxed max-w-md">
             {slide.description}
           </p>
 
@@ -169,7 +192,7 @@ export function HeroCarousel() {
               className={`block rounded-full transition-all duration-300 ${
                 i === current
                   ? `${slides[i].dotColor} w-6`
-                  : 'bg-[#ffffff20] w-2 hover:bg-[#ffffff40]'
+                  : 'bg-border/20 w-2 hover:bg-border/40'
               }`}
               style={{ height: '8px' }}
             />
