@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { TrackRow } from './track-row';
+import { MusicList, type MusicListItem } from '@/components/track/music-list';
+import { usePlayerStore } from '@/store/player-store';
 import type { Track } from '@/types';
 
 interface TrackListProps {
@@ -9,38 +9,35 @@ interface TrackListProps {
 }
 
 export function TrackList({ tracks }: TrackListProps) {
-  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
+  const { currentTrack, isPlaying, play, pause } = usePlayerStore();
 
-  useEffect(() => {
-    const ids = tracks.map((t) => t.id).join(',');
-    if (!ids) return;
-    fetch(`/api/user/favorites/check?ids=${ids}`)
-      .then((res) => res.json())
-      .then((data) => setFavoriteIds(new Set(data.favoriteIds)))
-      .catch(() => {});
-  }, [tracks]);
+  const items: MusicListItem[] = tracks.map((t) => ({
+    id: t.id,
+    title: t.title,
+    artist: t.album.artist.name,
+    cover: t.album.coverImage,
+    duration: t.duration,
+    artistSlug: t.album.artist.slug,
+  }));
 
-  const handleToggleFavorite = (trackId: string) => {
-    setFavoriteIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(trackId)) next.delete(trackId);
-      else next.add(trackId);
-      return next;
-    });
+  const handlePlay = (id: string) => {
+    if (currentTrack?.id === id && isPlaying) {
+      pause();
+    } else {
+      const track = tracks.find((t) => t.id === id);
+      if (track) {
+        const index = tracks.findIndex((t) => t.id === id);
+        play(track, tracks, index);
+      }
+    }
   };
 
   return (
-    <div className="space-y-1">
-      {tracks.map((track: Track, index: number) => (
-        <TrackRow
-          key={track.id}
-          track={track}
-          index={index}
-          isPlaying={false}
-          favoriteIds={favoriteIds}
-          onToggleFavorite={handleToggleFavorite}
-        />
-      ))}
-    </div>
+    <MusicList
+      items={items}
+      isPlaying={isPlaying}
+      currentId={currentTrack?.id}
+      onPlay={handlePlay}
+    />
   );
 }

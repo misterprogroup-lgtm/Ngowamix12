@@ -1,16 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SafeImage } from '@/components/ui/safe-image';
-import { Play, Pause, Music, Heart, Plus } from 'lucide-react';
+import { Heart } from 'lucide-react';
+import { MusicList, type MusicListItem } from '@/components/track/music-list';
 import { usePlayerStore } from '@/store/player-store';
-import { formatDuration } from '@/lib/utils';
 import type { Track } from '@/types';
 import { AddToPlaylistModal } from '@/components/catalog/add-to-playlist-modal';
 
 export function FavoritesPlaylist() {
   const [tracks, setTracks] = useState<Track[]>([]);
-  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [playlistPickerTrack, setPlaylistPickerTrack] = useState<string | null>(null);
   const { currentTrack, isPlaying, play, pause } = usePlayerStore();
@@ -21,7 +19,6 @@ export function FavoritesPlaylist() {
       .then((data) => {
         const favTracks = (data.tracks || []).map((f: { track: Track }) => f.track).filter(Boolean);
         setTracks(favTracks);
-        setFavoriteIds(new Set(favTracks.map((t: Track) => t.id)));
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -30,24 +27,29 @@ export function FavoritesPlaylist() {
   if (loading) return null;
   if (tracks.length === 0) return null;
 
-  const isTrackPlaying = (trackId: string) =>
-    currentTrack?.id === trackId && isPlaying;
+  const items: MusicListItem[] = tracks.map((t) => ({
+    id: t.id,
+    title: t.title,
+    artist: t.album?.artist?.name ?? '',
+    cover: t.album?.coverImage ?? null,
+    duration: t.duration,
+    isLiked: true,
+  }));
 
-  const handlePlay = (track: Track) => {
-    if (isTrackPlaying(track.id)) {
+  const handlePlay = (id: string) => {
+    if (currentTrack?.id === id && isPlaying) {
       pause();
     } else {
-      play(track, tracks, tracks.indexOf(track));
+      const track = tracks.find((t) => t.id === id);
+      if (track) {
+        const index = tracks.indexOf(track);
+        play(track, tracks, index);
+      }
     }
   };
 
-  const handleToggleFavorite = (trackId: string) => {
-    setFavoriteIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(trackId)) next.delete(trackId);
-      else next.add(trackId);
-      return next;
-    });
+  const handleMenu = (id: string) => {
+    setPlaylistPickerTrack(id);
   };
 
   return (
@@ -61,64 +63,13 @@ export function FavoritesPlaylist() {
           <p className="text-sm text-text-secondary">{tracks.length} titre{tracks.length > 1 ? 's' : ''}</p>
         </div>
       </div>
-      <div className="space-y-1">
-        {tracks.map((track) => (
-          <button
-            key={track.id}
-            onClick={() => handlePlay(track)}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg hover:bg-surface-hover transition-colors group text-left"
-          >
-            <div className="relative h-10 w-10 rounded-md bg-surface-hover overflow-hidden shrink-0">
-              {track.album?.coverImage ? (
-                <SafeImage src={track.album.coverImage} alt="" fill className="object-cover" sizes="40px" fallback={<Music className="h-5 w-5 text-text-muted" />} />
-              ) : (
-                <Music className="h-5 w-5 text-text-muted" />
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-text-primary truncate group-hover:text-primary transition-colors">
-                {track.title}
-              </p>
-              <p className="text-xs text-text-secondary truncate">
-                {track.album?.artist?.name}
-              </p>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleToggleFavorite(track.id);
-                fetch('/api/user/favorites', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ trackId: track.id }),
-                });
-              }}
-              className="p-1.5 hover:scale-110 transition-transform"
-            >
-              <Heart
-                className={cn(
-                  'h-4 w-4',
-                  favoriteIds.has(track.id) ? 'fill-red-500 text-red-500' : 'text-text-muted'
-                )}
-              />
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); setPlaylistPickerTrack(track.id); }}
-              className="p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:text-primary text-text-muted shrink-0"
-            >
-              <Plus className="h-4 w-4" />
-            </button>
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              {isTrackPlaying(track.id) ? (
-                <Pause className="h-4 w-4 text-primary" fill="currentColor" />
-              ) : (
-                <Play className="h-4 w-4 text-primary ml-0.5" fill="currentColor" />
-              )}
-            </div>
-            <span className="text-xs text-text-muted shrink-0">{formatDuration(track.duration)}</span>
-          </button>
-        ))}
-      </div>
+      <MusicList
+        items={items}
+        isPlaying={isPlaying}
+        currentId={currentTrack?.id}
+        onPlay={handlePlay}
+        onMenu={handleMenu}
+      />
       <AddToPlaylistModal
         isOpen={!!playlistPickerTrack}
         onClose={() => setPlaylistPickerTrack(null)}
@@ -126,8 +77,4 @@ export function FavoritesPlaylist() {
       />
     </section>
   );
-}
-
-function cn(...inputs: unknown[]) {
-  return inputs.filter(Boolean).join(' ');
 }

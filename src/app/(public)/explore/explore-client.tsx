@@ -5,7 +5,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { X, ChevronLeft, ChevronRight, Music, Sparkles } from 'lucide-react';
 import { AlbumCard } from '@/components/catalog/album-card';
 import { ArtistCard } from '@/components/catalog/artist-card';
-import { TrackRow } from '@/components/catalog/track-row';
+import { MusicList } from '@/components/track/music-list';
+import { usePlayerStore } from '@/store/player-store';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AnimateOnView } from '@/components/ui/animate-on-view';
@@ -46,6 +47,7 @@ const typeTabs = [
 export function ExploreClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { currentTrack, isPlaying, play, pause } = usePlayerStore();
   const [type, setType] = useState(searchParams.get('type') || 'all');
   const [page, setPage] = useState(1);
   const [items, setItems] = useState<(ExploreAlbum | ExploreArtist | Track)[]>([]);
@@ -280,27 +282,29 @@ export function ExploreClient() {
       ) : (
         <>
           {type === 'single' ? (
-            <div className="space-y-1">
-              {items.map((item, i) => {
-                const track = item as Track;
-                return (
-                  <AnimateOnView key={track.id} delay={i * 30}>
-                    <TrackRow
-                      track={track}
-                      index={i}
-                      isPlaying={false}
-                      favoriteIds={favoriteIds}
-                      onToggleFavorite={(id) => {
-                        const next = new Set(favoriteIds);
-                        if (next.has(id)) next.delete(id);
-                        else next.add(id);
-                        setFavoriteIds(next);
-                      }}
-                    />
-                  </AnimateOnView>
-                );
-              })}
-            </div>
+            <MusicList
+              items={(items as Track[]).map((t) => ({
+                id: t.id,
+                title: t.title,
+                artist: t.album.artist.name,
+                cover: t.album.coverImage,
+                duration: t.duration,
+                isLiked: favoriteIds.has(t.id),
+              }))}
+              isPlaying={isPlaying}
+              currentId={currentTrack?.id}
+              onPlay={(id) => {
+                if (currentTrack?.id === id && isPlaying) {
+                  pause();
+                } else {
+                  const track = (items as Track[]).find((t) => t.id === id);
+                  if (track) {
+                    const index = (items as Track[]).findIndex((t) => t.id === id);
+                    play(track, items as Track[], index);
+                  }
+                }
+              }}
+            />
           ) : (type === 'all' || type === 'album' || type === 'ep') ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {items.map((item, i) => {

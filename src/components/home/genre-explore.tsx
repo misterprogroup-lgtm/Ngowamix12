@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import { SafeImage } from '@/components/ui/safe-image';
 import Link from 'next/link';
-import { Music, Play, Pause, ArrowRight } from 'lucide-react';
+import { Music, ArrowRight } from 'lucide-react';
 import { GENRES } from '@/lib/constants';
-import { formatDuration } from '@/lib/utils';
+import { MusicList, type MusicListItem } from '@/components/track/music-list';
 import { usePlayerStore } from '@/store/player-store';
 import type { Track } from '@/types';
 
@@ -43,6 +43,26 @@ export function GenreExplore({ onGenreSelect }: GenreExploreProps) {
   }, [selected]);
 
   const genreList = GENRES.slice(0, 8);
+
+  const items: MusicListItem[] = tracks.map((t) => ({
+    id: t.id,
+    title: t.title,
+    artist: t.album?.artist?.name ?? '',
+    cover: t.album?.coverImage ?? null,
+    duration: t.duration,
+  }));
+
+  const handlePlay = (id: string) => {
+    if (currentTrack?.id === id && isPlaying) {
+      togglePlay();
+    } else {
+      const track = tracks.find((t) => t.id === id);
+      if (track) {
+        const index = tracks.indexOf(track);
+        play(track, tracks, index);
+      }
+    }
+  };
 
   return (
     <section className="bg-surface/30">
@@ -106,49 +126,12 @@ export function GenreExplore({ onGenreSelect }: GenreExploreProps) {
               </div>
             </div>
 
-            <div className="space-y-2">
-              {tracks.map((track, index) => {
-                const isCurrentTrack = currentTrack?.id === track.id;
-                return (
-                  <button
-                    key={track.id}
-                    onClick={() => {
-                      if (isCurrentTrack && isPlaying) {
-                        togglePlay();
-                      } else {
-                        play(track, tracks, index);
-                      }
-                    }}
-                    className="flex items-center gap-3 rounded-xl p-2 hover:bg-surface-hover transition-colors group w-full text-left"
-                  >
-                    <span className="text-sm text-text-muted w-6 text-right shrink-0">
-                      {isCurrentTrack && isPlaying ? (
-                        <Pause className="h-4 w-4 text-primary mx-auto" fill="currentColor" />
-                      ) : (
-                        index + 1
-                      )}
-                    </span>
-                    <div className="relative h-10 w-10 shrink-0 rounded-md overflow-hidden bg-surface">
-                      {track.album?.coverImage ? (
-                        <SafeImage src={track.album.coverImage} alt="" fill sizes="40px" className="object-cover" fallback={<div className="flex h-full items-center justify-center text-text-muted"><Music className="h-4 w-4" /></div>} />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-text-muted">
-                          <Music className="h-4 w-4" />
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Play className="h-4 w-4 text-white" fill="currentColor" />
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium truncate ${isCurrentTrack ? 'text-primary' : 'text-text-primary'}`}>{track.title}</p>
-                      <p className="text-xs text-text-secondary truncate">{track.album.artist.name}</p>
-                    </div>
-                    <span className="text-xs text-text-muted shrink-0">{formatDuration(track.duration)}</span>
-                  </button>
-                );
-              })}
-            </div>
+            <MusicList
+              items={items}
+              isPlaying={isPlaying}
+              currentId={currentTrack?.id}
+              onPlay={handlePlay}
+            />
           </div>
         )}
       </div>

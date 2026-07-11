@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { SafeImage } from '@/components/ui/safe-image';
 import { useRouter } from 'next/navigation';
-import { Search, X, Music, User, Clock } from 'lucide-react';
+import { Search, X, Music, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { formatDuration } from '@/lib/utils';
+import { MusicList } from '@/components/track/music-list';
+import { usePlayerStore } from '@/store/player-store';
 
 interface SearchAlbum {
   id: string;
@@ -218,36 +219,74 @@ export function MobileSearchOverlay({
                         <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2">
                           Titres ({results.tracks.length})
                         </h3>
-                        <div className="space-y-1">
-                          {results.tracks.map((track: SearchTrack) => (
-                            <Link
-                              key={track.id}
-                              href={`/track/${track.id}`}
-                              onClick={handleResultClick}
-                              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/20 dark:hover:bg-black/20 transition-colors"
-                            >
-                              <div className="relative h-10 w-10 rounded-md bg-white/20 dark:bg-black/20 overflow-hidden shrink-0">
-                                {track.album?.coverImage ? (
-                                  <SafeImage src={track.album.coverImage} alt="" fill sizes="40px" className="object-cover" fallback={<Music className="h-5 w-5 text-white/50" />} />
-                                ) : (
-                                  <Music className="h-5 w-5 text-white/50" />
-                                )}
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="text-sm font-medium text-white truncate">
-                                  {track.title}
-                                </p>
-                                <p className="text-xs text-white/80 truncate">
-                                  {track.album?.artist?.name}
-                                </p>
-                              </div>
-                              <span className="text-xs text-white/50 shrink-0 flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                {formatDuration(track.duration)}
-                              </span>
-                            </Link>
-                          ))}
-                        </div>
+                        <MusicList
+                          items={results.tracks.map((track) => ({
+                            id: track.id,
+                            title: track.title,
+                            artist: track.album?.artist?.name ?? '',
+                            cover: track.album?.coverImage ?? null,
+                            duration: track.duration,
+                          }))}
+                          onPlay={(id) => {
+                            const { currentTrack, isPlaying, play, pause } = usePlayerStore.getState();
+                            if (currentTrack?.id === id && isPlaying) {
+                              pause();
+                            } else {
+                              const track = results.tracks.find((t) => t.id === id);
+                              if (track) {
+                                play(
+                                  {
+                                    id: track.id,
+                                    title: track.title,
+                                    slug: '',
+                                    trackNumber: 0,
+                                    duration: track.duration,
+                                    audioFile: '',
+                                    isExplicit: false,
+                                    isPremiumOnly: false,
+                                    playCount: 0,
+                                    album: {
+                                      id: track.album?.id ?? '',
+                                      title: track.album?.title ?? '',
+                                      coverImage: track.album?.coverImage ?? null,
+                                      artist: {
+                                        id: '',
+                                        name: track.album?.artist?.name ?? '',
+                                        slug: '',
+                                        avatar: null,
+                                      },
+                                    },
+                                  },
+                                  results.tracks.map((t) => ({
+                                    id: t.id,
+                                    title: t.title,
+                                    slug: '',
+                                    trackNumber: 0,
+                                    duration: t.duration,
+                                    audioFile: '',
+                                    isExplicit: false,
+                                    isPremiumOnly: false,
+                                    playCount: 0,
+                                    album: {
+                                      id: t.album?.id ?? '',
+                                      title: t.album?.title ?? '',
+                                      coverImage: t.album?.coverImage ?? null,
+                                      artist: {
+                                        id: '',
+                                        name: t.album?.artist?.name ?? '',
+                                        slug: '',
+                                        avatar: null,
+                                      },
+                                    },
+                                  })),
+                                  results.tracks.findIndex((t) => t.id === id),
+                                );
+                              }
+                            }
+                            handleResultClick();
+                          }}
+                          className="!bg-transparent"
+                        />
                       </section>
                     )}
                   </div>

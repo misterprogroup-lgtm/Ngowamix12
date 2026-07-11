@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { SafeImage } from '@/components/ui/safe-image';
-import { Heart, Music, Download, WifiOff, Trash2, HardDrive, UserPlus } from 'lucide-react';
+import { Heart, Music, WifiOff, Trash2, HardDrive, UserPlus } from 'lucide-react';
+import { MusicList, type MusicListItem } from '@/components/track/music-list';
+import { usePlayerStore } from '@/store/player-store';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs } from '@/components/ui/tabs';
-import { formatDuration, formatFileSize } from '@/lib/utils';
+import { formatFileSize } from '@/lib/utils';
 import {
   getAllOfflineTracks,
   getOfflineAlbums,
@@ -16,6 +18,7 @@ import {
 } from '@/lib/offline-storage';
 
 export default function LibraryPage() {
+  const { currentTrack, isPlaying, play, pause } = usePlayerStore();
   const [favorites, setFavorites] = useState<{ tracks: any[]; albums: any[]; artists: any[] }>({ tracks: [], albums: [], artists: [] });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('tracks');
@@ -90,23 +93,36 @@ export default function LibraryPage() {
             <h2 className="text-lg font-medium text-text-secondary mb-2">Aucun favori</h2>
             <p className="text-text-muted">Ajoutez des titres à vos favoris pour les retrouver ici</p>
           </div>
-        ) : (
-          <div className="space-y-1">
-            {favorites.tracks.map((fav: any) => (
-              <div key={fav.id} className="flex items-center gap-4 rounded-lg px-3 py-2 hover:bg-surface-hover transition-colors">
-                <span className="text-sm text-text-muted w-6 text-right">{fav.track.trackNumber}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-text-primary truncate">{fav.track.title}</p>
-                  <p className="text-xs text-text-secondary truncate">{fav.track.album.artist.name} — {fav.track.album.title}</p>
-                </div>
-                <button onClick={() => { fetch('/api/user/favorites', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ trackId: fav.trackId }) }).then(() => window.location.reload()); }} className="text-primary hover:scale-110 transition-transform">
-                  <Heart className="h-4 w-4" fill="currentColor" />
-                </button>
-                <span className="text-sm text-text-muted w-10 text-right">{formatDuration(fav.track.duration)}</span>
-              </div>
-            ))}
-          </div>
-        )
+        ) : (() => {
+          const favTracks = favorites.tracks.map((fav: any) => fav.track).filter(Boolean);
+          const musicItems: MusicListItem[] = favTracks.map((t: any) => ({
+            id: t.id,
+            title: t.title,
+            artist: t.album?.artist?.name ?? '',
+            cover: t.album?.coverImage ?? null,
+            duration: t.duration,
+            isLiked: true,
+          }));
+          const handlePlay = (id: string) => {
+            if (currentTrack?.id === id && isPlaying) {
+              pause();
+            } else {
+              const track = favTracks.find((t: any) => t.id === id);
+              if (track) {
+                const index = favTracks.findIndex((t: any) => t.id === id);
+                play(track, favTracks, index);
+              }
+            }
+          };
+          return (
+            <MusicList
+              items={musicItems}
+              isPlaying={isPlaying}
+              currentId={currentTrack?.id}
+              onPlay={handlePlay}
+            />
+          );
+        })()
       )}
 
       {activeTab === 'albums' && (
