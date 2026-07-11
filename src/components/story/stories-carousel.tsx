@@ -504,7 +504,7 @@ export function StoriesCarousel() {
 
       {/* Viewer overlay */}
       {activeGroup && (
-        <div className="fixed inset-0 z-[100] bg-black flex flex-col" onClick={closeStory}>
+        <div className="fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden" onClick={closeStory}>
           <div className="absolute top-0 left-0 right-0 z-10 flex gap-1 p-2">
             {activeGroup.stories.map((_, i) => (
               <div key={i} className="flex-1 h-0.5 bg-white/30 rounded-full overflow-hidden">
@@ -539,7 +539,7 @@ export function StoriesCarousel() {
             <span className="text-sm font-semibold text-white">{activeGroup.artist.name}</span>
           </div>
 
-          <div className="flex-1 flex items-center justify-center relative" onClick={e => e.stopPropagation()}>
+          <div className="flex-1 flex items-center justify-center relative min-h-0" onClick={e => e.stopPropagation()}>
             <div className="absolute inset-0 flex" onClick={goPrev}>
               <div className="w-1/3 h-full" />
             </div>
