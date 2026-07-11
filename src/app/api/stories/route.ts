@@ -1,18 +1,6 @@
 import { NextResponse } from 'next/server';
-import { issueSignedToken, presignUrl } from '@vercel/blob';
-import type { IssuedSignedToken } from '@vercel/blob';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
-
-function getBlobPathname(blobUrl: string): string | null {
-  try {
-    const url = new URL(blobUrl);
-    if (!url.hostname.includes('public.blob.vercel-storage.com')) return null;
-    return url.pathname.slice(1);
-  } catch {
-    return null;
-  }
-}
 
 export async function GET() {
   try {
@@ -36,46 +24,17 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     });
 
-    let token: Pick<IssuedSignedToken, 'clientSigningToken' | 'delegationToken'> | null = null;
-    try {
-      const issued = await issueSignedToken({
-        pathname: 'stories/',
-        operations: ['get'],
-        validUntil: Date.now() + 3600_000,
-      });
-      token = { clientSigningToken: issued.clientSigningToken, delegationToken: issued.delegationToken };
-    } catch (e) {
-      console.error('issueSignedToken failed:', e);
-    }
+    const storiesWithUrls = stories.map((story) => {
+      const { _count, likes, ...rest } = story;
+      return {
+        ...rest,
+        likesCount: _count.likes,
+        isLiked: likes ? likes.length > 0 : false,
+      };
+    });
 
-    const storiesWithSignedUrls = await Promise.all(
-      stories.map(async (story) => {
-        let mediaUrl = story.mediaUrl;
-        const pathname = getBlobPathname(story.mediaUrl);
-        if (pathname && token) {
-          try {
-            const { presignedUrl } = await presignUrl(token, {
-              operation: 'get',
-              pathname,
-              access: 'private',
-            });
-            mediaUrl = presignedUrl;
-          } catch (e) {
-            console.error('presignUrl failed for', pathname, e);
-          }
-        }
-        const { _count, likes, ...rest } = story;
-        return {
-          ...rest,
-          mediaUrl,
-          likesCount: _count.likes,
-          isLiked: likes ? likes.length > 0 : false,
-        };
-      })
-    );
-
-    const grouped: Record<string, { artist: typeof stories[0]['artist']; stories: typeof storiesWithSignedUrls; allViewed: boolean }> = {};
-    for (const story of storiesWithSignedUrls) {
+    const grouped: Record<string, { artist: typeof stories[0]['artist']; stories: typeof storiesWithUrls; allViewed: boolean }> = {};
+    for (const story of storiesWithUrls) {
       const key = story.artistId;
       if (!grouped[key]) {
         grouped[key] = {

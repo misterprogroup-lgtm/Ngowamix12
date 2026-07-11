@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const filename = `stories/${artist.id}/${Date.now()}.${ext}`;
 
     const blob = await put(filename, file, {
-      access: 'private',
+      access: 'public',
       addRandomSuffix: true,
     });
 
