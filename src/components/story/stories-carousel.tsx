@@ -125,9 +125,11 @@ export function StoriesCarousel() {
 
   async function compressImage(file: File, maxWidth = 1920, quality = 0.8): Promise<File> {
     return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('timeout')), 10000);
       const img = new Image();
       const url = URL.createObjectURL(file);
       img.onload = () => {
+        clearTimeout(timer);
         URL.revokeObjectURL(url);
         const canvas = document.createElement('canvas');
         let { width, height } = img;
@@ -137,7 +139,8 @@ export function StoriesCarousel() {
         }
         canvas.width = width;
         canvas.height = height;
-        const ctx = canvas.getContext('2d')!;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { resolve(file); return; }
         ctx.drawImage(img, 0, 0, width, height);
         canvas.toBlob(
           (blob) => {
@@ -151,7 +154,7 @@ export function StoriesCarousel() {
           quality
         );
       };
-      img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+      img.onerror = () => { clearTimeout(timer); URL.revokeObjectURL(url); resolve(file); };
       img.src = url;
     });
   }
@@ -161,7 +164,11 @@ export function StoriesCarousel() {
     if (file.type.startsWith('image/')) {
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        processedFile = await compressImage(file);
+        try {
+          processedFile = await compressImage(file);
+        } catch {
+          processedFile = file;
+        }
       }
     } else if (file.type.startsWith('video/')) {
       const maxVideoSize = 50 * 1024 * 1024;
