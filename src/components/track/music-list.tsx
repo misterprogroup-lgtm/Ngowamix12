@@ -58,7 +58,7 @@ export function MusicList({
       <div
         ref={listRef}
         role="list"
-        className={cn('bg-[#121212] px-4', className)}
+        className={cn('bg-[#121212]', className)}
       >
         {Array.from({ length: skeletonCount }).map((_, i) => (
           <SongItemSkeleton key={i} />
@@ -71,7 +71,7 @@ export function MusicList({
     return (
       <div
         role="list"
-        className={cn('bg-[#121212] px-4', className)}
+        className={cn('bg-[#121212]', className)}
       >
         <div className="flex flex-col items-center justify-center py-16 text-[#B3B3B3]">
           <p className="text-lg font-medium">No songs yet</p>
@@ -84,7 +84,7 @@ export function MusicList({
     <div
       ref={listRef}
       role="list"
-      className={cn('bg-[#121212] px-4', className)}
+      className={cn('bg-[#121212]', className)}
     >
       {items.map((item, index) => (
         <div

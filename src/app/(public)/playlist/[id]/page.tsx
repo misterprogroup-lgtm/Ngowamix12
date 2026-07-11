@@ -4,13 +4,14 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { SafeImage } from '@/components/ui/safe-image';
 import { useParams } from 'next/navigation';
-import { Play, Pause, Music, ArrowLeft, ListMusic, Trash2, Loader2, Plus, Search, X, Check, Share2, Link as LinkIcon, Globe, Lock, Clock, Headphones } from 'lucide-react';
+import { Play, Pause, Music, ArrowLeft, ListMusic, Loader2, Plus, Search, X, Check, Share2, Link as LinkIcon, Globe, Lock, Clock, Trash2 } from 'lucide-react';
 import { usePlayerStore } from '@/store/player-store';
 import { useAuthStore } from '@/store/auth-store';
 import { AnimateOnView } from '@/components/ui/animate-on-view';
 import { formatDuration, cn } from '@/lib/utils';
 import { useToast } from '@/components/feedback/toast';
 import { CollaboratorManager } from '@/components/catalog/collaborator-manager';
+import { MusicList } from '@/components/track/music-list';
 import type { Playlist, PlaylistTrackSummary, Track } from '@/types';
 
 interface PlaylistDetail extends Playlist {
@@ -345,46 +346,26 @@ export default function PlaylistDetailPage() {
               )}
             </div>
           ) : tracks.length > 0 ? (
-            <div className="space-y-1">
-              {playlist.tracks.map((pt, index) => {
-                const isCurrent = isTrackPlaying(pt.track.id);
-                return (
-                  <AnimateOnView key={pt.id} delay={Math.min(index * 30, 300)} animation="fadeIn">
-                    <div className={cn("group flex items-center gap-4 rounded-lg px-3 py-2 hover:bg-surface-hover transition-colors", isCurrent && "bg-primary/10")}>
-                      <button onClick={() => handlePlay(pt.track)} className="flex h-8 w-8 items-center justify-center text-text-muted shrink-0">
-                        <span className={cn("text-sm", isCurrent && "text-primary", "group-hover:hidden")}>{index + 1}</span>
-                        <span className="hidden group-hover:flex items-center justify-center text-text-primary">
-                          {isCurrent && isPlaying ? <Pause className="h-4 w-4" fill="currentColor" /> : <Play className="h-4 w-4" fill="currentColor" />}
-                        </span>
-                      </button>
-                      <div className="relative h-10 w-10 shrink-0 rounded-md overflow-hidden bg-surface-hover">
-                        {pt.track.album?.coverImage ? (
-                          <SafeImage src={pt.track.album.coverImage} alt="" fill className="object-cover" sizes="40px" fallback={<div className="flex h-full items-center justify-center"><Music className="h-5 w-5 text-text-muted" /></div>} />
-                        ) : (
-                          <div className="flex h-full items-center justify-center"><Music className="h-5 w-5 text-text-muted" /></div>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <Link href={`/track/${pt.track.id}`} className={cn("text-sm font-medium truncate block hover:text-primary transition-colors", isCurrent ? "text-primary" : "text-text-primary")}>
-                          {pt.track.title}
-                        </Link>
-                        <p className="text-xs text-text-secondary truncate">
-                          <Link href={`/artist/${pt.track.album?.artist?.slug}`} className="hover:text-primary transition-colors">
-                            {pt.track.album?.artist?.name}
-                          </Link>
-                        </p>
-                      </div>
-                      <span className="text-xs text-text-muted tabular-nums">{formatDuration(pt.track.duration)}</span>
-                      {canEdit && (
-                        <button onClick={() => handleRemoveTrack(pt.track.id)} disabled={removingTrack === pt.track.id} className="p-1.5 opacity-0 group-hover:opacity-100 transition-opacity text-text-muted hover:text-error">
-                          {removingTrack === pt.track.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
-                        </button>
-                      )}
-                    </div>
-                  </AnimateOnView>
-                );
-              })}
-            </div>
+            <MusicList
+              items={playlist.tracks.map((pt) => ({
+                id: pt.track.id,
+                title: pt.track.title,
+                artist: pt.track.album?.artist?.name || 'Artiste inconnu',
+                cover: pt.track.album?.coverImage || null,
+                duration: pt.track.duration,
+                artistSlug: pt.track.album?.artist?.slug,
+              }))}
+              currentId={currentTrack?.id}
+              isPlaying={isPlaying}
+              onPlay={(trackId) => {
+                const pt = playlist.tracks.find((t) => t.track.id === trackId);
+                if (pt) handlePlay(pt.track);
+              }}
+              onMenu={(trackId) => {
+                const pt = playlist.tracks.find((t) => t.track.id === trackId);
+                if (pt) handleRemoveTrack(pt.track.id);
+              }}
+            />
           ) : null}
         </div>
 

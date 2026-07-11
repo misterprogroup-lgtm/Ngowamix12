@@ -42,6 +42,7 @@ export const SongItem = memo(function SongItem({
   artist,
   cover,
   isPlaying = false,
+  onPlay,
   onMenu,
 }: SongItemProps) {
   const [mounted, setMounted] = useState(false);
@@ -75,11 +76,12 @@ export const SongItem = memo(function SongItem({
       className={cn(
         'flex items-center gap-4 px-4 h-[78px] sm:h-[84px]',
         'transition-colors duration-200 ease',
-        'hover:bg-white/[0.05] active:bg-white/[0.08]',
+        'hover:bg-white/[0.05] active:bg-white/[0.08] cursor-pointer',
         isPlaying && 'bg-[rgba(29,185,84,0.06)]',
         !mounted && 'opacity-0',
         mounted && 'opacity-100 transition-opacity duration-300'
       )}
+      onClick={() => onPlay?.(id)}
     >
       <div className="relative w-[58px] h-[58px] shrink-0">
         {!visible || !cover ? (
