@@ -204,35 +204,17 @@ export function StoriesCarousel() {
       const formData = new FormData();
       formData.append('file', pendingFile);
 
-      const xhr = new XMLHttpRequest();
-      xhr.upload.onprogress = (e) => {
-        if (e.lengthComputable) setUploadProgress(Math.round((e.loaded / e.total) * 100));
-      };
-
-      const { url, pathname } = await new Promise<{ url: string; pathname: string }>((resolve, reject) => {
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            try {
-              const data = JSON.parse(xhr.responseText);
-              resolve(data);
-            } catch {
-              reject(new Error('Invalid server response'));
-            }
-          } else {
-            try {
-              const data = JSON.parse(xhr.responseText);
-              reject(new Error(data.error || 'Upload failed'));
-            } catch {
-              reject(new Error('Upload failed'));
-            }
-          }
-        };
-        xhr.onerror = () => reject(new Error('Network error'));
-        xhr.ontimeout = () => reject(new Error('Upload timed out'));
-        xhr.timeout = 60000;
-        xhr.open('POST', '/api/upload-story');
-        xhr.send(formData);
+      const uploadRes = await fetch('/api/upload-story', {
+        method: 'POST',
+        body: formData,
       });
+
+      if (!uploadRes.ok) {
+        const errData = await uploadRes.json().catch(() => ({}));
+        throw new Error(errData.error || 'Upload failed');
+      }
+
+      const { url, pathname } = await uploadRes.json();
 
       const res = await fetch('/api/stories', {
         method: 'POST',
@@ -245,12 +227,11 @@ export function StoriesCarousel() {
         throw new Error(errData.error || 'Failed to publish story');
       }
 
-      // Refresh stories BEFORE closing overlay
+      // Refresh stories before closing
       const storiesRes = await fetch('/api/stories');
       const storiesData = await storiesRes.json();
       setGroups(storiesData.groups || []);
 
-      // Now close overlay
       if (pendingPreview) URL.revokeObjectURL(pendingPreview);
       setPendingFile(null);
       setPendingPreview(null);
@@ -427,9 +408,9 @@ export function StoriesCarousel() {
 
       {/* Preview & publish overlay */}
       {pendingPreview && (
-        <div className="fixed inset-0 z-[110] bg-black flex flex-col">
+        <div className="fixed inset-0 z-[110] bg-black flex flex-col" style={{ height: '100dvh' }}>
           {/* Top bar */}
-          <div className="flex items-center justify-between p-3 z-10 shrink-0">
+          <div className="flex items-center justify-between px-4 py-3 z-10 shrink-0">
             <button onClick={() => {
               if (pendingPreview) URL.revokeObjectURL(pendingPreview);
               setPendingPreview(null);
@@ -444,16 +425,16 @@ export function StoriesCarousel() {
           </div>
 
           {/* Media preview */}
-          <div className="flex-1 flex items-center justify-center relative min-h-0">
+          <div className="flex-1 flex items-center justify-center relative overflow-hidden min-h-0">
             {pendingType === 'VIDEO' ? (
-              <video src={pendingPreview} className="max-h-full max-w-full object-contain h-full w-full" autoPlay muted loop playsInline />
+              <video src={pendingPreview} className="w-full h-full object-contain" autoPlay muted loop playsInline />
             ) : (
-              <img src={pendingPreview} alt="" className="max-h-full max-w-full object-contain h-full w-full" />
+              <img src={pendingPreview} alt="" className="w-full h-full object-contain" />
             )}
 
             {/* Error overlay */}
             {uploadError && (
-              <div className="absolute bottom-0 left-0 right-0 bg-red-500/90 px-4 py-3 flex items-center gap-2 z-20">
+              <div className="absolute top-0 left-0 right-0 bg-red-500/90 px-4 py-3 flex items-center gap-2 z-20">
                 <span className="text-white text-sm flex-1 font-medium">{uploadError}</span>
                 <button
                   onClick={publishStory}
@@ -466,7 +447,7 @@ export function StoriesCarousel() {
           </div>
 
           {/* Bottom bar */}
-          <div className="p-4 flex items-center gap-3 shrink-0">
+          <div className="px-4 py-3 flex items-center gap-3 shrink-0">
             <input
               type="text"
               placeholder="Add a caption..."
