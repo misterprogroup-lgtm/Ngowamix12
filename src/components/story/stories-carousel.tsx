@@ -245,21 +245,17 @@ export function StoriesCarousel() {
         throw new Error(errData.error || 'Failed to publish story');
       }
 
-      // Close overlay immediately on success
+      // Refresh stories BEFORE closing overlay
+      const storiesRes = await fetch('/api/stories');
+      const storiesData = await storiesRes.json();
+      setGroups(storiesData.groups || []);
+
+      // Now close overlay
       if (pendingPreview) URL.revokeObjectURL(pendingPreview);
       setPendingFile(null);
       setPendingPreview(null);
       setPendingType(null);
       setCaption('');
-
-      // Best-effort refresh
-      try {
-        const storiesRes = await fetch('/api/stories');
-        const storiesData = await storiesRes.json();
-        setGroups(storiesData.groups || []);
-      } catch {
-        // ignore refresh failure
-      }
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Erreur publication');
     } finally {
@@ -431,7 +427,7 @@ export function StoriesCarousel() {
 
       {/* Preview & publish overlay */}
       {pendingPreview && (
-        <div className="fixed inset-0 z-[110] bg-black flex flex-col overflow-hidden">
+        <div className="fixed inset-0 z-[110] bg-black flex flex-col">
           {/* Top bar */}
           <div className="flex items-center justify-between p-3 z-10 shrink-0">
             <button onClick={() => {
@@ -454,10 +450,23 @@ export function StoriesCarousel() {
             ) : (
               <img src={pendingPreview} alt="" className="max-h-full max-w-full object-contain h-full w-full" />
             )}
+
+            {/* Error overlay */}
+            {uploadError && (
+              <div className="absolute bottom-0 left-0 right-0 bg-red-500/90 px-4 py-3 flex items-center gap-2 z-20">
+                <span className="text-white text-sm flex-1 font-medium">{uploadError}</span>
+                <button
+                  onClick={publishStory}
+                  className="text-sm font-bold text-white hover:text-white/80 underline whitespace-nowrap"
+                >
+                  Retry
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Bottom bar */}
-          <div className="p-4 flex items-center gap-3">
+          <div className="p-4 flex items-center gap-3 shrink-0">
             <input
               type="text"
               placeholder="Add a caption..."
@@ -484,19 +493,6 @@ export function StoriesCarousel() {
           {uploading && (
             <div className="h-1 bg-white/20 shrink-0">
               <div className="h-full bg-[#FF8800] transition-all duration-300" style={{ width: `${uploadProgress}%` }} />
-            </div>
-          )}
-
-          {/* Error message */}
-          {uploadError && (
-            <div className="bg-red-500/90 px-4 py-3 flex items-center gap-2 shrink-0">
-              <span className="text-white text-sm flex-1 font-medium">{uploadError}</span>
-              <button
-                onClick={publishStory}
-                className="text-sm font-bold text-white hover:text-white/80 underline whitespace-nowrap"
-              >
-                Retry
-              </button>
             </div>
           )}
         </div>
