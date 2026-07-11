@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { head } from '@vercel/blob';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 
@@ -24,14 +25,25 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     });
 
-    const storiesWithUrls = stories.map((story) => {
-      const { _count, likes, ...rest } = story;
-      return {
-        ...rest,
-        likesCount: _count.likes,
-        isLiked: likes ? likes.length > 0 : false,
-      };
-    });
+    const storiesWithUrls = await Promise.all(
+      stories.map(async (story) => {
+        const { _count, likes, ...rest } = story;
+        let mediaUrl = story.mediaUrl;
+        try {
+          const identifier = story.blobPathname || story.mediaUrl;
+          const result = await head(identifier);
+          if (result.url) mediaUrl = result.url;
+        } catch {
+          // fallback to stored mediaUrl
+        }
+        return {
+          ...rest,
+          mediaUrl,
+          likesCount: _count.likes,
+          isLiked: likes ? likes.length > 0 : false,
+        };
+      })
+    );
 
     const grouped: Record<string, { artist: typeof stories[0]['artist']; stories: typeof storiesWithUrls; allViewed: boolean }> = {};
     for (const story of storiesWithUrls) {

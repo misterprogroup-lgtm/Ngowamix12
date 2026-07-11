@@ -21,11 +21,11 @@ export async function POST(request: Request) {
     const filename = `stories/${artist.id}/${Date.now()}.${ext}`;
 
     const blob = await put(filename, file, {
-      access: 'public',
+      access: 'private',
       addRandomSuffix: true,
     });
 
-    return NextResponse.json({ url: blob.url, pathname: filename });
+    return NextResponse.json({ url: blob.url, pathname: blob.pathname });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Erreur serveur' },
