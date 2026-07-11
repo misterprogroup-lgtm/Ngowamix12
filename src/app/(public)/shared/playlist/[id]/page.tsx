@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { SafeImage } from '@/components/ui/safe-image';
 import { useParams } from 'next/navigation';
-import { Play, Pause, Music, ListMusic, Loader2, ArrowLeft, Lock } from 'lucide-react';
+import { Music, ListMusic, Loader2, ArrowLeft } from 'lucide-react';
 import { usePlayerStore } from '@/store/player-store';
-import { formatDuration } from '@/lib/utils';
+import { MusicList } from '@/components/track/music-list';
 import type { Playlist, Track } from '@/types';
 
 export default function SharedPlaylistPage() {
@@ -110,51 +109,22 @@ export default function SharedPlaylistPage() {
             <p className="text-text-secondary">Cette playlist est vide</p>
           </div>
         ) : (
-          <div className="space-y-1">
-            {playlist.tracks.map((pt, index) => (
-              <div
-                key={pt.id}
-                className="group flex items-center gap-4 rounded-lg px-3 py-2 hover:bg-surface-hover transition-colors"
-              >
-                <div className="flex h-8 w-8 items-center justify-center text-text-muted">
-                  <span className="text-sm group-hover:hidden">{index + 1}</span>
-                  <button
-                    onClick={() => handlePlay(pt.track)}
-                    className="hidden group-hover:flex items-center justify-center text-text-primary"
-                  >
-                    {isTrackPlaying(pt.track.id) ? (
-                      <Pause className="h-4 w-4" fill="currentColor" />
-                    ) : (
-                      <Play className="h-4 w-4" fill="currentColor" />
-                    )}
-                  </button>
-                </div>
-                <div className="relative h-10 w-10 shrink-0 rounded-md overflow-hidden bg-surface-hover">
-                  {pt.track.album?.coverImage ? (
-                    <SafeImage
-                      src={pt.track.album.coverImage}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                      fallback={<div className="flex h-full items-center justify-center"><Music className="h-5 w-5 text-text-muted" /></div>}
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <Music className="h-5 w-5 text-text-muted" />
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-text-primary truncate">{pt.track.title}</p>
-                  <p className="text-xs text-text-secondary truncate">
-                    {pt.track.album?.artist?.name}
-                  </p>
-                </div>
-                <span className="text-xs text-text-muted">{formatDuration(pt.track.duration)}</span>
-              </div>
-            ))}
-          </div>
+          <MusicList
+            items={playlist.tracks.map((pt) => ({
+              id: pt.track.id,
+              title: pt.track.title,
+              artist: pt.track.album?.artist?.name || 'Artiste inconnu',
+              cover: pt.track.album?.coverImage || null,
+              duration: pt.track.duration,
+              artistSlug: pt.track.album?.artist?.slug,
+            }))}
+            currentId={currentTrack?.id}
+            isPlaying={isPlaying}
+            onPlay={(trackId) => {
+              const pt = playlist.tracks.find((t) => t.track.id === trackId);
+              if (pt) handlePlay(pt.track);
+            }}
+          />
         )}
 
         <div className="mt-12 text-center">
